@@ -1,0 +1,39 @@
+.overlord{
+    border: solid 1px #e6e6e6;
+    border-radius: 7px;
+    overflow: hidden;
+  padding: 20px;
+  }
+
+.table-container{
+    width:100%;
+    text-align: center;
+    padding-left: 30px;
+  }
+
+.table-heading{
+    padding: 15px 20px;
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 20px;
+  }
+
+  .t-heading{
+    font-family: 'Lato';
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 100%;
+    color: #3A3541;
+    border-bottom: 1px solid #e6e6e6;
+    margin-bottom: 20px;
+    
+  }
+
+  .t-data{
+    font-family: 'Lato';
+    font-weight: 400;
+    font-size: 14.22px;
+    color: #89868D;
+    line-height: 100%;
+    padding: 12px;
+    /* border-bottom: 1px solid #e6e6e6; */
+  }

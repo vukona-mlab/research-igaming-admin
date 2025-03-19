@@ -3,34 +3,33 @@ import "./FreelancerList.css";
 
 export default function FreelancerList() {
   const [loading, setLoading] = useState(false);
-  const [freelancerPicture, setFreelancerPicture] = useState("");
-
-  const data = [
-    {
-      name: "Tiger Nixon",
-      position: "Game Developer",
-      phone: "060 683 1314",
-      email: "rea@gmail.com",
-      date: "18/03/2001",
-      start: "18-03-2025",
-    },
-  ];
-
-  const getProfile = async () => {
+  const [freelancers, setFreelancers] = useState([]);
+  
+  // Fetch freelancers from the API
+  const getFreelancers = async () => {
     setLoading(true);
     try {
-      const response = await fetch(``, {
+      const response = await fetch(`http://localhost:8000/api/freelancers`, {
         method: "GET",
       });
       if (response.ok) {
         const data = await response.json();
-        setFreelancerPicture(data.user.freelancerPicture);
+        setFreelancers(data.freelancers);
       }
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getFreelancers();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -42,11 +41,10 @@ export default function FreelancerList() {
               <th className="t-heading">Position</th>
               <th className="t-heading">Phone</th>
               <th className="t-heading">Email</th>
-              <th className="t-heading">DOB</th>
-              <th className="t-heading">Start date</th>
+              <th className="t-heading">Status</th>
             </tr>
-            {data.map((item) => (
-              <tr key={item.id}>
+            {freelancers.map((freelancer) => (
+              <tr key={freelancer.id}>
                 <td className="t-data">
                   <div
                     style={{
@@ -55,30 +53,29 @@ export default function FreelancerList() {
                       gap: "15px",
                     }}
                   >
-                    {freelancerPicture !== "" ? (
-                      <img
-                        src={freelancerPicture}
-                        alt="User"
-                        className="user-profile"
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                          cursor: "pointer",
-                        }}
-                      />
-                    ) : null}
-                    {item.name}
+                    <img
+                      src={freelancer.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                      alt="User Profile"
+                      className="user-profile"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                      }}
+                    />
+                    {freelancer.name}
                   </div>
                 </td>
-                <td className="t-data">{item.position}</td>
-                <td className="t-data">{item.phone}</td>
-                <td className="t-data">{item.email}</td>
-                <td className="t-data">{item.date}</td>
-                <td className="t-data">{item.start}</td>
+                
+                <td className="t-data">{freelancer.jobTitle || 'N/A'}</td>
+                <td className="t-data">{freelancer.phone || 'N/A'}</td>
+                <td className="t-data">{freelancer.email}</td>
                 <td className="t-data">
                   <div className="action-buttons">
-                    <div className="active-blocked">active</div>
+                    <div className="active-blocked">
+                      {freelancer.activeStatus ? 'active' : 'inactive'}
+                    </div>
                   </div>
                 </td>
               </tr>

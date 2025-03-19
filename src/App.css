@@ -1,1 +1,28 @@
+.app-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2rem 0;
+  margin-left: 90px;
+  margin-top: 50px;
+  height: 1vh;
+}
 
+.login-box {
+  padding: 24px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 384px;
+  /* Equivalent to w-96 in Tailwind */
+}
+
+.login-title {
+  font-size: 1.25rem;
+  /* Equivalent to text-xl in Tailwind */
+  font-weight: 600;
+  /* Equivalent to font-semibold in Tailwind */
+  margin-bottom: 1rem;
+  /* Equivalent to mb-4 in Tailwind */
+  text-align: center;
+}

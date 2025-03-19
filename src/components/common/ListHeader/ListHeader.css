@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 25px 0px;
 }
 .lh-active-tabs {
 }
@@ -15,7 +16,9 @@
 }
 .lh-active-tabs-status {
   display: flex;
+  align-items: center;
   gap: 25px;
+  padding: 0px 25px;
 }
 .lh-view-list-btn {
   background-color: #000000;
@@ -36,6 +39,7 @@
 .lh-active-tabs-div {
   display: flex;
   gap: 15px;
+  margin: 25px 0px;
 }
 .lh-active-tabs-tab {
   height: 40px;

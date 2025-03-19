@@ -6,12 +6,13 @@ const ListHeader = ({
   tab,
   handleTabChange,
   handleListNameChange,
+  onSearch,
 }) => {
   const [currentTab, setCurrentTab] = useState("All");
   return (
     <div className="ListHeader">
       <div className="lh-search-view">
-        <SearchBar />
+        <SearchBar placeholder="Search" onSearch={onSearch} />
         <button
           className="lh-view-list-btn"
           onClick={() => {

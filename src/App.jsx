@@ -3,11 +3,7 @@ import LoginPage from "./pages/signin/SignIn";
 import "./App.css";
 
 const App = () => {
-  return (
-    <div className="App">
-      <LoginPage />
-    </div>
-  );
+  return <div className="App"></div>;
 };
 
 export default App;

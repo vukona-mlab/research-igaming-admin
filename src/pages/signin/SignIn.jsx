@@ -7,13 +7,15 @@ const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
     console.log('Logging in with:', email, password);
   };
 
   return (
     <div className="login-page">
       <div className="login-form">
+        {/* Logo added here */}
+        <img src="/images/logo.png" alt="Logo" className="login-logo" />
+        
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
           <div className="input-group">
@@ -37,6 +39,10 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+          </div>
+          <div className="remember-me-container">
+            <input type="checkbox" id="rememberMe" />
+            <label htmlFor="rememberMe">Remember me</label>
           </div>
           <button type="submit" className="login-btn">Login</button>
         </form>

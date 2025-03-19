@@ -10,14 +10,18 @@
   .login-form {
     width: 50%;
     padding: 30px;
+    padding-top: 0;
     border-radius: 10px;
     margin-right: 20px;
   }
   
   h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     color: #000;
+    font-weight: 500;
+    font-size: 32px;
+    margin-top: 30px;
   }
   
   .input-group {
@@ -31,27 +35,34 @@
     font-size: 14px;
     margin-bottom: 5px;
     text-align: left;
+    font-weight: 400;
   }
   
   input {
-    width: 100%;
-    padding: 8px;
+    width: 90%;
+    padding: 20px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 5px;
     background-color: transparent;
+    height: 25px;
+    font-weight: 400;
+    box-sizing: border-box;
   }
   
   button.login-btn {
-    padding: 10px;
+    padding: 8px 0px;
     background-color: black;
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
-    width: 100%;
-
+    font-size: 13px;
+    width: 90%;
+    height: 45px;
+    margin-right:0;
     display: block;
+    box-sizing: border-box;
+
   }
   
   button.login-btn:hover {
@@ -68,4 +79,36 @@
     object-fit: cover;
     border-radius: 10px;
   }
+  
+  .login-logo {
+    display: block;
+    margin: 0 left 120px; 
+    width: 137px; 
+    height: 58px;
+    text-align: left;
+  }
+  .remember-me-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .remember-me-container input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  
+  .remember-me-container label {
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+
+  
+  
+  
   

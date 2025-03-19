@@ -1,8 +1,9 @@
-import { useState } from "react";
+import FreelanceList from "./pages/FreelanceList/FreelanceList"
 import "./App.css";
-
 function App() {
-  return <div className="App"></div>;
+  return <div className="App">
+<FreelanceList/>
+  </div>;
 }
 
 export default App;

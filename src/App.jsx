@@ -1,11 +1,13 @@
-import { useState } from "react";
+import React from "react";
+import LoginPage from "./pages/signin/SignIn";
 import "./App.css";
-import FreelancerList from "../FreelancerList/FreelancerList";
 
-function App() {
-  return <div className="App">
-    <FreelancerList/>
-  </div>;
-}
+const App = () => {
+  return (
+    <div className="App">
+      <LoginPage />
+    </div>
+  );
+};
 
 export default App;

@@ -1,8 +1,8 @@
-import FreelanceList from "./pages/FreelanceList/FreelanceList"
+import Sidebar from "./components/CMS sidebar/Sidebar"
 import "./App.css";
 function App() {
   return <div className="App">
-<FreelanceList/>
+<Sidebar/>
   </div>;
 }
 

@@ -1,14 +1,13 @@
+import React from "react";
+import LoginPage from "./pages/signin/SignIn";
 import "./App.css";
-import NavBar from "./common/NavBar/NavBar";
-import ProfilePage from "./pages/ProfilePage";
 
-function App() {
+const App = () => {
   return (
-    <div>
-      <NavBar />
-      <ProfilePage />
+    <div className="App">
+      <LoginPage />
     </div>
   );
-}
+};
 
 export default App;

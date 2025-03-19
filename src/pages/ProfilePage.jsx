@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
 const Container = styled.div`
-  max-width: 900px;
+  max-width: 1200px;
   margin-left: 180px;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -43,8 +45,6 @@ const ProfileImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
   overflow: hidden;
   margin-right: 15px;
   position: relative;
@@ -55,21 +55,6 @@ const ProfileImage = styled.div`
     object-fit: cover;
     border-radius: 50%;
   }
-`;
-
-const Edit = styled.div`
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background-color: #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  overflow: hidden;
-  margin-: 15px;
-  position: relative;
 `;
 
 const CameraIcon = styled.div`
@@ -83,32 +68,10 @@ const CameraIcon = styled.div`
   border-radius: 50%;
 `;
 
-const FormGrid = styled.div`
+const FormGrid = styled(Box)`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  &:focus {
-    border-color: #007bff;
-  }
 `;
 
 const RequiredIndicator = styled.span`
@@ -134,26 +97,24 @@ const Button = styled.button`
 const LogoutButton = styled(Button)`
   margin-right: 10px;
 `;
-const RequiredInput = ({ label, isRequired }) => {
-  const [value, setValue] = useState("");
-
-  return (
-    <Container>
-      <Label>
-        {label}
-        {isRequired && <RequiredIndicator>*</RequiredIndicator>}
-      </Label>
-      <Input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        required={isRequired}
-      />
-    </Container>
-  );
-};
 
 const ProfilePage = () => {
+  // State to track input values
+  const [formValues, setFormValues] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    dob: "",
+    phone: "",
+    location: "",
+    role: "",
+  });
+
+  // Function to handle input changes
+  const handleInputChange = (field, value) => {
+    setFormValues((prev) => ({ ...prev, [field]: value }));
+  };
+
   return (
     <Container>
       <Header>Account</Header>
@@ -173,48 +134,103 @@ const ProfilePage = () => {
         </ProfileImage>
       </ProfileSection>
 
-      {/* Form Fields */}
-      <FormGrid>
-        <FormGroup>
-          <Label>Name *</Label>
-          <Input type="text" value="Sibusiso" disabled />
-        </FormGroup>
+      {/* Form Fields using Material-UI */}
+      <FormGrid
+        component="form"
+        sx={{ "& .MuiTextField-root": { m: 1, width: "100%" } }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          label={
+            <>
+              Name{" "}
+              {!formValues.name && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          value={formValues.name}
+          onChange={(e) => handleInputChange("name", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
 
-        <FormGroup>
-          <Label>Surname *</Label>
-          <Input type="text" value="Sibusiso" disabled />
-        </FormGroup>
+        <TextField
+          label={
+            <>
+              Surname{" "}
+              {!formValues.surname && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          value={formValues.surname}
+          onChange={(e) => handleInputChange("surname", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
 
-        <FormGroup>
-          <Label>Email *</Label>
-          <Input type="email" value="Sibusiso@mail.com" disabled />
-        </FormGroup>
+        <TextField
+          label={
+            <>
+              Email{" "}
+              {!formValues.email && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          type="email"
+          value={formValues.email}
+          onChange={(e) => handleInputChange("email", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
 
-        <FormGroup>
-          <Label>Date of Birth *</Label>
-          <Input type="text" value="DD/MM/YYYY" disabled />
-        </FormGroup>
+        <TextField
+          label={
+            <>
+              Date of Birth{" "}
+              {!formValues.dob && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          value={formValues.dob}
+          onChange={(e) => handleInputChange("dob", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
 
-        <FormGroup>
-          <Label>Phone *</Label>
-          <Input type="text" value="078 000 0000" disabled />
-        </FormGroup>
+        <TextField
+          label={
+            <>
+              Phone{" "}
+              {!formValues.phone && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          value={formValues.phone}
+          onChange={(e) => handleInputChange("phone", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
 
-        <FormGroup>
-          <Label>Location *</Label>
-          <Input type="text" value="Soweto" disabled />
-        </FormGroup>
+        <TextField
+          label={
+            <>
+              Location{" "}
+              {!formValues.location && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          value={formValues.location}
+          onChange={(e) => handleInputChange("location", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
 
-        <FormGroup>
-          <Label>Role *</Label>
-          <Input type="text" value="Super Admin" disabled />
-        </FormGroup>
+        <TextField
+          label={
+            <>
+              Role{" "}
+              {!formValues.role && <RequiredIndicator>*</RequiredIndicator>}
+            </>
+          }
+          value={formValues.role}
+          onChange={(e) => handleInputChange("role", e.target.value)}
+          InputLabelProps={{ shrink: true }} // Keeps label at the top
+        />
       </FormGrid>
 
       {/* Buttons */}
       <Buttons>
         <LogoutButton>Logout</LogoutButton>
-        <Edit>Edit</Edit>
+        <Button>Edit</Button>
       </Buttons>
     </Container>
   );

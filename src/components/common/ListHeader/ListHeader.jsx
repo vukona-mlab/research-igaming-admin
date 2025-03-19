@@ -7,7 +7,7 @@ const ListHeader = ({
   handleTabChange,
   handleListNameChange,
 }) => {
-  const [currentTab, setCurrentTab] = useState(tab);
+  const [currentTab, setCurrentTab] = useState("All");
   return (
     <div className="ListHeader">
       <div className="lh-search-view">
@@ -30,7 +30,7 @@ const ListHeader = ({
             <button
               className={
                 currentTab === "All"
-                  ? "lh-active-tabs-tab currentTab"
+                  ? "lh-active-tabs-tab lh-currentTab"
                   : "lh-active-tabs-tab"
               }
               onClick={() => {
@@ -43,7 +43,7 @@ const ListHeader = ({
             <button
               className={
                 currentTab === "Active"
-                  ? "lh-active-tabs-tab currentTab"
+                  ? "lh-active-tabs-tab lh-currentTab"
                   : "lh-active-tabs-tab"
               }
               onClick={() => {
@@ -56,7 +56,7 @@ const ListHeader = ({
             <button
               className={
                 currentTab === "Blocked"
-                  ? "lh-active-tabs-tab currentTab"
+                  ? "lh-active-tabs-tab lh-currentTab"
                   : "lh-active-tabs-tab"
               }
               onClick={() => {

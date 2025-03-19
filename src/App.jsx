@@ -1,9 +1,16 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/signin/SignIn";
-import "./App.css";
+//import AdminDashboard from "./AdminDashboard";
 
 const App = () => {
-  return <div className="App"></div>;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;

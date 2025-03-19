@@ -3,16 +3,22 @@
   display: flex;
   gap: 25px;
   padding-top: 5px;
-  border-bottom: 1px solid #333333b2;
+  border-bottom: 2px solid  #00000080;
+  top: 272px;
+  left: 146px;
  
 }
 
+
 .tbhTab {
   font-size: 16px;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   color: #00000080;
   padding-bottom: 15px;
   cursor: pointer;
+  top: 272px;
+  left: 146px;
 }
 
 .currentTab {

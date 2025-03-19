@@ -1,5 +1,5 @@
-import React from 'react';
-import './HeaderTabs.model.css'
+import React, { useState } from 'react';
+import styles from './HeaderTabs.module.css'; 
 
 
   const HeaderTabs = ({ tabOne, tabTwo, tabThree, handleTabChange }) => {

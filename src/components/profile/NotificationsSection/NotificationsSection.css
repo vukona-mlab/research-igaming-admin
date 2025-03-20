@@ -1,0 +1,23 @@
+.NotificationsSection {
+  font-family: "Poppins";
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.ns-input-check {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #0000001a;
+  padding: 15px 0px;
+}
+.ns-input-check-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: #00000080;
+}
+.ns-notifs-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
+import NotificationsSection from "../../components/profile/NotificationsSection/NotificationsSection";
 const Container = styled.div`
   max-width: 1250px;
   margin-left: 180px;
@@ -317,6 +317,7 @@ const ProfilePage = () => {
         <div>
           <h2>Notifications</h2>
           <p>Notification settings will be implemented here.</p>
+          <NotificationsSection />
         </div>
       )}
     </Container>

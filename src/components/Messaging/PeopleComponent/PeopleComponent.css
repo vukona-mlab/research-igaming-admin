@@ -1,0 +1,30 @@
+.PeopleComponent {
+  flex: 1;
+  width: 415px;
+  border-radius: 15px;
+  border: 2px solid #0000000d;
+  padding: 25px 10px;
+}
+
+.people-title {
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+
+.people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.person-card-container {
+  padding: 0 5px;
+}
+
+/* Add hover effect */
+.person-card-container:hover {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}

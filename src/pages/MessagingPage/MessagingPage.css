@@ -1,0 +1,84 @@
+.MessagingPageC {
+  min-height: 100vh;
+  background: #be353500;
+}
+
+.messagePageContainer {
+  width: calc(100% - 40px);
+  height: calc(95vh - 10px);
+  margin: 25px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: relative;
+  z-index: 1;
+  background-color: #fff;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .messagePageContainer {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .PeopleComponent {
+    width: 100% !important;
+    margin-bottom: 15px;
+  }
+
+  .f-chat-box {
+    width: 100%;
+    height: calc(70vh - 10px);
+  }
+}
+
+.MessagingPageC .search-container {
+  width: 30%;
+  margin: 15px 0 0 15px !important;
+}
+
+/* Modal overlay styles */
+.escrow-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+/* Adjust modal width for messaging page */
+.escrow-modal {
+  width: 90%;
+  max-width: 1000px;
+  margin: 20px auto;
+}
+
+/* Add these new styles */
+.main-content {
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+.main-content.sidebar-expanded {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 100px;
+  width: calc(100% - 100px);
+}

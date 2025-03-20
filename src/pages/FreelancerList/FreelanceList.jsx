@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import ListHeader from "../../components/common/ListHeader/ListHeader";
 import {
   Box,
-  Button,
   Typography,
   Avatar,
-  TextField,
   Table,
   TableBody,
   TableCell,
@@ -15,17 +13,16 @@ import {
   Paper,
   CircularProgress,
 } from "@mui/material";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SearchIcon from "@mui/icons-material/Search";
+import Sidebar from "../../components/CMS sidebar/Sidebar"
 
 const FreelanceList = () => {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("All");
   const [freelancers, setFreelancers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
-  const [viewMode, setViewMode] = useState("freelancers"); // New state to track current view
+  const [viewMode, setViewMode] = useState("freelancers"); // Track current view
 
   // Fetch freelancers or clients from the backend
   useEffect(() => {
@@ -78,10 +75,20 @@ const FreelanceList = () => {
   };
     
   // Toggle between freelancers and clients view
-  const toggleView = () => {
-    setViewMode(viewMode === "freelancers" ? "clients" : "freelancers");
-    setFilter("all"); // Reset filter when switching views
+  const handleListNameChange = (listName) => {
+    setViewMode(listName.toLowerCase());
+    setFilter("All"); // Reset filter when switching views
     setSearchTerm(""); // Reset search when switching views
+  };
+
+  // Handle tab change
+  const handleTabChange = (tabName) => {
+    setFilter(tabName);
+  };
+
+  // Handle search
+  const handleSearch = (term) => {
+    setSearchTerm(term);
   };
 
   // Get current data based on viewMode
@@ -90,9 +97,9 @@ const FreelanceList = () => {
   // Filter data based on selected filter and search term
   const filteredData = currentData
     .filter((item) => {
-      if (filter === "all") return true;
-      if (filter === "active") return item.activeStatus === true;
-      if (filter === "blocked") return item.activeStatus === false;
+      if (filter === "All") return true;
+      if (filter === "Active") return item.activeStatus === true;
+      if (filter === "Blocked") return item.activeStatus === false;
       return true;
     })
     .filter((item) => {
@@ -108,67 +115,32 @@ const FreelanceList = () => {
 
   return (
     <Box sx={{ width: "90%", margin: "auto", padding: 3 }}>
-      {/* Header Section */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h5" fontWeight="bold">
-          {viewMode === "freelancers" ? "Freelancers" : "Clients"}
-        </Typography>
-        <Box display="flex" alignItems="center" gap={2}>
-          <NotificationsNoneIcon sx={{ color: "#ffbf00" }} />
-          <Avatar alt="Profile" src="/profile.jpg" />
-          <Button 
-            variant="contained" 
-            sx={{ backgroundColor: "black" }}
-            onClick={toggleView}
-          >
-            {viewMode === "freelancers" ? "View client list" : "View freelancer list"}
-          </Button>
-        </Box>
-      </Box>
-
-      {/* Search Bar */}
-      <Box display="flex" alignItems="center" mt={2} mb={2} position="relative">
-        <SearchIcon sx={{ color: "gray", position: "absolute", marginLeft: 2 }} />
-        <TextField
-          variant="outlined"
-          placeholder={`Search ${viewMode}...`}
-          fullWidth
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{
-            maxWidth: 400,
-            backgroundColor: "white",
-            borderRadius: 1,
-            '& .MuiOutlinedInput-root': {
-              paddingLeft: 1,
-            },
-            '& .MuiOutlinedInput-input': {
-              paddingLeft: 4,
-            }
-          }}
+      {/* Sidebar Component */}
+      <Sidebar/>
+      
+      {/* ListHeader Component */}
+      <ListHeader 
+        listName={viewMode === "freelancers" ? "Freelancers" : "Clients"}
+        tab={filter}
+        handleTabChange={handleTabChange}
+        handleListNameChange={handleListNameChange}
+        onSearch={handleSearch}
+      />
+      
+      {/* Profile Section with custom notification icon */}
+      <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
+        <Box 
+          component="img" 
+          src="/public/images//carbon_notification-filled.png" 
+          alt="Notifications" 
+          sx={{ 
+            height: 24, 
+            width: 24, 
+            color: "#ffbf00",
+            cursor: "pointer"
+          }} 
         />
-      </Box>
-
-      {/* Filter Buttons */}
-      <Box display="flex" gap={2} mb={2}>
-        <Button
-          variant={filter === "all" ? "contained" : "outlined"}
-          onClick={() => setFilter("all")}
-        >
-          All
-        </Button>
-        <Button
-          variant={filter === "active" ? "contained" : "outlined"}
-          onClick={() => setFilter("active")}
-        >
-          Active
-        </Button>
-        <Button
-          variant={filter === "blocked" ? "contained" : "outlined"}
-          onClick={() => setFilter("blocked")}
-        >
-          Blocked
-        </Button>
+        <Avatar alt="Profile" src="/public/images/Frame 1149.png" />
       </Box>
 
       {/* Error Message */}

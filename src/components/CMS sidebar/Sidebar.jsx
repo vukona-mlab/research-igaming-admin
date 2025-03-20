@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Sidebar.css";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -7,8 +7,20 @@ import dashIcon from "/public/images/dashIcon.png";
 import messageIcon from "/public/images/messageIcon.png";
 import projectIcon from "/public/images/projIcon.png";
 
-const Sidebar = () => {
+const Sidebar = ({ onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Notify parent component when sidebar state changes
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(isOpen);
+    }
+  }, [isOpen, onToggle]);
+
+  // Toggle sidebar function
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div className={`sidebar ${isOpen ? "sidebar-open" : "sidebar-closed"}`}>
@@ -17,16 +29,16 @@ const Sidebar = () => {
         {/* Toggle Button */}
         <button
           className={`sidebar-button ${isOpen ? "open" : ""}`}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={toggleSidebar}
         >
           <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
         </button>
 
         {/* Navigation Items */}
         <div className="sidebar-nav">
-          <SidebarItem imgSrc={dashIcon} text="Dashboard" isOpen={isOpen}  />
+          <SidebarItem imgSrc={dashIcon} text="Dashboard" isOpen={isOpen} />
           <SidebarItem imgSrc={messageIcon} text="Messages" isOpen={isOpen} />
-          <SidebarItem imgSrc={userIcon} text="Users" isOpen={isOpen} />
+          <SidebarItem imgSrc={userIcon} text="Users" isOpen={isOpen}/>
           <SidebarItem imgSrc={projectIcon} text="Projects" isOpen={isOpen} />
         </div>
       </div>

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import "./FreelancerList.css";
+import ProfileCard from '../../components/Profilecard/ProfileCard';
 
 export default function FreelancerList() {
   const [loading, setLoading] = useState(false);
   const [freelancers, setFreelancers] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedFreelancer, setSelectedFreelancer] = useState(null);
 
   useEffect(() => {
     fetchFreelancers();
@@ -13,19 +16,9 @@ export default function FreelancerList() {
   const fetchFreelancers = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/freelancers`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch freelancers');
-      }
-
-      const data = await response.json();
-      setFreelancers(data.freelancers);
+      const response = await axios.get('http://localhost:8000/api/freelancers');
+      console.log('Fetched freelancers:', response.data.freelancers);
+      setFreelancers(response.data.freelancers);
     } catch (error) {
       console.error("Error fetching freelancers:", error);
       setError(error.message);
@@ -34,12 +27,33 @@ export default function FreelancerList() {
     }
   };
 
+  const handleProfileClick = (freelancer) => {
+    setSelectedFreelancer(freelancer);
+  };
+
+  const handleCloseProfile = () => {
+    setSelectedFreelancer(null);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <>
       <div className="freelancer-container">
+        {selectedFreelancer && (
+          <ProfileCard
+            fullName={selectedFreelancer.name}
+            roles={selectedFreelancer.roles}
+            email={selectedFreelancer.email}
+            phone={selectedFreelancer.phone}
+            dateOfBirth={selectedFreelancer.dateOfBirth}
+            interests={selectedFreelancer.interests || 'Not specified'}
+            projectCount={selectedFreelancer.projectCount || 0}
+            profileImage={selectedFreelancer.profilePicture}
+            onClose={handleCloseProfile}
+          />
+        )}
         <div className="overlord">
           <table className="table-container">
             <tbody>
@@ -71,7 +85,9 @@ export default function FreelancerList() {
                             width: "40px",
                             height: "40px",
                             borderRadius: "50%",
+                            cursor: "pointer"
                           }}
+                          onClick={() => handleProfileClick(freelancer)}
                         />
                       )}
                       {freelancer.name}

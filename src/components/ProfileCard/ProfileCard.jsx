@@ -30,7 +30,7 @@ const ProfileCard = ({
                 </div>
                 <div className="profile-title">
                   <h2>{fullName}</h2>
-                  <p className="role">{roles}</p>
+                  <p className="role">{Array.isArray(roles) ? roles.join(', ') : roles}</p>
                 </div>
               </div>
             </div>

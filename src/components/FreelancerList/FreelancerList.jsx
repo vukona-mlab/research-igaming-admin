@@ -3,88 +3,98 @@ import "./FreelancerList.css";
 
 export default function FreelancerList() {
   const [loading, setLoading] = useState(false);
-  const [freelancerPicture, setFreelancerPicture] = useState("");
+  const [freelancers, setFreelancers] = useState([]);
+  const [error, setError] = useState(null);
 
-  const data = [
-    {
-      name: "Tiger Nixon",
-      position: "Game Developer",
-      phone: "060 683 1314",
-      email: "rea@gmail.com",
-      date: "18/03/2001",
-      start: "18-03-2025",
-    },
-  ];
+  useEffect(() => {
+    fetchFreelancers();
+  }, []);
 
-  const getProfile = async () => {
+  const fetchFreelancers = async () => {
     setLoading(true);
     try {
-      const response = await fetch(``, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/freelancers`, {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-      if (response.ok) {
-        const data = await response.json();
-        setFreelancerPicture(data.user.freelancerPicture);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch freelancers');
       }
-      setLoading(false);
+
+      const data = await response.json();
+      setFreelancers(data.freelancers);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching freelancers:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <>
-      <div className="overlord">
-        <table className="table-container">
-          <tbody>
-            <tr className="table-heading">
-              <th className="t-heading">Name</th>
-              <th className="t-heading">Position</th>
-              <th className="t-heading">Phone</th>
-              <th className="t-heading">Email</th>
-              <th className="t-heading">DOB</th>
-              <th className="t-heading">Start date</th>
-            </tr>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td className="t-data">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "15px",
-                    }}
-                  >
-                    {freelancerPicture !== "" ? (
-                      <img
-                        src={freelancerPicture}
-                        alt="User"
-                        className="user-profile"
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                          cursor: "pointer",
-                        }}
-                      />
-                    ) : null}
-                    {item.name}
-                  </div>
-                </td>
-                <td className="t-data">{item.position}</td>
-                <td className="t-data">{item.phone}</td>
-                <td className="t-data">{item.email}</td>
-                <td className="t-data">{item.date}</td>
-                <td className="t-data">{item.start}</td>
-                <td className="t-data">
-                  <div className="action-buttons">
-                    <div className="active-blocked">active</div>
-                  </div>
-                </td>
+      <div className="freelancer-container">
+        <div className="overlord">
+          <table className="table-container">
+            <tbody>
+              <tr className="table-heading">
+                <th className="t-heading">Name</th>
+                <th className="t-heading">Position</th>
+                <th className="t-heading">Phone</th>
+                <th className="t-heading">Email</th>
+                <th className="t-heading">DOB</th>
+                <th className="t-heading">Start date</th>
+                <th className="t-heading">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+              {freelancers.map((freelancer) => (
+                <tr key={freelancer.id}>
+                  <td className="t-data">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "15px",
+                      }}
+                    >
+                      {freelancer.profilePicture && (
+                        <img
+                          src={freelancer.profilePicture}
+                          alt="User"
+                          className="user-profile"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                      )}
+                      {freelancer.name}
+                      {freelancer.role}
+                    </div>
+                  </td>
+                  <td className="t-data">{freelancer.position || 'N/A'}</td>
+                  <td className="t-data">{freelancer.phone || 'N/A'}</td>
+                  <td className="t-data">{freelancer.email}</td>
+                  <td className="t-data">{freelancer.dateOfBirth || 'N/A'}</td>
+                  <td className="t-data">{freelancer.startDate || 'N/A'}</td>
+                  <td className="t-data">
+                    <div className="action-buttons">
+                      <div className={`active-blocked ${freelancer.status?.toLowerCase() || 'inactive'}`}>
+                        {freelancer.status || 'inactive'}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

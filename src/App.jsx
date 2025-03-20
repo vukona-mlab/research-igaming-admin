@@ -6,13 +6,14 @@ import FreelancerList from "./pages/FreelancerList/FreelanceList";
 import DocumentsPage from "./pages/Documents/DocumentsPage";
 import ProtectedRoutes from "./components/protected/ProtectedRoutes";
 import ProtectedAuth from "./components/protected/ProtectedAuth";
+import NotificationsSection from "./components/profile/NotificationsSection";
 const App = () => {
   return (
     <div className="App">
       <Router>
         <Routes>
           <Route element={<ProtectedAuth />}>
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/" element={<NotificationsSection />} />
           </Route>
           <Route element={<ProtectedRoutes />}>
             <Route path="/freelancer" element={<FreelancerList />} />

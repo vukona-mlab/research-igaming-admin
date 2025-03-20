@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import {
   Box,
   Button,
@@ -20,32 +21,43 @@ import SearchIcon from "@mui/icons-material/Search";
 const FreelanceList = () => {
   const [filter, setFilter] = useState("all");
   const [freelancers, setFreelancers] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
+  const [viewMode, setViewMode] = useState("freelancers"); // New state to track current view
 
-  // Fetch freelancers from the backend
+  // Fetch freelancers or clients from the backend
   useEffect(() => {
-    const fetchFreelancers = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8000/api/freelancers");
+        const endpoint = viewMode === "freelancers" 
+          ? "http://localhost:8000/api/freelancers" 
+          : "http://localhost:8000/api/clients";
+        
+        const response = await fetch(endpoint);
         if (!response.ok) {
-          throw new Error(`Failed to fetch freelancers: ${response.statusText}`);
+          throw new Error(`Failed to fetch ${viewMode}: ${response.statusText}`);
         }
         const data = await response.json();
-        setFreelancers(data.freelancers);
+        
+        if (viewMode === "freelancers") {
+          setFreelancers(data.freelancers || []);
+        } else {
+          setClients(data.clients || []);
+        }
         setError(null);
       } catch (error) {
-        console.error("Error fetching freelancers:", error);
-        setError("Failed to load freelancers. Please try again later.");
+        console.error(`Error fetching ${viewMode}:`, error);
+        setError(`Failed to load ${viewMode}. Please try again later.`);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFreelancers();
-  }, []);
+    fetchData();
+  }, [viewMode]); // Re-fetch when viewMode changes
 
   // Format date function
   const formatDate = (timestamp) => {
@@ -64,23 +76,33 @@ const FreelanceList = () => {
       return "Invalid date";
     }
   };
+    
+  // Toggle between freelancers and clients view
+  const toggleView = () => {
+    setViewMode(viewMode === "freelancers" ? "clients" : "freelancers");
+    setFilter("all"); // Reset filter when switching views
+    setSearchTerm(""); // Reset search when switching views
+  };
 
-  // Filter freelancers based on selected filter and search term
-  const filteredFreelancers = freelancers
-    .filter((freelancer) => {
+  // Get current data based on viewMode
+  const currentData = viewMode === "freelancers" ? freelancers : clients;
+
+  // Filter data based on selected filter and search term
+  const filteredData = currentData
+    .filter((item) => {
       if (filter === "all") return true;
-      if (filter === "active") return freelancer.activeStatus === true;
-      if (filter === "blocked") return freelancer.activeStatus === false;
+      if (filter === "active") return item.activeStatus === true;
+      if (filter === "blocked") return item.activeStatus === false;
       return true;
     })
-    .filter((freelancer) => {
+    .filter((item) => {
       if (!searchTerm) return true;
       
       const searchLower = searchTerm.toLowerCase();
       return (
-        (freelancer.name && freelancer.name.toLowerCase().includes(searchLower)) ||
-        (freelancer.email && freelancer.email.toLowerCase().includes(searchLower)) ||
-        (freelancer.jobTitle && freelancer.jobTitle.toLowerCase().includes(searchLower))
+        (item.name && item.name.toLowerCase().includes(searchLower)) ||
+        (item.email && item.email.toLowerCase().includes(searchLower)) ||
+        (item.jobTitle && item.jobTitle.toLowerCase().includes(searchLower))
       );
     });
 
@@ -89,13 +111,17 @@ const FreelanceList = () => {
       {/* Header Section */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h5" fontWeight="bold">
-          Freelancers
+          {viewMode === "freelancers" ? "Freelancers" : "Clients"}
         </Typography>
         <Box display="flex" alignItems="center" gap={2}>
           <NotificationsNoneIcon sx={{ color: "#ffbf00" }} />
           <Avatar alt="Profile" src="/profile.jpg" />
-          <Button variant="contained" sx={{ backgroundColor: "black" }}>
-            View client list
+          <Button 
+            variant="contained" 
+            sx={{ backgroundColor: "black" }}
+            onClick={toggleView}
+          >
+            {viewMode === "freelancers" ? "View client list" : "View freelancer list"}
           </Button>
         </Box>
       </Box>
@@ -105,7 +131,7 @@ const FreelanceList = () => {
         <SearchIcon sx={{ color: "gray", position: "absolute", marginLeft: 2 }} />
         <TextField
           variant="outlined"
-          placeholder="Search freelancers..."
+          placeholder={`Search ${viewMode}...`}
           fullWidth
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -158,7 +184,7 @@ const FreelanceList = () => {
           <CircularProgress />
         </Box>
       ) : (
-        /* Freelancers Table */
+        /* Table */
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -173,26 +199,26 @@ const FreelanceList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredFreelancers.length === 0 ? (
+              {filteredData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
-                    No freelancers found
+                    No {viewMode} found
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredFreelancers.map((freelancer) => (
-                  <TableRow key={freelancer.id}>
+                filteredData.map((item) => (
+                  <TableRow key={item.id}>
                     <TableCell>
                       <Box display="flex" alignItems="center" gap={2}>
-                        <Avatar src={freelancer.profilePicture || "/default-avatar.jpg"} />
-                        {freelancer.displayName || freelancer.name || "No Name"}
+                        <Avatar src={item.profilePicture || "/default-avatar.jpg"} />
+                        {item.displayName || item.name || "No Name"}
                       </Box>
                     </TableCell>
-                    <TableCell>{freelancer.jobTitle || "N/A"}</TableCell>
-                    <TableCell>{freelancer.phoneNumber || "N/A"}</TableCell>
-                    <TableCell>{freelancer.email || "N/A"}</TableCell>
-                    <TableCell>{freelancer.dateOfBirth ? formatDate(freelancer.dateOfBirth) : "N/A"}</TableCell>
-                    <TableCell>{freelancer.createdAt ? formatDate(freelancer.createdAt) : "N/A"}</TableCell>
+                    <TableCell>{item.jobTitle || "Client"}</TableCell>
+                    <TableCell>{item.phoneNumber || "N/A"}</TableCell>
+                    <TableCell>{item.email || "N/A"}</TableCell>
+                    <TableCell>{item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}</TableCell>
+                    <TableCell>{item.createdAt ? formatDate(item.createdAt) : "N/A"}</TableCell>
                     <TableCell>
                       <Box
                         sx={{
@@ -206,11 +232,11 @@ const FreelanceList = () => {
                             width: 10,
                             height: 10,
                             borderRadius: "50%",
-                            backgroundColor: freelancer.activeStatus ? "green" : "red",
+                            backgroundColor: item.activeStatus ? "green" : "red",
                           }}
                         />
                         <Typography variant="body2">
-                          {freelancer.activeStatus ? "Active" : "Inactive"}
+                          {item.activeStatus ? "Active" : "Inactive"}
                         </Typography>
                       </Box>
                     </TableCell>

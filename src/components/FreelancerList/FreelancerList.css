@@ -37,3 +37,30 @@
     padding: 12px;
     /* border-bottom: 1px solid #e6e6e6; */
   }
+
+.active-blocked {
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.active {
+  background-color: #e6f4ea;
+  color: #1e7e34;
+}
+
+.inactive {
+  background-color: #feeced;
+  color: #dc3545;
+}
+
+.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.freelancer-container {
+  position: relative;
+}

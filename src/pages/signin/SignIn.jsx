@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
+import { Navbar } from "react-bootstrap";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +36,7 @@ const SignIn = () => {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       // Redirect to dashboard or admin page
-      navigate("/admin-dashboard");
+      navigate("/profile");
     } catch (err) {
       setError(err.message);
     }

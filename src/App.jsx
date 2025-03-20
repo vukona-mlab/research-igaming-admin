@@ -4,15 +4,23 @@ import LoginPage from "./pages/signin/SignIn";
 //import AdminDashboard from "./AdminDashboard";
 import FreelancerList from "./components/FreelancerList/FreelancerList";
 import DocumentsPage from "./pages/Documents/DocumentsPage";
+import ProtectedRoutes from "./components/protected/ProtectedRoutes";
+import ProtectedAuth from "./components/protected/ProtectedAuth";
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/freelancer" element={<FreelancerList />} />
-        <Route path="/documents" element={<DocumentsPage />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <Router>
+        <Routes>
+          <Route element={<ProtectedAuth />}>
+            <Route path="/" element={<LoginPage />} />
+          </Route>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/freelancer" element={<FreelancerList />} />
+            <Route path="/documents" element={<DocumentsPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </div>
   );
 };
 

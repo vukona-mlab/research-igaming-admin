@@ -40,20 +40,18 @@ const googleProvider = new GoogleAuthProvider();
 const messaging = getMessaging(app);
 
 const requestForToken = () => {
-  return getToken(messaging, { vapidKey: import.meta.env.VITE_API_VAPID_KEY })
-    .then((currentToken) => {
-      if (currentToken) {
-        return currentToken;
+  return Notification.requestPermission()
+    .then((permission) => {
+      if (permission === "granted") {
+        return getToken(messaging, {
+          vapidKey: import.meta.env.VITE_API_VAPID_KEY,
+        });
       } else {
-        alert(
-          "No registration token available. Request permission to generate one."
-        );
-        return null;
+        throw new Error("Notification not granted");
       }
     })
     .catch((err) => {
-      alert("An error occurred while retrieving token - " + err);
-      return null;
+      console.error("Error getting token", err);
     });
 };
 onMessage(messaging, ({ notification }) => {

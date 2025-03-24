@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import "./ChatHeader.css";
 import { BsThreeDotsVertical, BsPersonCircle, BsCameraVideo } from "react-icons/bs";
 import { io } from "socket.io-client";
-import ProjectModal from "../ProjectModal/ProjectModal";
 import ZoomMeetingModal from '../ZoomMeetingModal/ZoomMeetingModal';
 
-const url = "http://localhost:8000";
+const url = import.meta.env.VITE_API_URL;
 const socket = io(url, { transports: ["websocket"] });
 
 const ChatHeader = ({ currentChat }) => {
@@ -15,7 +14,6 @@ const ChatHeader = ({ currentChat }) => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   const [activeStatus, setActiveStatus] = useState(false);
-  const [showProjectModal, setShowProjectModal] = useState(false);
   const [showZoomModal, setShowZoomModal] = useState(false);
   const [meetingDetails, setMeetingDetails] = useState(null);
   const socketRef = useRef();
@@ -23,26 +21,21 @@ const ChatHeader = ({ currentChat }) => {
   // Get user role and ID from localStorage
   const userRole = localStorage.getItem("role");
   const currentUserId = localStorage.getItem("uid");
-  const isFreelancer = userRole === "freelancer";
 
-  // Find the current user and other participant
-  const currentUser = currentChat?.participants?.find(
-    (part) => part.uid === currentUserId
-  );
+  // Get other participant from chat metadata
+  const otherParticipant = currentChat?.metadata?.target;
 
-  const otherParticipant = currentChat?.participants?.find(
-    (part) => part.uid !== currentUserId
-  );
   useEffect(() => {
     if (otherParticipant && otherParticipant.activeStatus) {
       setActiveStatus(otherParticipant.activeStatus);
     }
   }, [otherParticipant]);
+
   useEffect(() => {
     socketRef.current = io(url, { transports: ["websocket"] });
     
     socketRef.current.on("get-active-status", (data) => {
-      if (otherParticipant?.uid === data.uid) {
+      if (otherParticipant?.id === data.uid) {
         setActiveStatus(data.activeStatus);
       }
     });
@@ -51,6 +44,7 @@ const ChatHeader = ({ currentChat }) => {
       socketRef.current.off("get-active-status");
     };
   }, [otherParticipant]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -67,26 +61,50 @@ const ChatHeader = ({ currentChat }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleCreateProject = () => {
-    setShowProjectModal(true);
+  const handleEndChat = async () => {
+    try {
+      const response = await fetch(`${url}/api/adminChats/${currentChat.id}/archive`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': localStorage.getItem('token'),
+        }
+      });
+
+      if (response.ok) {
+        // Emit socket event for real-time update
+        socket.emit('chat-archived', { chatId: currentChat.id });
+        navigate('/admin/messages');
+      }
+    } catch (error) {
+      console.error('Error archiving chat:', error);
+    }
     setShowMenu(false);
   };
 
-  const handleEndChat = () => {
-    // TODO: Implement end chat logic
+  const handleDeleteChat = async () => {
+    try {
+      const response = await fetch(`${url}/api/adminChats/${currentChat.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': localStorage.getItem('token'),
+        }
+      });
+
+      if (response.ok) {
+        // Emit socket event for real-time update
+        socket.emit('chat-deleted', { chatId: currentChat.id });
+        navigate('/admin/messages');
+      }
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+    }
     setShowMenu(false);
   };
 
-  const handleDeleteChat = () => {
-    // TODO: Implement delete chat logic
-    setShowMenu(false);
-  };
   const handleVideoCall = async () => {
     try {
       const token = localStorage.getItem('token');
-      const userRole = localStorage.getItem('role');
-      const currentUserId = localStorage.getItem('uid');
-      const initiatorName = currentUser?.name || "User"; // Get the current user's name
+      const initiatorName = currentChat?.metadata?.initiator?.name || "Admin";
 
       // First create the Zoom meeting
       const meetingRequest = {
@@ -119,7 +137,7 @@ const ChatHeader = ({ currentChat }) => {
         const data = await response.json();
         
         // Send meeting details as a message in the chat
-        const messageResponse = await fetch(`${url}/api/chats/${currentChat.id}/messages`, {
+        const messageResponse = await fetch(`${url}/api/adminChats/${currentChat.id}/messages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -127,14 +145,13 @@ const ChatHeader = ({ currentChat }) => {
           },
           body: JSON.stringify({
             message: `Video call initiated by ${initiatorName}`,
-            senderId: currentUserId,
             type: 'zoom-meeting',
             meetingDetails: {
               join_url: data.join_url,
               password: data.password,
               meeting_id: data.meeting_id,
-              host_name: initiatorName, // Set the host name as the initiator
-              initiator_id: currentUserId // Store the initiator's ID
+              host_name: initiatorName,
+              initiator_id: currentUserId
             }
           })
         });
@@ -145,20 +162,20 @@ const ChatHeader = ({ currentChat }) => {
 
         // Socket emission for real-time notification
         socket.emit('video-call-invitation', {
-          chatId: currentChat?.id,
+          chatId: currentChat.id,
           meetingDetails: {
             ...data,
-            host_name: initiatorName // Include host name in socket emission
+            host_name: initiatorName
           },
           initiatorName: initiatorName,
-          recipientId: otherParticipant?.uid,
+          recipientId: otherParticipant?.id,
           initiatorRole: userRole,
           initiatorId: currentUserId
         });
 
         setMeetingDetails({
           ...data,
-          host_name: initiatorName // Include host name in modal data
+          host_name: initiatorName
         });
         setShowZoomModal(true);
       } else {
@@ -185,15 +202,16 @@ const ChatHeader = ({ currentChat }) => {
             ) : (
               <BsPersonCircle className="default-avatar" />
             )}
-            <span className="online-status"></span>
+            <span className={`online-status ${activeStatus ? 'active' : ''}`}></span>
           </div>
           <div className="user-info">
             <h3 className="user-name">{otherParticipant?.name || "User"}</h3>
             <span className="user-status">
               {!activeStatus
                 ? `Last seen ${new Date(
-                    otherParticipant.lastSeen._seconds ||
-                      otherParticipant.lastSeen
+                    otherParticipant?.lastSeen?._seconds 
+                      ? otherParticipant.lastSeen._seconds * 1000 
+                      : otherParticipant?.lastSeen
                   ).toLocaleString()}`
                 : "Online"}
             </span>
@@ -213,34 +231,13 @@ const ChatHeader = ({ currentChat }) => {
           </button>
           {showMenu && (
             <div className="context-menu" ref={menuRef}>
-              {isFreelancer && (
-                <button onClick={handleCreateProject}>
-                  Create Project Agreement
-                </button>
-              )}
-              <button onClick={handleEndChat}>End Chat</button>
+              <button onClick={handleEndChat}>Archive Chat</button>
               <button onClick={handleDeleteChat}>Delete Chat</button>
             </div>
           )}
         </div>
       </div>
 
-      <ProjectModal
-        isOpen={showProjectModal}
-        onClose={() => setShowProjectModal(false)}
-        chatId={currentChat?.id}
-        isClientView={!isFreelancer}
-        projectData={{
-          clientId: isFreelancer ? otherParticipant?.uid : currentUserId,
-          freelancerId: isFreelancer ? currentUserId : otherParticipant?.uid,
-          clientEmail: isFreelancer
-            ? otherParticipant?.email
-            : currentUser?.email,
-          freelancerEmail: isFreelancer
-            ? currentUser?.email
-            : otherParticipant?.email,
-        }}
-      />
       <ZoomMeetingModal 
         isOpen={showZoomModal}
         onClose={() => setShowZoomModal(false)}

@@ -12,45 +12,30 @@ const ChatBox = ({
   currentChat,
   currentClientId,
   currentClientName,
-  currentClientEmail,
-  currentFreelancerEmail,
-  onEscrowClick,
+  isAdminChat,
 }) => {
   const [messages, setMessages] = useState([]);
   const [photoUrl, setPhotoUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-
   const [loading, setLoading] = useState(true);
   const [files, setFiles] = useState();
   const [fileIcon, setFileIcon] = useState();
-
   const [isTyping, setIsTyping] = useState({});
   const [text, setText] = useState("");
   const uid = localStorage.getItem("uid");
-  const token = localStorage.getItem("token");
   const bottomRef = useRef();
   const socketRef = useRef();
-  const [showProjectModal, setShowProjectModal] = useState(false);
-  const [projectData, setProjectData] = useState(null);
+  const [showZoomModal, setShowZoomModal] = useState(false);
+  const [meetingDetails, setMeetingDetails] = useState(null);
   const userRole = localStorage.getItem("role");
-  const [projectStatus, setProjectStatus] = useState(null);
-  const [showProjectDetails, setShowProjectDetails] = useState(false);
-  const [showEscrowModal, setShowEscrowModal] = useState(false);
-  const [escrowData, setEscrowData] = useState(null);
-  const otherParticipant = currentChat?.participants?.find(
-    (part) => part.uid !== uid
-  );
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const messagesContainerRef = useRef(null);
   const MESSAGES_PER_PAGE = 20;
   const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
     if (chatId) {
+      console.log("Fetching messages for chatId:", chatId);
       fetchMessages();
-      fetchProjectStatus();
     }
   }, [chatId]);
 
@@ -60,7 +45,7 @@ const ChatBox = ({
 
   useEffect(() => {
     // Initialize socket connection
-    socketRef.current = io("http://localhost:8000");
+    socketRef.current = io(import.meta.env.VITE_API_URL);
 
     // Join the chat room when component mounts
     if (chatId) {
@@ -68,23 +53,15 @@ const ChatBox = ({
     }
 
     // Listen for new messages
-    socketRef.current.on("new-message", (data) => {
+    socketRef.current.on("new-admin-message", (data) => {
       if (data.chatId === chatId) {
-        setMessages((prev) => [...prev, data.message]);
-      }
-    });
-
-    // Listen for new project notifications
-    socketRef.current.on("new-project", (data) => {
-      if (data.chatId === chatId && userRole === "client") {
-        setProjectData(data.projectData);
-        setShowProjectModal(true);
+        setMessages(prev => [...prev, data.message]);
       }
     });
 
     // Listen for typing status
     socketRef.current.on("user-typing", ({ userId, isTyping }) => {
-      if (userId === otherParticipant?.uid) {
+      if (userId === currentClientId) {
         setIsTyping(isTyping);
       }
     });
@@ -96,91 +73,93 @@ const ChatBox = ({
       }
       socketRef.current.disconnect();
     };
-  }, [chatId, userRole]);
+  }, [chatId, currentClientId]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    console.log("Current token:", token);
+  }, []);
 
   const fetchMessages = async (pageNum = 1, isInitial = true) => {
     try {
-      setIsLoadingMore(true);
+      setLoading(true);
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No authentication token found");
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch(
-        `http://localhost:8000/api/chats/${chatId}?page=${pageNum}&limit=${MESSAGES_PER_PAGE}`,
+        `${import.meta.env.VITE_API_URL}/api/adminChats/${chatId}/messages?page=${pageNum}&limit=${MESSAGES_PER_PAGE}`,
         {
           headers: {
-            Authorization: `${localStorage.getItem("token")}`,
+            Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
+            "Content-Type": "application/json"
           },
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch messages");
+        const errorText = await response.text();
+        console.error("Server response:", response.status, errorText);
+        throw new Error(`Failed to fetch messages: ${errorText}`);
       }
 
       const data = await response.json();
-      const url = (data.chat?.participants?.filter(
-        (part) => part.uid !== localStorage.getItem("uid")
-      )[0]?.photoURL) || "";
-
-      setPhotoUrl(url);
       
-      // Update messages based on whether this is initial load or loading more
+      // Sort messages by timestamp in ascending order (oldest first)
+      const sortedMessages = (data.messages || []).sort((a, b) => {
+        const timeA = a.createdAt?._seconds ? a.createdAt._seconds * 1000 : new Date(a.createdAt).getTime();
+        const timeB = b.createdAt?._seconds ? b.createdAt._seconds * 1000 : new Date(b.createdAt).getTime();
+        return timeA - timeB;
+      });
+      
       if (isInitial) {
-        setMessages(data.chat.messages);
+        setMessages(sortedMessages);
       } else {
-        setMessages(prev => [...data.chat.messages, ...prev]);
+        setMessages(prev => [...prev, ...sortedMessages]);
       }
-      
-      setHasMore(data.chat.messages.length === MESSAGES_PER_PAGE);
     } catch (error) {
       console.error("Error fetching messages:", error);
     } finally {
-      setIsLoadingMore(false);
       setLoading(false);
-    }
-  };
-
-  const fetchProjectStatus = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/projects/chat/${chatId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      const data = await response.json();
-      if (data.project) {
-        setProjectStatus(data.project);
-      }
-    } catch (error) {
-      console.error("Error fetching project status:", error);
     }
   };
 
   const sendMessage = async (text, files, fileIcon) => {
     try {
+      // Use authToken instead of token
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No authentication token found");
+        throw new Error("No authentication token found");
+      }
+
       let attachments = [];
       if (files) {
         attachments = await handleFileUpload(files || []);
       }
 
       const response = await fetch(
-        `http://localhost:8000/api/chats/${chatId}/messages`,
+        `${import.meta.env.VITE_API_URL}/api/adminChats/${chatId}/messages`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
           },
           body: JSON.stringify({
-            senderId: uid,
             message: text || "",
+            type: 'text',
             attachments: attachments || [],
           }),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to send message");
+        const errorText = await response.text();
+        console.error("Server response:", response.status, errorText);
+        throw new Error(`Failed to send message: ${errorText}`);
       }
 
       // No need to fetch messages here as we'll receive the update via socket
@@ -194,7 +173,11 @@ const ChatBox = ({
     setIsUploading(true);
 
     try {
-      console.log("Starting file upload for chat:", chatId);
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const uploadPromises = Array.from(files).map(async (file) => {
         const storageRef = ref(
           storage,
@@ -218,56 +201,6 @@ const ChatBox = ({
     }
   };
 
-  const handleEscrowClick = () => {
-    setShowEscrowModal(true);
-  };
-
-  const handleEscrowOpen = (data) => {
-    setEscrowData(data);
-    setShowEscrowModal(true);
-  };
-
-  const handleDeleteProject = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/projects/${projectStatus.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 401) {
-        throw new Error("Unauthorized - Please log in again");
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to delete project");
-      }
-
-      // Clear project status and close modal if open
-      setProjectStatus(null);
-      setShowProjectDetails(false);
-
-      // Notify socket about project deletion
-      socketRef.current.emit("project-deleted", {
-        chatId,
-        projectId: projectStatus.id,
-      });
-    } catch (error) {
-      console.error("Error deleting project:", error.message);
-    }
-  };
-
   const groupMessagesByDate = (messages) => {
     const groups = {};
     
@@ -284,8 +217,8 @@ const ChatBox = ({
     return groups;
   };
 
-  if (loading) return;
-  console.log({ otherParticipant, projectStatus });
+  if (loading) return <div className="loading">Loading messages...</div>;
+
   return (
     <div className="f-chat-box">
       {!currentChat ? (
@@ -293,64 +226,11 @@ const ChatBox = ({
       ) : (
         <>
           <ChatHeader currentChat={currentChat} />
-          {projectStatus &&
-            (otherParticipant.uid === projectStatus.clientId ||
-              otherParticipant.uid === projectStatus.freelancerId) && (
-              <div className="project-status-container">
-                <div className="project-status-header">
-                  <h3>Project Status</h3>
-                  <div className="project-status-actions">
-                    <button
-                      className="view-project-btn"
-                      onClick={() => setShowProjectDetails(true)}
-                    >
-                      View Project
-                    </button>
-                    {userRole === "client" &&
-                      projectStatus?.status === "pending" && (
-                        <button
-                          className="delete-project-btn"
-                          onClick={handleDeleteProject}
-                        >
-                          Delete Project
-                        </button>
-                      )}
-                    {/* {userRole === "freelancer" &&
-                      projectStatus.status === "approved" && (
-                        <button
-                          className="create-escrow-btn"
-                          onClick={handleEscrowClick}
-                        >
-                          Create Escrow
-                        </button>
-                      )} */}
-                  </div>
-                </div>
-
-                <div className="project-status-details">
-                  <div className="status-item">
-                    <span className="status-label">Status:</span>
-                    <span className={`status-value ${projectStatus.status}`}>
-                      {projectStatus.status.charAt(0).toUpperCase() +
-                        projectStatus.status.slice(1)}
-                    </span>
-                  </div>
-                  <div className="status-item">
-                    <span className="status-label">Title:</span>
-                    <span className="status-value">{projectStatus.title}</span>
-                  </div>
-                  <div className="status-item">
-                    <span className="status-label">Budget:</span>
-                    <span className="status-value">
-                      R{projectStatus.budget}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-          <div className="f-messages-container">
+          <div className="f-messages-container" ref={messagesContainerRef}>
             {loading ? (
               <div className="loading">Loading messages...</div>
+            ) : messages.length === 0 ? (
+              <div className="no-messages">No messages yet</div>
             ) : (
               <div className="f-messages-wrapper">
                 {Object.entries(groupMessagesByDate(messages)).map(([date, dateMessages]) => (
@@ -385,63 +265,6 @@ const ChatBox = ({
               sendMessage={sendMessage}
             />
           </div>
-
-          {/* Project Details Modal */}
-          {showProjectDetails &&
-            projectStatus &&
-            (otherParticipant.uid === projectStatus.clientId ||
-              otherParticipant.uid === projectStatus.freelancerId) && (
-              <ProjectDetails
-                project={projectStatus}
-                onClose={() => setShowProjectDetails(false)}
-                isClient={userRole === "client"}
-                onEscrowOpen={handleEscrowOpen}
-              />
-            )}
-
-          {/* Existing Project Modal */}
-          {showProjectModal && (
-            <ProjectModal
-              isOpen={showProjectModal}
-              onClose={() => setShowProjectModal(false)}
-              projectData={projectData}
-              chatId={chatId}
-              isClientView={userRole === "client"}
-            />
-          )}
-
-          {showEscrowModal && (
-            <div className="escrow-modal-overlay">
-              <div className="escrow-modal">
-                <div className="escrow-modal-header">
-                  <h2>Update Escrow Agreement</h2>
-                  <button
-                    className="close-button"
-                    onClick={() => setShowEscrowModal(false)}
-                  >
-                    ×
-                  </button>
-                </div>
-                <EscrowForm
-                  onSubmit={async (escrowData) => {
-                    try {
-                      // Handle escrow submission
-                      await handleEscrowSubmit(escrowData);
-                      setShowEscrowModal(false);
-                    } catch (error) {
-                      console.error("Error creating escrow:", error);
-                    }
-                  }}
-                  freelancerId={escrowData.freelancerId}
-                  clientId={escrowData.clientId}
-                  existingEscrow={escrowData.escrowId}
-                  project={escrowData.project}
-                  isModal={true}
-                  onClose={() => setShowEscrowModal(false)}
-                />
-              </div>
-            </div>
-          )}
         </>
       )}
     </div>

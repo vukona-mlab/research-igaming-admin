@@ -1,10 +1,10 @@
 import React from "react";
 import "./MessageCard.css";
 import { Link } from 'react-router-dom';
-import { BsCameraVideo } from 'react-icons/bs';
+import { BsCameraVideo, BsExclamationTriangle, BsInfoCircle } from 'react-icons/bs';
 
 const MessageCard = ({ message }) => {
-  const isCurrentUser = message.senderId === localStorage.getItem('uid');
+  const isCurrentUser = !message.senderId === localStorage.getItem('uid');
   
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return '';
@@ -92,38 +92,67 @@ const MessageCard = ({ message }) => {
   };
 
   const renderMessageContent = () => {
-    if (message.type === 'zoom-meeting') {
-      const isHost = message.meetingDetails.initiator_id === localStorage.getItem('uid');
-      
-      return (
-        <div className="zoom-meeting-message">
-          <div className="zoom-meeting-header">
-            <BsCameraVideo size={20} />
-            <span>Video Call Invitation</span>
+    switch (message.type) {
+      case 'zoom-meeting':
+        const isHost = message.meetingDetails.initiator_id === localStorage.getItem('uid');
+        
+        return (
+          <div className="zoom-meeting-message">
+            <div className="zoom-meeting-header">
+              <BsCameraVideo size={20} />
+              <span>Video Call Invitation</span>
+            </div>
+            <div className="zoom-meeting-details">
+              <p className="host-info">
+                Host: {message.meetingDetails.host_name} {isHost && '(You)'}
+              </p>
+              <p>Meeting ID: {message.meetingDetails.meeting_id}</p>
+              <p>Password: {message.meetingDetails.password}</p>
+              <button 
+                className="join-meeting-btn"
+                onClick={() => handleJoinMeeting(message.meetingDetails.join_url)}
+              >
+                Join Meeting
+              </button>
+            </div>
           </div>
-          <div className="zoom-meeting-details">
-            <p className="host-info">
-              Host: {message.meetingDetails.host_name} {isHost && '(You)'}
-            </p>
-            <p>Meeting ID: {message.meetingDetails.meeting_id}</p>
-            <p>Password: {message.meetingDetails.password}</p>
-            <button 
-              className="join-meeting-btn"
-              onClick={() => handleJoinMeeting(message.meetingDetails.join_url)}
-            >
-              Join Meeting
-            </button>
+        );
+
+      case 'system':
+        return (
+          <div className="system-message">
+            <BsInfoCircle size={16} />
+            <span>{message.text}</span>
           </div>
-        </div>
-      );
+        );
+
+      case 'warning':
+        return (
+          <div className="warning-message">
+            <BsExclamationTriangle size={16} />
+            <span>{message.text}</span>
+          </div>
+        );
+
+      case 'user_action':
+        return (
+          <div className="action-message">
+            <span className="action-label">Admin Action:</span>
+            <span className="action-details">{message.text}</span>
+          </div>
+        );
+
+      default:
+        return message.text || message.message;
     }
-    return message.text || message.message;
   };
 
   return (
     <div
       className={`MessageCard ${isCurrentUser ? "right" : "left"} ${
-        message.type === 'project_creation' ? 'project-message' : ''
+        message.type === 'system' ? 'system' :
+        message.type === 'warning' ? 'warning' :
+        message.type === 'user_action' ? 'action' : ''
       }`}
     >
       <div className="message-wrapper">

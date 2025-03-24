@@ -1,31 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { requestForToken } from "../../../config/firebase";
+import { requestForToken, onMessageListener } from "../../../config/firebase";
 import toast, { Toaster } from "react-hot-toast";
 
 const NotifsLogic = () => {
   const [token, setToken] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const authToken = localStorage.getItem("authToken");
+  useEffect(() => {
+    const getNotifications = async () => {
+      const response = await fetch(
+        "http://localhost:8000/api/admin-notifications",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authToken,
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setNotifications(data.notifications);
+      }
+    };
+    getNotifications();
+  }, []);
   useEffect(() => {
     const getToken = async () => {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
+      try {
         const token = await requestForToken();
-        if (token) {
-          setToken(token);
-        }
+        setToken(token);
+      } catch (error) {
+        console.log(error);
       }
     };
 
     getToken();
   }, []);
 
-  return (
-    <div className="App">
-      <h1>Push Notification with React & FCM</h1>
-      <p>{token} </p>
-      {token && <h2>Notification permission enabled</h2>}
-      {!token && <h2>Need notification permission </h2>}
-    </div>
-  );
+  onMessageListener()
+    .then((payload) => {
+      console.log("recieved, payoload", payload);
+      setNotifications((prev) => [
+        ...prev,
+        {
+          title: payload?.notification?.title,
+          body: payload?.notification?.body,
+        },
+      ]);
+    })
+    .catch((err) => console.log("failed: ", err));
+
+  return <div className="NotifsLogic"></div>;
 };
 
 export default NotifsLogic;

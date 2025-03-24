@@ -1,10 +1,9 @@
 importScripts(
-  "https://www.gstatic.com/firebasejs/9.2.0/firebase-app-compat.js"
+  "https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"
 );
 importScripts(
-  "https://www.gstatic.com/firebasejs/9.2.0/firebase-messaging-compat.js"
+  "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"
 );
-
 fetch("/firebase-config.json")
   .then((response) => {
     return response.json();
@@ -12,19 +11,21 @@ fetch("/firebase-config.json")
   .then((jsContent) => {
     const config = eval(jsContent);
     firebase.initializeApp(config.firebaseConfig);
-    firebase.messaging();
-    firebase.messaging.onBackgroundMessage(function (payload) {
+    const messaging = firebase.messaging();
+    console.log(messaging);
+
+    messaging.onBackgroundMessage(function (payload) {
       console.log("Received background message ", payload);
 
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {
-        body: payload.notification.body,
-      };
+      // const notificationTitle = payload.notification.title;
+      // const notificationOptions = {
+      //   body: payload.notification.body,
+      // };
 
-      self.registration.showNotification(
-        notificationTitle,
-        notificationOptions
-      );
+      // self.registration.showNotification(
+      //   notificationTitle,
+      //   notificationOptions
+      // );
     });
   })
   .catch((error) => {

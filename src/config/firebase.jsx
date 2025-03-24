@@ -60,13 +60,13 @@ onMessage(messaging, ({ notification }) => {
     icon: notification.icon,
   });
 });
-// const onMessageListener = () =>
-//   new Promise((resolve) => {
-//     onMessage(messaging, (payload) => {
-//       console.log("payload", payload);
-//       resolve(payload);
-//     });
-//   });
+const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      console.log("payload", payload);
+      resolve(payload);
+    });
+  });
 // Add logout function
 const handleLogout = async () => {
   try {
@@ -88,6 +88,6 @@ export {
   storage,
   googleProvider,
   requestForToken,
-  //onMessageListener,
+  onMessageListener,
   handleLogout,
 };

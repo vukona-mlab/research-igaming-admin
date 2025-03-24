@@ -8,7 +8,6 @@ import ProtectedRoutes from "./components/protected/ProtectedRoutes";
 import ProtectedAuth from "./components/protected/ProtectedAuth";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import MessagesPage from "./pages/MessagingPage/MessagingPage";
-import NotifsLogic from "./components/Notifications/NotifsLogic/NotifsLogic";
 const App = () => {
   return (
     <div className="App">
@@ -22,7 +21,6 @@ const App = () => {
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/messages" element={<MessagesPage />} />
-            <Route path="/notifs" element={<NotifsLogic />} />
           </Route>
         </Routes>
       </Router>

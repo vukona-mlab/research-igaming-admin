@@ -164,7 +164,7 @@ const ProfilePage = () => {
             dob: data.profile.dob || "",
             phone: data.profile.phone || "",
             location: data.profile.location || "",
-            role: data.profile.role || "",
+            roles: data.profile.roles || "",
           });
         } else {
           console.error("Error fetching profile:", data.error);

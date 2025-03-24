@@ -237,9 +237,8 @@ const ProfilePage = () => {
       <Sidebar />
       <HeaderContainer>
         <Header>Account</Header>
-        <Button>
-          <LogoutButton>Logout</LogoutButton>
-        </Button>
+
+        <LogoutButton>Logout</LogoutButton>
       </HeaderContainer>
 
       <Tabs>

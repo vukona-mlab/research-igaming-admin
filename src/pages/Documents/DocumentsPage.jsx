@@ -13,8 +13,6 @@ const DocumentsPage = () => {
   const url = import.meta.env.VITE_API_URL;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
- 
-
   const handleSearch = (query) => {
     if (!query) {
       setFilteredDocuments(documents);
@@ -35,12 +33,16 @@ const DocumentsPage = () => {
   return (
     <div className="DocumentsPage">
       <Sidebar onToggle={setIsSidebarOpen} />
-      <div className={`main-content ${isSidebarOpen ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
+      <div
+        className={`main-content ${
+          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+        }`}
+      >
         <Navbar />
         <div className="DocumentsPageContainer">
           <SearchBar placeholder="Search" onSearch={handleSearch} />
           <DocumentHeader />
-          <DocumentsList />
+          {/* <DocumentsList /> */}
         </div>
       </div>
     </div>

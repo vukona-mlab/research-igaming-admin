@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import DocumentTabs from '../DocumentsTabs/DocumentTabs';
-import './DocumentHeader.css';
-
+import React, { useState } from "react";
+import DocumentTabs from "../DocumentsTabs/DocumentTabs";
+import "./DocumentHeader.css";
+import NotificationsPage from "../../pages/notificationPage/NotificationsPage";
 const Documents = () => {
-  const [selectedTab, setSelectedTab] = useState('Documents');
-  const [selectedFilter, setSelectedFilter] = useState('All'); // State for selected filter button
+  const [selectedTab, setSelectedTab] = useState("Documents");
+  const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter button
 
   return (
     <div className="documents-container">
@@ -18,10 +18,10 @@ const Documents = () => {
 
       {/* Buttons Section */}
       <div className="filter-buttons">
-        {['All', 'Pending', 'Approved', 'Declined'].map((filter) => (
+        {["All", "Pending", "Approved", "Declined"].map((filter) => (
           <button
             key={filter}
-            className={selectedFilter === filter ? 'selected' : ''}
+            className={selectedFilter === filter ? "selected" : ""}
             onClick={() => setSelectedFilter(filter)}
           >
             {filter}
@@ -30,14 +30,13 @@ const Documents = () => {
       </div>
 
       <div className="tab-content">
-        {selectedTab === 'Notifications'}
+        {selectedTab === "Notifications" && <NotificationsPage />}
 
-        {selectedTab === 'Documents'}
+        {selectedTab === "Documents"}
 
-        {selectedTab === 'Account'}
+        {selectedTab === "Account"}
 
-        {selectedTab === 'Reviews'}
-
+        {selectedTab === "Reviews"}
       </div>
     </div>
   );

@@ -243,12 +243,17 @@ const ProfilePage = () => {
       </HeaderContainer>
 
       <Tabs>
-        <Tab
-          active={activeTab === "Profile Information"}
-          onClick={() => setActiveTab("Profile Information")}
-        >
-          Profile Information
-        </Tab>
+        {["Profile Information", "Change Password", "Notifications"].map(
+          (tab) => (
+            <Tab
+              key={tab}
+              active={activeTab === tab}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </Tab>
+          )
+        )}
       </Tabs>
 
       {activeTab === "Profile Information" && (
@@ -301,6 +306,8 @@ const ProfilePage = () => {
           />
         </>
       )}
+      {activeTab === "Change Password" && <div>Change Password Content</div>}
+      {activeTab === "Notifications" && <NotificationsSection />}
     </Container>
   );
 };

@@ -1,18 +1,4 @@
-import React from "react";
-import NotificationsPage from "./pages/notificationPage/NotificationsPage"
-const App = () => {
-  return (
-    <div className="App">
-     
-     <NotificationsPage/>
-    </div>
-  );
-};
 
-export default App;
-
-
-/* 
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/signin/SignIn";
@@ -45,4 +31,3 @@ const App = () => {
 
 export default App;
  
-*/

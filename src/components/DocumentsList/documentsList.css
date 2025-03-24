@@ -1,0 +1,48 @@
+.container{
+    border: solid 2px #e6e6e6;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 30px;
+  }
+
+.table-container{
+    width:100%;
+    text-align: center;
+    padding-left: 30px;
+  }
+
+  .heading-container{
+    background-color: #F7F7F7;
+    height: 62px;
+    border-radius: 20pxpx;
+    width: 1178.22px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+ .table-heading{
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 150%;
+    color: #7c7c7c;
+ }
+
+ .t-data{
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 150%;
+    color: #b2b2b2;
+    margin-top: 25px;
+ }
+
+ .approved{
+    background-color: #333333;
+    color:#FFFFFF;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 7px;
+    border-radius: 12px;
+ }

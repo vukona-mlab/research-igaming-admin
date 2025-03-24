@@ -1,12 +1,13 @@
 .navbar-custom {
-  background-color: white;
+  background-color: rgba(80, 0, 0, 0);
   padding: 10px 20px;
+  width: 30rem;
 }
 
 .nav-logo img {
   width: 125px;
   height: auto;
-  margin-left: 156px;
+  margin-left: 10px;
 }
 
 .nav-right {

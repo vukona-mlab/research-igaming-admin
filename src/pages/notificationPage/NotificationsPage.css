@@ -1,0 +1,211 @@
+/* NotificationsPage.css - Updated to match first image */
+
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+}
+
+.main-section {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.main-content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* Custom Search Styling */
+
+.search-input {
+    padding: 15px 15px 5px 45px;
+    width: 100%;
+    font-size: 14px;
+}
+
+
+/* Custom Header Styling */
+
+.custom-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: none;
+    /* Changed from 1px solid #eee to none */
+    height: 60px;
+}
+
+
+/* Update the search-container class to remove the border */
+
+.search-container {
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: none;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    margin-left: 80px;
+    /* Adjusted margin to match first image */
+}
+
+.logo {
+    height: 40px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.notification-bell {
+    cursor: pointer;
+}
+
+.notification-bell img {
+    width: 24px;
+    height: 24px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+
+/* Tabs styling - Updated to match first image */
+
+.tabs-container {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+.tab {
+    padding: 15px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    color: #555;
+}
+
+.tab.active {
+    color: #0c0c0c;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #cc0000;
+}
+
+
+/* Filter buttons - Updated to match first image */
+
+.filter-buttons {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.filter-btn {
+    padding: 5px 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-btn.active-filter {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+
+/* Notification cards - Updated to match first image */
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Align items to top to match first image */
+    background-color: white;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-message {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.notification-date {
+    margin: 0;
+    font-size: 12px;
+    color: #888;
+}
+
+.delete-btn {
+    background-color: #cc0000;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-btn:hover {
+    background-color: #aa0000;
+}
+
+
+/* Additional Sidebar adjustments */
+
+
+/* This ensures the logo in the header has enough space from the sidebar */
+
+.main-section {
+    margin-left: 0;
+    /* Removed margin to match first image */
+}

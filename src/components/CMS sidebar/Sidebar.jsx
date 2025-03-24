@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import userIcon from "/public/images/user.png";
@@ -9,6 +10,7 @@ import projectIcon from "/public/images/projIcon.png";
 
 const Sidebar = ({ onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
   
   // Notify parent component when sidebar state changes
   useEffect(() => {
@@ -36,16 +38,36 @@ const Sidebar = ({ onToggle }) => {
 
         {/* Navigation Items */}
         <div className="sidebar-nav">
-          <SidebarItem imgSrc={dashIcon} text="Dashboard" isOpen={isOpen} />
-          <SidebarItem imgSrc={messageIcon} text="Messages" isOpen={isOpen} />
-          <SidebarItem imgSrc={userIcon} text="Users" isOpen={isOpen}/>
-          <SidebarItem imgSrc={projectIcon} text="Projects" isOpen={isOpen} />
+          <SidebarItem 
+            imgSrc={dashIcon} 
+            text="Dashboard" 
+            to="/admin-dashboard" 
+            isOpen={isOpen} 
+          />
+          <SidebarItem 
+            imgSrc={messageIcon} 
+            text="Messages" 
+            to="/messages" 
+            isOpen={isOpen} 
+          />
+          <SidebarItem 
+            imgSrc={userIcon} 
+            text="Users" 
+            to="/freelancer" 
+            isOpen={isOpen}
+          />
+          <SidebarItem 
+            imgSrc={projectIcon} 
+            text="Projects" 
+            to="/documents" 
+            isOpen={isOpen} 
+          />
         </div>
       </div>
 
       {/* Bottom Profile Section */}
       <div className="mb-4">
-        <div className="sidebar-profile">
+        <Link to="/profile" className="sidebar-profile">
           <img
             src="https://randomuser.me/api/portraits/women/44.jpg"
             alt="User"
@@ -57,23 +79,21 @@ const Sidebar = ({ onToggle }) => {
               <p className="text-xs text-gray-300">anita@commerce.com</p>
             </div>
           )}
-        </div>
+        </Link>
       </div>
     </div>
   );
 };
 
 // Sidebar Item Component
-const SidebarItem = ({ imgSrc, text, isOpen, active }) => {
+const SidebarItem = ({ imgSrc, text, isOpen, to }) => {
   return (
-    <div
-      className={`sidebar-item ${active ? "active" : ""}`}
-    >
+    <Link to={to} className="sidebar-item">
       {imgSrc && (
         <img src={imgSrc} alt="Icon" className="sidebar-icon" />
       )}
       {isOpen && <span className="sidebar-text">{text}</span>}
-    </div>
+    </Link>
   );
 };
 

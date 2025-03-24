@@ -2,227 +2,186 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    height: 72px;
-  }
-  
-  .chat-header-left {
+    padding: 16px 24px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.chat-header-left {
     display: flex;
     align-items: center;
-    gap: 15px;
-  }
-  
-  .avatar-wrapper {
+    gap: 16px;
+}
+
+.avatar-wrapper {
     position: relative;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #e0e0e0;
-  }
-  
-  .online-status {
+    border: 2px solid #E5E7EB;
+}
+
+.online-status {
     position: absolute;
     bottom: 2px;
     right: 2px;
-    width: 10px;
-    height: 10px;
-    background-color: #44b700;
+    width: 12px;
+    height: 12px;
+    background-color: #10B981;
     border-radius: 50%;
-    border: 2px solid #ffffff;
-  }
-  
-  .user-info {
+    border: 2px solid #FFFFFF;
+}
+
+.online-status.active {
+    background-color: #10B981;
+}
+
+.user-info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-  }
-  
-  .user-name {
+    gap: 4px;
+}
+
+.user-name {
     font-size: 16px;
     font-weight: 600;
-    color: #2c3e50;
+    color: #111827;
     margin: 0;
-    line-height: 1.2;
-  }
-  
-  .user-status {
+}
+
+.user-status {
     font-size: 13px;
-    color: #7f8c8d;
-    margin-top: 2px;
-  }
-  
-  .chat-header-right {
+    color: #6B7280;
+}
+
+.chat-header-right {
     display: flex;
     align-items: center;
-    gap: 15px;
-    position: relative;
-  }
-  
-  .options-button {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    color: #7f8c8d;
-    border-radius: 50%;
+    gap: 12px;
+}
+
+.video-call-button,
+.options-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease;
-  }
-  
-  .options-button:hover {
-    background-color: #f5f6f7;
-    color: #2c3e50;
-  }
-  
-  .default-avatar {
     width: 40px;
     height: 40px;
-    color: #7f8c8d;
-  }
-  
-  .context-menu {
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #6B7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.video-call-button:hover,
+.options-button:hover {
+    background-color: #F3F4F6;
+    color: #111827;
+}
+
+.context-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     right: 0;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     min-width: 180px;
-    padding: 8px 0;
-  }
-  
-  .context-menu button {
-    display: block;
+    overflow: hidden;
+}
+
+.context-menu button {
     width: 100%;
-    padding: 8px 16px;
+    padding: 10px 16px;
     text-align: left;
     background: none;
     border: none;
     font-size: 14px;
-    color: #2c3e50;
+    color: #374151;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .context-menu button:hover {
-    background-color: #f5f6f7;
-  }
-  
-  .video-call-button {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    color: #7f8c8d;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease;
-    font-size: 24px;
-  }
-  
-  .video-call-button:hover {
-    background-color: #f5f6f7;
-    color: #2c3e50;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
+    transition: all 0.2s ease;
+}
+
+.context-menu button:hover {
+    background-color: #F3F4F6;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
     .chat-header {
-      padding: 12px 16px;
-      height: 64px;
+        padding: 12px 16px;
     }
-  
+
+    .avatar-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
     .user-avatar {
-      width: 36px;
-      height: 36px;
+        width: 40px;
+        height: 40px;
     }
-  
+
     .user-name {
-      font-size: 15px;
+        font-size: 15px;
     }
-  
+
     .user-status {
-      font-size: 12px;
+        font-size: 12px;
     }
-  
-    .default-avatar {
-      width: 36px;
-      height: 36px;
-    }
-  
-    .context-menu {
-      min-width: 160px;
-    }
-  
-    .context-menu button {
-      padding: 10px 16px;
-      font-size: 13px;
-    }
-  
-    .video-call-button {
-      font-size: 20px;
-    }
-  }
-  
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
     .chat-header {
-      background-color: #ffffff;
-      border-bottom-color: #e0e0e0;
+        background-color: #ffffff;
+        border-bottom-color: #e0e0e0;
     }
-  
+
     .user-name {
-      color: #2c3e50;
+        color: #2c3e50;
     }
-  
+
     .user-status {
-      color: #7f8c8d;
+        color: #7f8c8d;
     }
-  
+
     .options-button {
-      color: #7f8c8d;
+        color: #7f8c8d;
     }
-  
+
     .options-button:hover {
-      background-color: #f5f6f7;
-      color: #2c3e50;
+        background-color: #f5f6f7;
+        color: #2c3e50;
     }
-  
+
     .online-status {
-      border-color: #ffffff;
+        border-color: #ffffff;
     }
-  
-    .default-avatar {
-      color: #7f8c8d;
+
+    .online-status.active {
+        background-color: #ffffff;
     }
-  
+
     .context-menu {
-      background-color: #ffffff;
-      border-color: #e0e0e0;
+        background-color: #ffffff;
+        border-color: #e0e0e0;
     }
-  
+
     .context-menu button {
-      color: #2c3e50;
+        color: #2c3e50;
     }
-  
+
     .context-menu button:hover {
-      background-color: #f5f6f7;
+        background-color: #f5f6f7;
     }
-  }
+}

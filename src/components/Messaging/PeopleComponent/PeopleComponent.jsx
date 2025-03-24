@@ -7,6 +7,7 @@ const PeopleComponent = ({
   setcurrentChatId,
   setCurrentClientId,
   setCurrentClientName,
+  isAdminChat,
 }) => {
   const formatLastMessageTime = (timestamp) => {
     if (!timestamp) return '';
@@ -68,26 +69,29 @@ const PeopleComponent = ({
         <div>No chats</div>
       ) : (
         <>
-          <div className="people-title">People</div>
+          <div className="people-title">Chats</div>
           <div className="people-list">
-            {people.map((person, i) => {
-              const otherParticipant = person.participants?.find(
-                (part) => part.uid !== localStorage.getItem("uid")
-              );
+            {people.map((chat, i) => {
+              const otherParticipant = chat.metadata?.target;
               
               return (
                 <div key={i} className="person-card-container">
                   <PersonCard
-                    chatId={person.id}
-                    otherId={otherParticipant?.uid || ""}
+                    chatId={chat.id}
+                    otherId={otherParticipant?.id || ""}
                     name={otherParticipant?.name || ""}
-                    lastMessage={person.lastMessage}
-                    timestamp={person.updatedAt}
+                    lastMessage={chat.lastMessage}
+                    timestamp={chat.updatedAt}
                     photoUrl={otherParticipant?.photoURL || ""}
                     setcurrentChatId={setcurrentChatId}
                     setCurrentClientId={setCurrentClientId}
                     setCurrentClientName={setCurrentClientName}
-                    formattedTime={formatLastMessageTime(person.updatedAt)}
+                    formattedTime={formatLastMessageTime(chat.updatedAt)}
+                    isAdminChat={isAdminChat}
+                    chatType={chat.chatType}
+                    status={chat.status}
+                    priority={chat.priority}
+                    category={chat.category}
                   />
                 </div>
               );

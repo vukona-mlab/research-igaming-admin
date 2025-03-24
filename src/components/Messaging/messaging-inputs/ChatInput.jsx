@@ -20,12 +20,17 @@ const ChatInput = ({
     setFileIcon(URL.createObjectURL(event.target.files[0]));
   };
 
-  const handleSendClick = () => {
+  const handleSendClick = async () => {
     if (text.trim() || files || fileIcon) {
-      sendMessage(text, files, fileIcon);
-      setText("");
-      setFiles(null);
-      setFileIcon(null);
+      try {
+        await sendMessage(text, files, fileIcon);
+        setText("");
+        setFiles(null);
+        setFileIcon(null);
+      } catch (error) {
+        console.error("Error in handleSendClick:", error);
+        // Optionally show an error message to the user
+      }
     }
   };
 

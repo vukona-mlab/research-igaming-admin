@@ -10,6 +10,8 @@ import {
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getMessaging, getToken, onMessage } from "firebase/messaging/sw";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -35,7 +37,32 @@ await setPersistence(auth, inMemoryPersistence);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
+const messaging = getMessaging(app);
 
+const requestForToken = () => {
+  return getToken(messaging, { vapidKey: import.meta.env.VITE_API_VAPID_KEY })
+    .then((currentToken) => {
+      if (currentToken) {
+        console.log("current token for client: ", currentToken);
+        // Perform any other neccessary action with the token
+      } else {
+        // Show permission request UI
+        console.log(
+          "No registration token available. Request permission to generate one."
+        );
+      }
+    })
+    .catch((err) => {
+      console.log("An error occurred while retrieving token. ", err);
+    });
+};
+const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      console.log("payload", payload);
+      resolve(payload);
+    });
+  });
 // Add logout function
 const handleLogout = async () => {
   try {
@@ -51,4 +78,12 @@ const handleLogout = async () => {
   }
 };
 
-export { auth, db, storage, googleProvider, handleLogout };
+export {
+  auth,
+  db,
+  storage,
+  googleProvider,
+  requestForToken,
+  onMessageListener,
+  handleLogout,
+};

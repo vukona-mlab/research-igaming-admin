@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getMessaging, getToken, onMessage } from "firebase/messaging/sw";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -43,26 +43,32 @@ const requestForToken = () => {
   return getToken(messaging, { vapidKey: import.meta.env.VITE_API_VAPID_KEY })
     .then((currentToken) => {
       if (currentToken) {
-        console.log("current token for client: ", currentToken);
-        // Perform any other neccessary action with the token
+        return currentToken;
       } else {
-        // Show permission request UI
-        console.log(
+        alert(
           "No registration token available. Request permission to generate one."
         );
+        return null;
       }
     })
     .catch((err) => {
-      console.log("An error occurred while retrieving token. ", err);
+      alert("An error occurred while retrieving token - " + err);
+      return null;
     });
 };
-const onMessageListener = () =>
-  new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      console.log("payload", payload);
-      resolve(payload);
-    });
+onMessage(messaging, ({ notification }) => {
+  new Notification(notification.title, {
+    body: notification.body,
+    icon: notification.icon,
   });
+});
+// const onMessageListener = () =>
+//   new Promise((resolve) => {
+//     onMessage(messaging, (payload) => {
+//       console.log("payload", payload);
+//       resolve(payload);
+//     });
+//   });
 // Add logout function
 const handleLogout = async () => {
   try {
@@ -84,6 +90,6 @@ export {
   storage,
   googleProvider,
   requestForToken,
-  onMessageListener,
+  //onMessageListener,
   handleLogout,
 };

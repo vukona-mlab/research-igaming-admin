@@ -6,6 +6,7 @@ import NotificationsSection from "../../components/profile/NotificationsSection/
 import Sidebar from "../../components/CMS sidebar/Sidebar";
 import NavBar from "../../components/common/NavBar/NavBar";
 import LogoutButton from "../../components/LogOut/Logout";
+import ChangePasswordForm from "../../components/ResetPassword/ChangePasswordForm";
 
 const Container = styled.div`
   max-width: 1250px;
@@ -122,7 +123,6 @@ const ProfilePage = () => {
     phone: "",
     location: "",
     role: "",
-    profilePicture: "",
   });
 
   const [image, setImage] = useState(null);
@@ -198,15 +198,15 @@ const ProfilePage = () => {
       const formData = new FormData();
 
       // Add the form fields to the FormData object
-      Object.keys(formValues).forEach(key => {
-        if (key !== 'profilePicture') {
+      Object.keys(formValues).forEach((key) => {
+        if (key !== "profilePicture") {
           formData.append(key, formValues[key]);
         }
       });
 
       // Add the profile picture if it exists
       if (image) {
-        formData.append('profilePicture', image);
+        formData.append("profilePicture", image);
       }
 
       const response = await fetch(
@@ -241,9 +241,8 @@ const ProfilePage = () => {
       <Sidebar />
       <HeaderContainer>
         <Header>Account</Header>
-        <Button>
-          <LogoutButton>Logout</LogoutButton>
-        </Button>
+
+        <LogoutButton>Logout</LogoutButton>
       </HeaderContainer>
 
       <Tabs>
@@ -300,21 +299,22 @@ const ProfilePage = () => {
                 value={formValues[key]}
                 onChange={(e) => handleInputChange(key, e.target.value)}
                 InputLabelProps={{ shrink: true }}
-                disabled={!isEditing || key === "email" || key === "role"}
+                disabled={
+                  !isEditing ||
+                  key === "email" ||
+                  key === "role" ||
+                  key === "profilePicture"
+                }
               />
             ))}
           </FormGrid>
-          {/* File input for profile picture */}
-          <input
-            type="file"
-            id="profilePictureInput"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ visibility: "hidden" }} // Hide the input field
-          />
         </>
       )}
-      {activeTab === "Change Password" && <div>Change Password Content</div>}
+      {activeTab === "Change Password" && (
+        <div>
+          <ChangePasswordForm />
+        </div>
+      )}
       {activeTab === "Notifications" && <NotificationsSection />}
     </Container>
   );

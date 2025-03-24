@@ -1,4 +1,4 @@
-.MessagingPageC {
+.DocumentsPage {
     min-height: 100vh;
     background: #be353500;
   }
@@ -64,4 +64,15 @@
   .filter-buttons .selected {
     background: #333333;
     color: white;
+  }
+
+  .DocumentsPageContainer .container {
+    margin-left: 0px;
+    width: calc(100% + 30px);
+    margin-top: 40px;
+    max-width: auto;
+  }
+
+  .DocumentsPageContainer .table-container {
+    width: 100%;
   }

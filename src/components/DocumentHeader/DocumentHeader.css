@@ -1,0 +1,24 @@
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+  }
+  
+  .filter-buttons button {
+    background: transparent;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100px;
+    text-align: center;
+  }
+
+  .filter-buttons .selected {
+    background: #333333;
+    color: white;
+    border: 1px solid #333333;
+  }
+  

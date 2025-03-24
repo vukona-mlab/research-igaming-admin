@@ -122,6 +122,7 @@ const ProfilePage = () => {
     phone: "",
     location: "",
     role: "",
+    profilePicture: "",
   });
 
   const [image, setImage] = useState(null);
@@ -165,6 +166,7 @@ const ProfilePage = () => {
             phone: data.profile.phone || "",
             location: data.profile.location || "",
             role: data.profile.role || "",
+            profilePicture: data.profile.profilePicture || "",
           });
         } else {
           console.error("Error fetching profile:", data.error);
@@ -192,22 +194,21 @@ const ProfilePage = () => {
 
   // Save updated data to the backend
   const handleSave = async () => {
-    const formData = new FormData();
-
-    // Add the form fields to the FormData object
-    for (let key in formValues) {
-      if (key !== "profilePicture") {
-        // Don't include profilePicture as it will be handled separately
-        formData.append(key, formValues[key]);
-      }
-    }
-
-    if (image) {
-      formData.append("profilePicture", image);
-    }
-
     try {
-      const { email, role, ...formData } = formValues; // Exclude email and role from updates
+      const formData = new FormData();
+
+      // Add the form fields to the FormData object
+      Object.keys(formValues).forEach(key => {
+        if (key !== 'profilePicture') {
+          formData.append(key, formValues[key]);
+        }
+      });
+
+      // Add the profile picture if it exists
+      if (image) {
+        formData.append('profilePicture', image);
+      }
+
       const response = await fetch(
         `http://localhost:8000/api/auth/admin/profile/${adminId}`,
         {
@@ -223,11 +224,14 @@ const ProfilePage = () => {
 
       if (response.ok) {
         alert("Profile updated successfully!");
+        setIsEditing(false);
       } else {
         console.error("Update failed:", result.error);
+        alert("Failed to update profile. Please try again.");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      alert("An error occurred while updating your profile.");
     }
   };
 
@@ -268,9 +272,13 @@ const ProfilePage = () => {
                 src={
                   image
                     ? URL.createObjectURL(image)
-                    : formValues.profilePicture || "images/empty.jpeg"
+                    : formValues.profilePicture || "/images/empty.jpeg"
                 }
                 alt="Profile"
+                onError={(e) => {
+                  e.target.onerror = null; // Prevent infinite loop
+                  e.target.src = "/images/empty.jpeg";
+                }}
               />
               <CameraIcon>📷</CameraIcon>
             </ProfileImage>

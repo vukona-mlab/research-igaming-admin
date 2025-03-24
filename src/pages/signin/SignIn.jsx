@@ -35,7 +35,7 @@ const SignIn = () => {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       // Redirect to dashboard or admin page
-      navigate("/admin-dashboard");
+      navigate("/profile");
     } catch (err) {
       setError(err.message);
     }

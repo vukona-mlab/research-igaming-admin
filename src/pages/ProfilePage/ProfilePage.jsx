@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import NotificationsSection from "../../components/profile/NotificationsSection/NotificationsSection";
+import Sidebar from "../../components/CMS sidebar/Sidebar";
+import NavBar from "../../components/common/NavBar/NavBar";
+import LogoutButton from "../../components/LogOut/Logout";
+
 const Container = styled.div`
   max-width: 1250px;
-  margin-left: 180px;
+  margin-left: 210px;
   padding: 20px;
   font-family: Arial, sans-serif;
 `;
 
-/* Flex container for Header + Logout Button */
+/* Header + Logout */
 const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -24,17 +28,12 @@ const Header = styled.h1`
   color: #888;
 `;
 
-/* Flex container for Profile Section + Edit Button */
+/* Profile Section + Edit Button */
 const ProfileContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-`;
-
-const ProfileSection = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const ProfileImage = styled.div`
@@ -88,11 +87,6 @@ const FormGrid = styled(Box)`
   gap: 15px;
 `;
 
-const RequiredIndicator = styled.span`
-  color: red;
-  margin-left: 4px;
-`;
-
 const Button = styled.button`
   width: 100px;
   height: 32px;
@@ -102,224 +96,218 @@ const Button = styled.button`
   border-radius: 10px;
   font-size: 14px;
   cursor: pointer;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-/* Logout Button */
-const LogoutButton = styled(Button)`
-  background: black;
-  border: 1px solid black;
-`;
-
-/* Edit/Save Button */
 const EditButton = styled(Button)`
   margin-left: auto;
 `;
 
-/* Save Button (Appears Below Form) */
 const SaveButton = styled(Button)`
   margin-top: 20px;
 `;
 
 const ProfilePage = () => {
+  const user = JSON.parse(localStorage.getItem("user")); // Parse the user object
+  const adminId = user?.uid || ""; // Extract adminId safely
+  const token = localStorage.getItem("authToken");
+
   const [formValues, setFormValues] = useState({
-    name: "John",
-    surname: "Doe",
-    email: "johndoe@example.com",
-    dob: "1990-01-01",
-    phone: "+1234567890",
-    location: "New York, USA",
-    role: "Software Engineer",
+    name: "",
+    surname: "",
+    email: "",
+    dob: "",
+    phone: "",
+    location: "",
+    role: "",
   });
 
+  const [image, setImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState("Profile Information"); // Track active tab
+  const [activeTab, setActiveTab] = useState("Profile Information");
 
-  const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
+  // Handle file input change
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+    }
   };
 
+  // Fetch profile data when page loads
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!adminId || !token) {
+        console.error("Missing adminId or token");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/auth/admin/profile/${adminId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          setFormValues({
+            name: data.profile.name || "",
+            surname: data.profile.surname || "",
+            email: data.profile.email || "",
+            dob: data.profile.dob || "",
+            phone: data.profile.phone || "",
+            location: data.profile.location || "",
+            role: data.profile.role || "",
+          });
+        } else {
+          console.error("Error fetching profile:", data.error);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    };
+
+    fetchProfile();
+  }, [adminId, token]);
+
+  // Handle input changes
   const handleInputChange = (field, value) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Toggle edit mode
   const toggleEdit = () => {
+    if (isEditing) {
+      handleSave();
+    }
     setIsEditing(!isEditing);
+  };
+
+  // Save updated data to the backend
+  const handleSave = async () => {
+    const formData = new FormData();
+
+    // Add the form fields to the FormData object
+    for (let key in formValues) {
+      if (key !== "profilePicture") {
+        // Don't include profilePicture as it will be handled separately
+        formData.append(key, formValues[key]);
+      }
+    }
+
+    if (image) {
+      formData.append("profilePicture", image);
+    }
+
+    try {
+      const { email, role, ...formData } = formValues; // Exclude email and role from updates
+      const response = await fetch(
+        `http://localhost:8000/api/auth/admin/profile/${adminId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Profile updated successfully!");
+      } else {
+        console.error("Update failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
     <Container>
-      {/* Header + Logout Button */}
+      <NavBar />
+      <Sidebar />
       <HeaderContainer>
         <Header>Account</Header>
-        <LogoutButton>Logout</LogoutButton>
+        <Button>
+          <LogoutButton>Logout</LogoutButton>
+        </Button>
       </HeaderContainer>
 
-      {/* Tabs */}
       <Tabs>
-        <Tab
-          active={activeTab === "Profile Information"}
-          onClick={() => handleTabClick("Profile Information")}
-        >
-          Profile Information
-        </Tab>
-        <Tab
-          active={activeTab === "Change Password"}
-          onClick={() => handleTabClick("Change Password")}
-        >
-          Change Password
-        </Tab>
-        <Tab
-          active={activeTab === "Notifications"}
-          onClick={() => handleTabClick("Notifications")}
-        >
-          Notifications
-        </Tab>
+        {["Profile Information", "Change Password", "Notifications"].map(
+          (tab) => (
+            <Tab
+              key={tab}
+              active={activeTab === tab}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </Tab>
+          )
+        )}
       </Tabs>
 
-      {/* Conditional Rendering of Content */}
       {activeTab === "Profile Information" && (
         <>
-          {/* Profile Section + Edit Button */}
           <ProfileContainer>
-            <ProfileSection>
-              <ProfileImage>
-                <img src="images/Rectangle 258.png" alt="Profile" />
-                <CameraIcon>📷</CameraIcon>
-              </ProfileImage>
-            </ProfileSection>
+            <ProfileImage
+              onClick={() =>
+                document.getElementById("profilePictureInput").click()
+              }
+            >
+              <img
+                src={
+                  image
+                    ? URL.createObjectURL(image)
+                    : formValues.profilePicture || "images/empty.jpeg"
+                }
+                alt="Profile"
+              />
+              <CameraIcon>📷</CameraIcon>
+            </ProfileImage>
             <EditButton onClick={toggleEdit}>
               {isEditing ? "Save" : "Edit"}
             </EditButton>
           </ProfileContainer>
 
-          {/* Form Fields */}
           <FormGrid
             component="form"
             sx={{ "& .MuiTextField-root": { m: 1, width: "100%" } }}
             noValidate
             autoComplete="off"
           >
-            <TextField
-              label={
-                <>
-                  Name{" "}
-                  {!formValues.name && <RequiredIndicator>*</RequiredIndicator>}
-                </>
-              }
-              value={formValues.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
-
-            <TextField
-              label={
-                <>
-                  Surname{" "}
-                  {!formValues.surname && (
-                    <RequiredIndicator>*</RequiredIndicator>
-                  )}
-                </>
-              }
-              value={formValues.surname}
-              onChange={(e) => handleInputChange("surname", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
-
-            <TextField
-              label={
-                <>
-                  Email{" "}
-                  {!formValues.email && (
-                    <RequiredIndicator>*</RequiredIndicator>
-                  )}
-                </>
-              }
-              type="email"
-              value={formValues.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
-
-            <TextField
-              label={
-                <>
-                  Date of Birth{" "}
-                  {!formValues.dob && <RequiredIndicator>*</RequiredIndicator>}
-                </>
-              }
-              value={formValues.dob}
-              onChange={(e) => handleInputChange("dob", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
-
-            <TextField
-              label={
-                <>
-                  Phone{" "}
-                  {!formValues.phone && (
-                    <RequiredIndicator>*</RequiredIndicator>
-                  )}
-                </>
-              }
-              value={formValues.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
-
-            <TextField
-              label={
-                <>
-                  Location{" "}
-                  {!formValues.location && (
-                    <RequiredIndicator>*</RequiredIndicator>
-                  )}
-                </>
-              }
-              value={formValues.location}
-              onChange={(e) => handleInputChange("location", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
-
-            <TextField
-              label={
-                <>
-                  Role{" "}
-                  {!formValues.role && <RequiredIndicator>*</RequiredIndicator>}
-                </>
-              }
-              value={formValues.role}
-              onChange={(e) => handleInputChange("role", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-            />
+            {Object.keys(formValues).map((key) => (
+              <TextField
+                key={key}
+                label={key.charAt(0).toUpperCase() + key.slice(1)}
+                value={formValues[key]}
+                onChange={(e) => handleInputChange(key, e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                disabled={!isEditing || key === "email" || key === "role"}
+              />
+            ))}
           </FormGrid>
+          {/* File input for profile picture */}
+          <input
+            type="file"
+            id="profilePictureInput"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ visibility: "hidden" }} // Hide the input field
+          />
         </>
       )}
-
-      {activeTab === "Change Password" && (
-        <div>
-          <h2>Change Password</h2>
-          <p>Password change functionality will be implemented here.</p>
-        </div>
-      )}
-
-      {activeTab === "Notifications" && (
-        <div>
-          <h2>Notifications</h2>
-          <p>Notification settings will be implemented here.</p>
-          <NotificationsSection />
-        </div>
-      )}
+      {activeTab === "Change Password" && <div>Change Password Content</div>}
+      {activeTab === "Notifications" && <NotificationsSection />}
     </Container>
   );
 };

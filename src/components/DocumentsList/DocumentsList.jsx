@@ -14,14 +14,29 @@ export default function DocumentsList() {
     const getDocuments = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:8000/api/documents');
+        const token = localStorage.getItem('authToken');
+        console.log('Token:', token);
+
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
+        const response = await axios.get('http://localhost:8000/api/documents', {
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          }
+        });
         console.log('Fetched documents:', response.data.usersDocuments);
     
-        // Flatten documents into a single array
         const allDocuments = response.data.usersDocuments.flat();
         setDocuments(allDocuments);
       } catch (error) {
         console.error("Error fetching documents:", error);
+        if (error.response) {
+          console.error('Error response:', error.response.data);
+          console.error('Error status:', error.response.status);
+        }
         setError(error.message);
       } finally {
         setLoading(false);

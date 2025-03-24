@@ -4,8 +4,9 @@ import Navbar from "../../components/common/NavBar/NavBar";
 import SearchBar from "../../components/common/SearchBar/SearchBar";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
 import DocumentHeader from "../../components/DocumentHeader/DocumentHeader1";
+import DocumentsList from "../../components/DocumentsList/DocumentsList";
 
-const MessagingPage = () => {
+const DocumentsPage1 = () => {
   const [loading, setLoading] = useState(false);
   const [filteredDocuments, setFilteredDocuments] = useState([]);
   const token = localStorage.getItem("token");
@@ -32,17 +33,18 @@ const MessagingPage = () => {
   }
 
   return (
-    <div className="MessagingPageC">
+    <div className="DocumentsPage">
       <Sidebar onToggle={setIsSidebarOpen} />
       <div className={`main-content ${isSidebarOpen ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
         <Navbar />
-        <div className="messagePageContainer">
+        <div className="DocumentsPageContainer">
           <SearchBar placeholder="Search" onSearch={handleSearch} />
           <DocumentHeader />
+          <DocumentsList />
         </div>
       </div>
     </div>
   );
 };
 
-export default MessagingPage;
+export default DocumentsPage1;

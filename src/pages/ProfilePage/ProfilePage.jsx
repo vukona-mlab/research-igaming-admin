@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import NotificationsSection from "../../components/profile/NotificationsSection/NotificationsSection";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
+import NavBar from "../../components/common/NavBar/NavBar";
+import LogoutButton from "../../components/LogOut/Logout";
 
 const Container = styled.div`
   max-width: 1250px;
@@ -112,8 +114,6 @@ const ProfilePage = () => {
   const adminId = user?.uid || ""; // Extract adminId safely
   const token = localStorage.getItem("authToken");
 
-  console.log(localStorage.getItem("authToken"));
-
   const [formValues, setFormValues] = useState({
     name: "",
     surname: "",
@@ -124,8 +124,17 @@ const ProfilePage = () => {
     role: "",
   });
 
+  const [image, setImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("Profile Information");
+
+  // Handle file input change
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+    }
+  };
 
   // Fetch profile data when page loads
   useEffect(() => {
@@ -183,17 +192,30 @@ const ProfilePage = () => {
 
   // Save updated data to the backend
   const handleSave = async () => {
+    const formData = new FormData();
+
+    // Add the form fields to the FormData object
+    for (let key in formValues) {
+      if (key !== "profilePicture") {
+        // Don't include profilePicture as it will be handled separately
+        formData.append(key, formValues[key]);
+      }
+    }
+
+    if (image) {
+      formData.append("profilePicture", image);
+    }
+
     try {
-      const { email, role, ...updateData } = formValues; // Exclude email and role from updates
+      const { email, role, ...formData } = formValues; // Exclude email and role from updates
       const response = await fetch(
         `http://localhost:8000/api/auth/admin/profile/${adminId}`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `${token}`,
           },
-          body: JSON.stringify(updateData),
+          body: formData,
         }
       );
 
@@ -211,10 +233,13 @@ const ProfilePage = () => {
 
   return (
     <Container>
+      <NavBar />
       <Sidebar />
       <HeaderContainer>
         <Header>Account</Header>
-        <Button>Logout</Button>
+        <Button>
+          <LogoutButton>Logout</LogoutButton>
+        </Button>
       </HeaderContainer>
 
       <Tabs>
@@ -229,8 +254,19 @@ const ProfilePage = () => {
       {activeTab === "Profile Information" && (
         <>
           <ProfileContainer>
-            <ProfileImage>
-              <img src="images/Rectangle 258.png" alt="Profile" />
+            <ProfileImage
+              onClick={() =>
+                document.getElementById("profilePictureInput").click()
+              }
+            >
+              <img
+                src={
+                  image
+                    ? URL.createObjectURL(image)
+                    : formValues.profilePicture || "images/empty.jpeg"
+                }
+                alt="Profile"
+              />
               <CameraIcon>📷</CameraIcon>
             </ProfileImage>
             <EditButton onClick={toggleEdit}>
@@ -255,6 +291,14 @@ const ProfilePage = () => {
               />
             ))}
           </FormGrid>
+          {/* File input for profile picture */}
+          <input
+            type="file"
+            id="profilePictureInput"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ visibility: "hidden" }} // Hide the input field
+          />
         </>
       )}
     </Container>

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import './documentsList.css';
 import axios from 'axios';
+import { FaEllipsisV } from "react-icons/fa";
 
 export default function DocumentsList() {
   const [loading, setLoading] = useState(false);
@@ -66,7 +67,8 @@ export default function DocumentsList() {
           <td className="t-data">{document.date || 'N/A'}</td>
           <td className="t-data">{document.document || 'N/A'}</td>
           <td className="t-data"><div className="action-buttons">
-            <div className="approved">{document.actions}</div>
+            <div className="approved">{document.actions}Approved</div>
+            <div className="dotted-menu"><FaEllipsisV /></div>
             </div></td>
         </tr>
        ))}

@@ -10,8 +10,49 @@ import projectIcon from "/public/images/projIcon.png";
 
 const Sidebar = ({ onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [profilePicture, setProfilePicture] = useState("");
   const location = useLocation();
   
+  useEffect(() => {
+    // Fetch user data from localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setUserData(user);
+      fetchProfile(user.uid);
+    }
+  }, []);
+
+  const fetchProfile = async (adminId) => {
+    const token = localStorage.getItem('authToken');
+    
+    if (!adminId || !token) {
+      console.error("Missing adminId or token");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/auth/admin/profile/${adminId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setProfilePicture(data.profile.profilePicture || "");
+      } else {
+        console.error("Error fetching profile:", data.error);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
   // Notify parent component when sidebar state changes
   useEffect(() => {
     if (onToggle) {
@@ -69,14 +110,14 @@ const Sidebar = ({ onToggle }) => {
       <div className="mb-4">
         <Link to="/profile" className="sidebar-profile">
           <img
-            src="https://randomuser.me/api/portraits/women/44.jpg"
+            src={profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.displayName || '')}&background=random`}
             alt="User"
             className="profile-img"
           />
-          {isOpen && (
+          {isOpen && userData && (
             <div className="profile-details">
-              <p className="font-semibold">Anita Cruz</p>
-              <p className="text-xs text-gray-300">anita@commerce.com</p>
+              <p className="font-semibold">{userData.displayName}</p>
+              <p className="text-xs text-gray-300">{userData.email}</p>
             </div>
           )}
         </Link>

@@ -165,7 +165,7 @@ const ProfilePage = () => {
             dob: data.profile.dob || "",
             phone: data.profile.phone || "",
             location: data.profile.location || "",
-            role: data.profile.role || "",
+            role: data.profile.roles || "",
             profilePicture: data.profile.profilePicture || "",
           });
         } else {

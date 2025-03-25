@@ -4,12 +4,23 @@ import SearchBar from "../SearchBar/SearchBar";
 
 const ProjectTab = ({
   listName,
-  tab,
   handleTabChange,
-  handleListNameChange,
   onSearch,
 }) => {
-  const [currentTab, setCurrentTab] = useState("All");
+  const [currentTab, setCurrentTab] = useState("all"); // Default to lowercase 'all'
+
+  const getTabClass = (status) => {
+    return currentTab === status.toLowerCase()
+      ? "lh-active-tabs-tab lh-currentTab"
+      : "lh-active-tabs-tab";
+  };
+
+  const handleClick = (status) => {
+    const statusLowerCase = status.toLowerCase(); // Ensure status is in lowercase
+    setCurrentTab(statusLowerCase); // Update the active tab
+    handleTabChange(statusLowerCase); // Pass the lowercase status
+    console.log(`Selected status: ${statusLowerCase}`); // Log the status
+  };
 
   return (
     <div className="ListHeader">
@@ -18,7 +29,7 @@ const ProjectTab = ({
         <button
           className="lh-view-list-btn"
           onClick={() => {
-            handleListNameChange(
+            handleTabChange(
               listName === "Clients" ? "Freelancers" : "Clients"
             );
           }}
@@ -31,61 +42,15 @@ const ProjectTab = ({
         <div className="lh-active-tabs-heading">{listName}</div>
         <div className="lh-active-tabs-tabs-status">
           <div className="lh-active-tabs-div">
-            <button
-              className={
-                currentTab === "All"
-                  ? "lh-active-tabs-tab lh-currentTab"
-                  : "lh-active-tabs-tab"
-              }
-              onClick={() => {
-                setCurrentTab("All");
-                handleTabChange("All");
-              }}
-            >
-              All
-            </button>
-
-            <button
-              className={
-                currentTab === "Completed"
-                  ? "lh-active-tabs-tab lh-currentTab"
-                  : "lh-active-tabs-tab"
-              }
-              onClick={() => {
-                setCurrentTab("Completed");
-                handleTabChange("Completed");
-              }}
-            >
-              Completed
-            </button>
-
-            <button
-              className={
-                currentTab === "Pending"
-                  ? "lh-active-tabs-tab lh-currentTab"
-                  : "lh-active-tabs-tab"
-              }
-              onClick={() => {
-                setCurrentTab("Pending");
-                handleTabChange("Pending");
-              }}
-            >
-              Pending
-            </button>
-
-            <button
-              className={
-                currentTab === "Cancelled"
-                  ? "lh-active-tabs-tab lh-currentTab"
-                  : "lh-active-tabs-tab"
-              }
-              onClick={() => {
-                setCurrentTab("Cancelled");
-                handleTabChange("Cancelled");
-              }}
-            >
-              Cancelled
-            </button>
+            {["all", "completed", "pending", "cancelled"].map((status) => (
+              <button
+                key={status}
+                className={getTabClass(status)}
+                onClick={() => handleClick(status)}
+              >
+                {status.charAt(0).toUpperCase() + status.slice(1)} {/* Capitalize first letter */}
+              </button>
+            ))}
           </div>
         </div>
       </div>

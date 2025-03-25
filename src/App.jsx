@@ -1,9 +1,8 @@
-
 import React from "react";
 import DocumentsList from "./components/DocumentsList/DocumentsList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/signin/SignIn";
-//import AdminDashboard from "./AdminDashboard";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import FreelancerList from "./pages/FreelancerList/FreelanceList";
 import DocumentsPage from "./pages/Documents/DocumentsPage";
 import ProtectedRoutes from "./components/protected/ProtectedRoutes";
@@ -27,6 +26,7 @@ const App = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/projects" element={<ProjectPage />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Route>
         </Routes>
       </Router>
@@ -35,5 +35,3 @@ const App = () => {
 };
 
 export default App;
- 
-

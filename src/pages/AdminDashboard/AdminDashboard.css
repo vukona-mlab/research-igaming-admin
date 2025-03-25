@@ -1,0 +1,17 @@
+.AdminDashboard {
+  margin: 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+  padding: 0px;
+  background-color: rgb(255, 255, 255);
+}
+.amd-main-container {
+  transition: all 0.3s ease;
+  width: calc(100% - 70px);
+  margin-left: 70px;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+}

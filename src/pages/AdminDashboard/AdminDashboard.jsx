@@ -8,6 +8,10 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="amd-main-container">
         <NavBar />
+        <div className="amd-main-content">
+          <div className="amd-graphs-container"></div>
+          <div className="amd-notifications-container"></div>
+        </div>
       </div>
     </div>
   );

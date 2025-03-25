@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ListHeader from "../../components/common/ListHeader/ListHeader";
+import NavBar from "../../components/common/NavBar/NavBar";
 import {
   Box,
   Typography,
@@ -13,7 +14,7 @@ import {
   Paper,
   CircularProgress,
 } from "@mui/material";
-import Sidebar from "../../components/CMS sidebar/Sidebar"
+import Sidebar from "../../components/CMS sidebar/Sidebar";
 
 const FreelanceList = () => {
   const [filter, setFilter] = useState("All");
@@ -29,19 +30,30 @@ const FreelanceList = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        
+        // Update endpoints based on your route definitions
         const endpoint = viewMode === "freelancers" 
           ? "http://localhost:8000/api/freelancers" 
-          : "http://localhost:8000/api/clients";
+          : "http://localhost:8000/api/clients"; // Endpoint for fetching clients
         
-        const response = await fetch(endpoint);
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Include JWT token
+            'Content-Type': 'application/json'
+          }
+        });
+        
         if (!response.ok) {
           throw new Error(`Failed to fetch ${viewMode}: ${response.statusText}`);
         }
+        
         const data = await response.json();
         
         if (viewMode === "freelancers") {
           setFreelancers(data.freelancers || []);
         } else {
+          // Handle clients data - the API returns clients in an object with clients property
           setClients(data.clients || []);
         }
         setError(null);
@@ -108,6 +120,7 @@ const FreelanceList = () => {
       const searchLower = searchTerm.toLowerCase();
       return (
         (item.name && item.name.toLowerCase().includes(searchLower)) ||
+        (item.displayName && item.displayName.toLowerCase().includes(searchLower)) ||
         (item.email && item.email.toLowerCase().includes(searchLower)) ||
         (item.jobTitle && item.jobTitle.toLowerCase().includes(searchLower))
       );
@@ -115,6 +128,9 @@ const FreelanceList = () => {
 
   return (
     <Box sx={{ width: "90%", margin: "auto", padding: 3 }}>
+      <NavBar/>
+      {/* Top Header with Profile Section and notification icon - Moved to the top */}
+      
       {/* Sidebar Component */}
       <Sidebar/>
       
@@ -127,22 +143,6 @@ const FreelanceList = () => {
         onSearch={handleSearch}
       />
       
-      {/* Profile Section with custom notification icon */}
-      <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
-        <Box 
-          component="img" 
-          src="/public/images//carbon_notification-filled.png" 
-          alt="Notifications" 
-          sx={{ 
-            height: 24, 
-            width: 24, 
-            color: "#ffbf00",
-            cursor: "pointer"
-          }} 
-        />
-        <Avatar alt="Profile" src="/public/images/Frame 1149.png" />
-      </Box>
-
       {/* Error Message */}
       {error && (
         <Box sx={{ textAlign: "center", my: 4 }}>
@@ -157,17 +157,17 @@ const FreelanceList = () => {
         </Box>
       ) : (
         /* Table */
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} className="overlord">
+          <Table className="table-container">
             <TableHead>
-              <TableRow>
-                <TableCell><b>Name</b></TableCell>
-                <TableCell><b>Position</b></TableCell>
-                <TableCell><b>Phone</b></TableCell>
-                <TableCell><b>Email</b></TableCell>
-                <TableCell><b>DOB</b></TableCell>
-                <TableCell><b>Start Date</b></TableCell>
-                <TableCell><b>Status</b></TableCell>
+              <TableRow className="table-heading">
+                <TableCell className="t-heading"><b>Name</b></TableCell>
+                <TableCell className="t-heading"><b>Position</b></TableCell>
+                <TableCell className="t-heading"><b>Phone</b></TableCell>
+                <TableCell className="t-heading"><b>Email</b></TableCell>
+                <TableCell className="t-heading"><b>DOB</b></TableCell>
+                <TableCell className="t-heading"><b>Start Date</b></TableCell>
+                <TableCell className="t-heading"><b>Status</b></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -180,18 +180,18 @@ const FreelanceList = () => {
               ) : (
                 filteredData.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell>
+                    <TableCell className="t-data">
                       <Box display="flex" alignItems="center" gap={2}>
                         <Avatar src={item.profilePicture || "/default-avatar.jpg"} />
                         {item.displayName || item.name || "No Name"}
                       </Box>
                     </TableCell>
-                    <TableCell>{item.jobTitle || "Client"}</TableCell>
-                    <TableCell>{item.phoneNumber || "N/A"}</TableCell>
-                    <TableCell>{item.email || "N/A"}</TableCell>
-                    <TableCell>{item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}</TableCell>
-                    <TableCell>{item.createdAt ? formatDate(item.createdAt) : "N/A"}</TableCell>
-                    <TableCell>
+                    <TableCell className="t-data">{item.jobTitle || (viewMode === "clients" ? "Client" : "N/A")}</TableCell>
+                    <TableCell className="t-data">{item.phoneNumber || "N/A"}</TableCell>
+                    <TableCell className="t-data">{item.email || "N/A"}</TableCell>
+                    <TableCell className="t-data">{item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}</TableCell>
+                    <TableCell className="t-data">{item.createdAt ? formatDate(item.createdAt) : "N/A"}</TableCell>
+                    <TableCell className="t-data">
                       <Box
                         sx={{
                           display: "flex",

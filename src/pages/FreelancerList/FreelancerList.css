@@ -1,23 +1,23 @@
-.overlord{
+.overlord {
     border: solid 1px #e6e6e6;
     border-radius: 7px;
     overflow: hidden;
-  padding: 20px;
-  }
+    padding: 20px;
+}
 
-.table-container{
-    width:100%;
+.table-container {
+    width: 100%;
     text-align: center;
     padding-left: 30px;
-  }
+}
 
-.table-heading{
+.table-heading {
     padding: 15px 20px;
     border-bottom: 2px solid #e6e6e6;
     margin-bottom: 20px;
-  }
+}
 
-  .t-heading{
+.t-heading {
     font-family: 'Lato';
     font-weight: 500;
     font-size: 18px;
@@ -25,10 +25,9 @@
     color: #3A3541;
     border-bottom: 1px solid #e6e6e6;
     margin-bottom: 20px;
-    
-  }
+}
 
-  .t-data{
+.t-data {
     font-family: 'Lato';
     font-weight: 400;
     font-size: 14.22px;
@@ -36,4 +35,56 @@
     line-height: 100%;
     padding: 12px;
     /* border-bottom: 1px solid #e6e6e6; */
-  }
+}
+
+
+/* Navbar override styles */
+
+.freelancer-container .navbar-toggle,
+.freelancer-container .navbar-toggler {
+    display: none !important;
+}
+
+
+/* Force navbar to remain expanded */
+
+.freelancer-container~.navbar-collapse,
+.freelancer-container~nav .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto !important;
+}
+
+
+/* Ensure navbar elements stay visible */
+
+.freelancer-container~nav .navbar-nav,
+.freelancer-container~.navbar .navbar-nav {
+    flex-direction: row !important;
+}
+
+
+/* Keep the right navigation section visible */
+
+.freelancer-container~nav .nav-right {
+    display: flex !important;
+    align-items: center;
+}
+
+
+/* Make the table responsive */
+
+@media screen and (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+        display: block;
+        width: 100%;
+    }
+    /* Hide hamburger when FreelancerList is active */
+    body .navbar-toggler {
+        display: none !important;
+    }
+    /* Keep navbar expanded */
+    body .navbar-collapse {
+        display: flex !important;
+    }
+}

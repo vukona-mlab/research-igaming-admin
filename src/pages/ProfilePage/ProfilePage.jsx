@@ -9,10 +9,23 @@ import LogoutButton from "../../components/LogOut/Logout";
 import ChangePasswordForm from "../../components/ResetPassword/ChangePasswordForm";
 
 const Container = styled.div`
-  max-width: 1250px;
+  max-width: 1600px;
   margin-left: 210px;
   padding: 20px;
   font-family: Arial, sans-serif;
+
+  @media (max-width: 1200px) {
+    margin-left: 150px;
+  }
+
+  @media (max-width: 992px) {
+    margin-left: 50px;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 10px;
+  }
 `;
 
 /* Header + Logout */
@@ -21,12 +34,21 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+
+   @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Header = styled.h1`
   font-size: 24px;
   font-weight: bold;
   color: #888;
+
+   @media (max-width: 768px) {
+    font-size: 20px;
+  }
 `;
 
 /* Profile Section + Edit Button */
@@ -35,6 +57,11 @@ const ProfileContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const ProfileImage = styled.div`
@@ -48,12 +75,18 @@ const ProfileImage = styled.div`
   overflow: hidden;
   margin-right: 15px;
   position: relative;
-
+  cursor:pointer;
+  
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+  }
+
+  @media (max-width: 768px) {
+    width: 60px;
+    height: 60px;
   }
 `;
 
@@ -72,6 +105,11 @@ const Tabs = styled.div`
   display: flex;
   border-bottom: 2px solid #eee;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Tab = styled.div`
@@ -80,12 +118,20 @@ const Tab = styled.div`
   font-size: 16px;
   color: #888;
   border-bottom: ${(props) => (props.active ? "3px solid #B90909" : "none")};
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+  }
 `;
 
 const FormGrid = styled(Box)`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
+
+   @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Button = styled.button`
@@ -100,15 +146,18 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 90px;
+    height: 30px;
+  }
 `;
 
 const EditButton = styled(Button)`
   margin-left: auto;
 `;
 
-const SaveButton = styled(Button)`
-  margin-top: 20px;
-`;
+
 
 const ProfilePage = () => {
   const user = JSON.parse(localStorage.getItem("user")); // Parse the user object
@@ -292,21 +341,27 @@ const ProfilePage = () => {
             noValidate
             autoComplete="off"
           >
-            {Object.keys(formValues).map((key) => (
-              <TextField
-                key={key}
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={formValues[key]}
-                onChange={(e) => handleInputChange(key, e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                disabled={
-                  !isEditing ||
-                  key === "email" ||
-                  key === "role" ||
-                  key === "profilePicture"
-                }
-              />
-            ))}
+            {Object.keys(formValues).map((key) => {
+              if (key === "profilePicture") {
+                return null; // Skip rendering the profilePicture field
+              }
+              return (
+                <TextField
+                  key={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={formValues[key]}
+                  onChange={(e) => handleInputChange(key, e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  disabled={
+                    !isEditing ||
+                    key === "email" ||
+                    key === "role" ||
+                    key === "profilePicture"
+                  }
+                  type={key === "dob" ? "date" : "text"} // Set 'dob' to 'date' input type
+                />
+              );
+            })}
           </FormGrid>
 
           {/* Add the input for profile picture */}

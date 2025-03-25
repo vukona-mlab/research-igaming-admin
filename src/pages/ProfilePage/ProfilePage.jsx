@@ -309,6 +309,7 @@ const ProfilePage = () => {
                     key === "role" ||
                     key === "profilePicture"
                   }
+                  type={key === "dob" ? "date" : "text"} // Set 'dob' to 'date' input type
                 />
               );
             })}

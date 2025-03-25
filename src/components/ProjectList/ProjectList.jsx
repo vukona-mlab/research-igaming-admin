@@ -11,7 +11,7 @@ export default function ProjectList({ statusFilter }) {
   const [clients, setClients] = useState({});
   const [freelancers, setFreelancers] = useState({});
   const [error, setError] = useState(null);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function ProjectList({ statusFilter }) {
     fetchProjects();
     fetchClients();
     fetchFreelancers();
-  }, [navigate]);
+  }, [statusFilter, navigate]);
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -37,7 +37,12 @@ export default function ProjectList({ statusFilter }) {
         headers: { Authorization: token },
       });
 
-      setProjects(response.data.projects);
+      // Filter projects based on selected status
+      const filteredProjects = response.data.projects.filter(
+        (project) => project.status?.toLowerCase() === statusFilter.toLowerCase()
+      );
+
+      setProjects(filteredProjects);
     } catch (error) {
       console.error("Error fetching projects:", error);
       setError(error.message);
@@ -117,14 +122,6 @@ export default function ProjectList({ statusFilter }) {
     }
   };
 
-  // ✅ Apply status filter
-  const filteredProjects =
-    statusFilter === "all"
-      ? projects
-      : projects.filter(
-          (project) => project.status?.toLowerCase() === statusFilter.toLowerCase()
-        );
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -132,7 +129,7 @@ export default function ProjectList({ statusFilter }) {
     <div className="project-container">
       <div className="overlord">
         <table className="table-container">
-          <tbody>
+          <thead>
             <tr className="table-heading">
               <th>Client</th>
               <th>Project Ref</th>
@@ -141,33 +138,43 @@ export default function ProjectList({ statusFilter }) {
               <th>Date</th>
               <th>Actions</th>
             </tr>
-            {filteredProjects.map((project) => {
-              const client = clients[project.clientId] || {};
-              const freelancer = freelancers[project.freelancerId] || {};
-              return (
-                <tr key={project.id}>
-                  <td>{client.name || "Unknown"}</td>
-                  <td>{project.id}</td>
-                  <td>{freelancer.name || "N/A"}</td>
-                  <td>
-                    <div className={`status ${project.status?.toLowerCase() || "pending"}`}>
-                      {project.status}
-                    </div>
-                  </td>
-                  <td>{formatDate(project.createdAt)}</td>
-                  <td>
-                    <div className="action-buttons">
-                      <Button variant="contained" size="large">
-                        View
-                      </Button>
-                      <IconButton size="small">
-                        <MoreVertIcon />
-                      </IconButton>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+          </thead>
+          <tbody>
+            {projects.length > 0 ? (
+              projects.map((project) => {
+                const client = clients[project.clientId] || {};
+                const freelancer = freelancers[project.freelancerId] || {};
+                return (
+                  <tr key={project.id}>
+                    <td>{client.name || "Unknown"}</td>
+                    <td>{project.id}</td>
+                    <td>{freelancer.name || "N/A"}</td>
+                    <td>
+                      <div className={`status ${project.status?.toLowerCase() || "pending"}`}>
+                        {project.status}
+                      </div>
+                    </td>
+                    <td>{formatDate(project.createdAt)}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <Button variant="contained" size="large">
+                          View
+                        </Button>
+                        <IconButton size="small">
+                          <MoreVertIcon />
+                        </IconButton>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center", padding: "10px" }}>
+                  No projects found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

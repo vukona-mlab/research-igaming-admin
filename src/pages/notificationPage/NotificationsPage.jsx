@@ -185,8 +185,8 @@ const NotificationsPage = () => {
   );
   console.log({ token });
   return (
-    <div className="dashboard-layout">
-      <div className="main-section">
+    <div className="noti-dashboard-layout">
+      <div className="noti-main-section">
         {/* Replace NavBar with custom header */}
         {/* <Sidebar/> */}
         {/* <div className="navbar-wrapper">
@@ -198,7 +198,7 @@ const NotificationsPage = () => {
           <SearchBar placeholder="Search" onSearch={handleSearch} />
         </div> */}
 
-        <div className="main-content">
+        <div className="noti-main-content">
           {/* <div className="tabs-container">
             <div
               className={`tab ${activeTab === "Notifications" ? "active" : ""}`}
@@ -226,9 +226,9 @@ const NotificationsPage = () => {
             </div>
           </div> */}
 
-          <div className="filter-buttons">
+          <div className="noti-filter-buttons">
             <button
-              className={`filter-btn ${
+              className={`noti-filter-btn ${
                 filterType === "All" ? "active-filter" : ""
               }`}
               onClick={() => handleFilterChange("All")}
@@ -236,7 +236,7 @@ const NotificationsPage = () => {
               All
             </button>
             <button
-              className={`filter-btn ${
+              className={`noti-filter-btn ${
                 filterType === "Read" ? "active-filter" : ""
               }`}
               onClick={() => handleFilterChange("Read")}
@@ -244,7 +244,7 @@ const NotificationsPage = () => {
               Read
             </button>
             <button
-              className={`filter-btn ${
+              className={`noti-filter-btn ${
                 filterType === "Unread" ? "active-filter" : ""
               }`}
               onClick={() => handleFilterChange("Unread")}

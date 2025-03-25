@@ -1,17 +1,18 @@
 /* NotificationsPage.css - Updated to match first image */
 
-.dashboard-layout {
+
+.noti-dashboard-layout {
     display: flex;
     height: 100vh;
 }
 
-.main-section {
+.noti-main-section {
     flex: 1;
     overflow-y: auto;
     background-color: #ffffff;
 }
 
-.main-content {
+.noti-main-content {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -128,13 +129,13 @@
 
 /* Filter buttons - Updated to match first image */
 
-.filter-buttons {
+.noti-filter-buttons {
     display: flex;
     margin-bottom: 20px;
     gap: 10px;
 }
 
-.filter-btn {
+.noti-filter-btn {
     padding: 5px 15px;
     background-color: white;
     border: 1px solid #ddd;
@@ -143,7 +144,7 @@
     font-size: 14px;
 }
 
-.filter-btn.active-filter {
+.noti-filter-btn.active-filter {
     background-color: #333;
     color: white;
     border-color: #333;
@@ -205,7 +206,7 @@
 
 /* This ensures the logo in the header has enough space from the sidebar */
 
-.main-section {
+.noti-main-section {
     margin-left: 0;
     /* Removed margin to match first image */
 }

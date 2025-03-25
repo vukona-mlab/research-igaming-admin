@@ -17,17 +17,19 @@ const Documents = () => {
       />
 
       {/* Buttons Section */}
-      <div className="filter-buttons">
-        {["All", "Pending", "Approved", "Declined"].map((filter) => (
-          <button
-            key={filter}
-            className={selectedFilter === filter ? "selected" : ""}
-            onClick={() => setSelectedFilter(filter)}
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
+      {selectedTab !== "Notifications" && selectedTab !== "Account" && (
+        <div className="filter-buttons">
+          {["All", "Pending", "Approved", "Declined"].map((filter) => (
+            <button
+              key={filter}
+              className={selectedFilter === filter ? "selected" : ""}
+              onClick={() => setSelectedFilter(filter)}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="tab-content">
         {selectedTab === "Notifications" && <NotificationsPage />}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./ProjectList.css";
-import ProfileCard from "../Profilecard/ProfileCard";
+//import ProfileCard from "../Profilecard/ProfileCard";
 import PersonIcon from "@mui/icons-material/Person";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton, Menu, MenuItem } from "@mui/material";

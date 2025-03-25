@@ -18,7 +18,7 @@ const ProfileCard = ({
   onClose 
 }) => {
   return (
-    <div className="profile-card-overlay">
+    <div className="profile-card-overlay" >
       <div className="profile-card-container">
         <button className="close-button" onClick={onClose}>×</button>
         <div className="profile-card">

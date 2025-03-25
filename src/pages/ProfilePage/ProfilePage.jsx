@@ -308,6 +308,14 @@ const ProfilePage = () => {
               />
             ))}
           </FormGrid>
+
+          {/* Add the input for profile picture */}
+          <input
+            id="profilePictureInput"
+            type="file"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
         </>
       )}
       {activeTab === "Change Password" && (

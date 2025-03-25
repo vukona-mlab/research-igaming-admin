@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import DocumentTabs from "../DocumentsTabs/DocumentTabs";
 import "./DocumentHeader.css";
 import NotificationsPage from "../../pages/notificationPage/NotificationsPage";
+import DocumentsList from "../DocumentsList/DocumentsList";
 const Documents = () => {
-  const [selectedTab, setSelectedTab] = useState("Documents");
+  const [selectedTab, setSelectedTab] = useState("Notifications");
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter button
 
   return (
@@ -34,7 +35,7 @@ const Documents = () => {
       <div className="tab-content">
         {selectedTab === "Notifications" && <NotificationsPage />}
 
-        {selectedTab === "Documents"}
+        {selectedTab === "Documents" && <DocumentsList />}
 
         {selectedTab === "Account"}
 

@@ -10,7 +10,7 @@ const NotificationsPage = () => {
   const [activeTab, setActiveTab] = useState("Notifications");
   const [filterType, setFilterType] = useState("All");
   const [searchQuery, setSearchQuery] = useState(""); // Add state for search
-  const navigate = useNavigate(); // For redirection after login
+  const navigation = useNavigate(); // For redirection after login
 
   // const [notifications, setNotifications] = useState([
   //   {
@@ -85,9 +85,7 @@ const NotificationsPage = () => {
           },
         }
       );
-      console.log(response);
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         setNotifications(data && data.notifications);
@@ -97,9 +95,9 @@ const NotificationsPage = () => {
     }
   };
   const handleDeleteNotification = async (id) => {
-    console.log({ id, authToken });
     try {
-      const response = await fetch(
+      console.log("clicked", id, authToken);
+      const res = await fetch(
         `http://localhost:8000/api/admin-notifications/${id}`,
         {
           method: "DELETE",
@@ -108,24 +106,36 @@ const NotificationsPage = () => {
           },
         }
       );
-      console.log({ response });
 
-      const data = await response.json();
-      console.log({ response, data });
-
-      if (response.ok) {
-        console.log("refresh");
-        navigate(0);
-
-        // setNotifications(
-        //   notifications.filter((notification) => notification.id !== id)
-        // );
+      if (res.ok) {
+        setNotifications(
+          notifications.filter((notification) => notification.id !== id)
+        );
       }
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   };
+  const readNotification = async (id) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/admin-notifications/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: authToken,
+            "Content-Length": "0",
+          },
+        }
+      );
 
+      if (res.ok) {
+        getNotifications();
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
@@ -148,7 +158,7 @@ const NotificationsPage = () => {
     // Apply search query if exists
     if (searchQuery) {
       filtered = filtered.filter((notification) =>
-        notification.message.toLowerCase().includes(searchQuery.toLowerCase())
+        notification.body.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -183,7 +193,7 @@ const NotificationsPage = () => {
       </div>
     </div>
   );
-  console.log({ token });
+  console.log({ notifications });
   return (
     <div className="noti-dashboard-layout">
       <div className="noti-main-section">
@@ -255,15 +265,35 @@ const NotificationsPage = () => {
 
           <div className="notifications-list">
             {getFilteredNotifications().map((notification) => (
-              <div key={notification.id} className="notification-card">
+              <div
+                key={notification.id}
+                className="notification-card"
+                onClick={
+                  notification.read
+                    ? () => console.log()
+                    : () =>
+                        readNotification(
+                          notification.id || notification.data.id
+                        )
+                }
+              >
                 <div className="notification-content">
                   <p className="notification-date">{notification.title}</p>
                   <p className="notification-message">{notification.body}</p>
-                  {/* <p className="notification-date">{notification.date}</p> */}
+                  <p className="notification-date">
+                    {notification.date &&
+                      notification.date._seconds &&
+                      new Date(notification.date._seconds).toDateString()}
+                  </p>
                 </div>
+
                 <button
                   className="delete-btn"
-                  onClick={() => handleDeleteNotification(notification.id)}
+                  onClick={() =>
+                    handleDeleteNotification(
+                      notification.id || notification.data.id
+                    )
+                  }
                 >
                   Delete
                 </button>

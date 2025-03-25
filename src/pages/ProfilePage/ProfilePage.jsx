@@ -48,6 +48,7 @@ const ProfileImage = styled.div`
   overflow: hidden;
   margin-right: 15px;
   position: relative;
+  cursor: pointer;
 
   img {
     width: 100%;

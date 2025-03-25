@@ -1,5 +1,5 @@
 .NotificationCard {
-  width: 315px;
+  width: 325px;
   height: 200px;
   border: 2px solid #0000000d;
   padding: 15px;
@@ -21,7 +21,7 @@
 }
 
 .nc-ref {
-  width: 168px;
+  width: 200px;
   height: 31px;
   background-color: black;
   color: white;
@@ -31,6 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 5px 15px;
 }
 .nc-header {
   display: flex;

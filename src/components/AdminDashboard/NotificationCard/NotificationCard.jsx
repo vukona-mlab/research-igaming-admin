@@ -11,7 +11,7 @@ const NotificationCard = ({ notification }) => {
         </div>
       </div>
       <div className="nc-body">{notification.body}</div>
-      <div className="nc-ref">{notification.id}</div>
+      <div className="nc-ref">REF:{notification.id}</div>
     </div>
   );
 };

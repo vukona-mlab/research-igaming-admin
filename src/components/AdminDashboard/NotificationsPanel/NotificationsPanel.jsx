@@ -3,6 +3,7 @@ import NotificationCard from "../NotificationCard/NotificationCard";
 import "./NotificationsPanel.css";
 const NotificationsPanel = () => {
   const [notifications, setNotifications] = useState([]);
+  const [currentTab, setCurrentTab] = useState("All");
   const authToken = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -36,6 +37,44 @@ const NotificationsPanel = () => {
         <div className="np-title">Notifications</div>
         <div className="np-mark">Mark all as read</div>
       </div>
+      <div className="lh-active-tabs-div">
+        <button
+          className={
+            currentTab === "All"
+              ? "lh-active-tabs-tab lh-currentTab"
+              : "lh-active-tabs-tab"
+          }
+          onClick={() => {
+            setCurrentTab("All");
+          }}
+        >
+          All
+        </button>
+        <button
+          className={
+            currentTab === "Alerts"
+              ? "lh-active-tabs-tab lh-currentTab"
+              : "lh-active-tabs-tab"
+          }
+          onClick={() => {
+            setCurrentTab("Alerts");
+          }}
+        >
+          Alerts
+        </button>
+        <button
+          className={
+            currentTab === "Updates"
+              ? "lh-active-tabs-tab lh-currentTab"
+              : "lh-active-tabs-tab"
+          }
+          onClick={() => {
+            setCurrentTab("Updates");
+          }}
+        >
+          Updates
+        </button>
+      </div>
       <div className="np-tabs"></div>
       <div className="np-body">
         {notifications.length > 0 ? (
@@ -45,6 +84,9 @@ const NotificationsPanel = () => {
         ) : (
           <div>No notifications</div>
         )}
+      </div>
+      <div>
+        <button className="np-see-all">See all</button>
       </div>
     </div>
   );

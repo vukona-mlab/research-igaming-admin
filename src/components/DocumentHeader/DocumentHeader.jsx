@@ -3,7 +3,7 @@ import DocumentTabs from "../DocumentsTabs/DocumentTabs";
 import "./DocumentHeader.css";
 import NotificationsPage from "../../pages/notificationPage/NotificationsPage";
 import DocumentsList from "../DocumentsList/DocumentsList";
-const Documents = () => {
+const Documents = ({ searchTerm }) => {
   const [selectedTab, setSelectedTab] = useState("Notifications");
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter button
 
@@ -33,7 +33,9 @@ const Documents = () => {
       )}
 
       <div className="tab-content">
-        {selectedTab === "Notifications" && <NotificationsPage />}
+        {selectedTab === "Notifications" && (
+          <NotificationsPage searchTerm={searchTerm} />
+        )}
 
         {selectedTab === "Documents" && <DocumentsList />}
 

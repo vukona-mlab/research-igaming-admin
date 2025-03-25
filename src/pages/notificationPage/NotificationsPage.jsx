@@ -6,7 +6,7 @@ import Sidebar from "../../components/CMS sidebar/Sidebar";
 import { requestForToken, onMessageListener } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
-const NotificationsPage = () => {
+const NotificationsPage = ({ searchTerm }) => {
   const [activeTab, setActiveTab] = useState("Notifications");
   const [filterType, setFilterType] = useState("All");
   const [searchQuery, setSearchQuery] = useState(""); // Add state for search
@@ -38,9 +38,13 @@ const NotificationsPage = () => {
   const [token, setToken] = useState("");
   const [notifications, setNotifications] = useState([]);
   const authToken = localStorage.getItem("authToken");
+
   useEffect(() => {
     getNotifications();
   }, []);
+  useEffect(() => {
+    getFilteredNotifications();
+  }, [searchTerm]);
   useEffect(() => {
     const getToken = async () => {
       try {
@@ -156,9 +160,9 @@ const NotificationsPage = () => {
     }
 
     // Apply search query if exists
-    if (searchQuery) {
+    if (searchTerm) {
       filtered = filtered.filter((notification) =>
-        notification.body.toLowerCase().includes(searchQuery.toLowerCase())
+        notification.body.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 

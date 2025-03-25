@@ -12,8 +12,11 @@ const DocumentsPage = () => {
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_API_URL;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [documents, setDocuments] = useState([]);
 
   const handleSearch = (query) => {
+    setSearchTerm(query);
     if (!query) {
       setFilteredDocuments(documents);
     } else {
@@ -29,7 +32,6 @@ const DocumentsPage = () => {
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
-
   return (
     <div className="DocumentsPage">
       <Sidebar onToggle={setIsSidebarOpen} />
@@ -41,7 +43,7 @@ const DocumentsPage = () => {
         <Navbar />
         <div className="DocumentsPageContainer">
           <SearchBar placeholder="Search" onSearch={handleSearch} />
-          <DocumentHeader />
+          <DocumentHeader searchTerm={searchTerm} />
           {/* <DocumentsList /> */}
         </div>
       </div>

@@ -292,21 +292,26 @@ const ProfilePage = () => {
             noValidate
             autoComplete="off"
           >
-            {Object.keys(formValues).map((key) => (
-              <TextField
-                key={key}
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={formValues[key]}
-                onChange={(e) => handleInputChange(key, e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                disabled={
-                  !isEditing ||
-                  key === "email" ||
-                  key === "role" ||
-                  key === "profilePicture"
-                }
-              />
-            ))}
+            {Object.keys(formValues).map((key) => {
+              if (key === "profilePicture") {
+                return null; // Skip rendering the profilePicture field
+              }
+              return (
+                <TextField
+                  key={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={formValues[key]}
+                  onChange={(e) => handleInputChange(key, e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  disabled={
+                    !isEditing ||
+                    key === "email" ||
+                    key === "role" ||
+                    key === "profilePicture"
+                  }
+                />
+              );
+            })}
           </FormGrid>
 
           {/* Add the input for profile picture */}

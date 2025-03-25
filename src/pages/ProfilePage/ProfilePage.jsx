@@ -117,7 +117,7 @@ const Tab = styled.div`
   cursor: pointer;
   font-size: 16px;
   color: #888;
-  border-bottom: ${(props) => (props.active ? "3px solid #B90909" : "none")};
+  border-bottom: ${(props) => (props.isactive ? "3px solid #B90909" : "none")};
 
   @media (max-width: 768px) {
     padding: 8px 12px;
@@ -299,7 +299,7 @@ const ProfilePage = () => {
           (tab) => (
             <Tab
               key={tab}
-              active={activeTab === tab}
+              isactive={activeTab === tab}
               onClick={() => setActiveTab(tab)}
             >
               {tab}

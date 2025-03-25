@@ -17,33 +17,117 @@ const ChatHeader = ({ currentChat }) => {
   const [showZoomModal, setShowZoomModal] = useState(false);
   const [meetingDetails, setMeetingDetails] = useState(null);
   const socketRef = useRef();
+  const [userProfile, setUserProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [profilePicture, setProfilePicture] = useState(null);
 
   // Get user role and ID from localStorage
   const userRole = localStorage.getItem("role");
   const currentUserId = localStorage.getItem("uid");
 
-  // Get other participant from chat metadata
-  const otherParticipant = currentChat?.metadata?.target;
+  // Get selected participant from chat data
+  const selectedParticipant = currentChat?.metadata?.target;
+  console.log('Current chat in ChatHeader:', currentChat);
+  console.log('Selected participant in ChatHeader:', selectedParticipant);
 
   useEffect(() => {
-    if (otherParticipant && otherParticipant.activeStatus) {
-      setActiveStatus(otherParticipant.activeStatus);
-    }
-  }, [otherParticipant]);
+    const fetchUserProfile = async () => {
+      if (!selectedParticipant?.id) {
+        console.log('No selected participant ID found');
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          console.error('No authentication token found');
+          return;
+        }
+
+        // Format the token with Bearer prefix if not already present
+        const authToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+
+        // Try admin profile endpoint first
+        let response = await fetch(
+          `${url}/api/auth/admin/profile/${selectedParticipant.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: authToken,
+            },
+          }
+        );
+
+        // If admin profile fails, try user profile endpoint
+        if (!response.ok && response.status === 404) {
+          response = await fetch(
+            `${url}/api/auth/profile/${selectedParticipant.id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: authToken,
+              },
+            }
+          );
+        }
+
+        if (!response.ok) {
+          console.error('Failed to fetch user profile:', response.status);
+          return;
+        }
+
+        const data = await response.json();
+        const profile = data.profile || data.user;
+        console.log('Fetched user profile:', profile);
+
+        // Update user profile with all available data
+        const updatedProfile = {
+          ...profile,
+          name: profile.displayName || profile.name || selectedParticipant.name,
+          profilePicture: profile.profilePicture || selectedParticipant.profilePicture,
+          activeStatus: profile.activeStatus || selectedParticipant.activeStatus
+        };
+
+        setUserProfile(updatedProfile);
+        setProfilePicture(updatedProfile.profilePicture);
+        setActiveStatus(updatedProfile.activeStatus || false);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        // Fallback to selectedParticipant data if fetch fails
+        if (selectedParticipant) {
+          setUserProfile(selectedParticipant);
+          setProfilePicture(selectedParticipant.profilePicture);
+          setActiveStatus(selectedParticipant.activeStatus || false);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [selectedParticipant?.id]);
 
   useEffect(() => {
     socketRef.current = io(url, { transports: ["websocket"] });
     
     socketRef.current.on("get-active-status", (data) => {
-      if (otherParticipant?.id === data.uid) {
+      if (selectedParticipant?.id === data.uid) {
         setActiveStatus(data.activeStatus);
+      }
+    });
+
+    socketRef.current.on("chat-archived", (data) => {
+      if (data.chatId === currentChat.id) {
+        navigate('/admin/messages');
       }
     });
 
     return () => {
       socketRef.current.off("get-active-status");
+      socketRef.current.off("chat-archived");
     };
-  }, [otherParticipant]);
+  }, [selectedParticipant?.id, currentChat?.id, navigate]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -63,18 +147,31 @@ const ChatHeader = ({ currentChat }) => {
 
   const handleEndChat = async () => {
     try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.error('No authentication token found');
+        return;
+      }
+
       const response = await fetch(`${url}/api/adminChats/${currentChat.id}/archive`, {
         method: 'PUT',
         headers: {
-          'Authorization': localStorage.getItem('token'),
+          'Authorization': token,
+          'Content-Type': 'application/json'
         }
       });
 
-      if (response.ok) {
-        // Emit socket event for real-time update
-        socket.emit('chat-archived', { chatId: currentChat.id });
-        navigate('/admin/messages');
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.error('Authentication failed');
+          return;
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      // Emit socket event for real-time update
+      socket.emit('chat-archived', { chatId: currentChat.id });
+      navigate('/admin/messages');
     } catch (error) {
       console.error('Error archiving chat:', error);
     }
@@ -83,18 +180,31 @@ const ChatHeader = ({ currentChat }) => {
 
   const handleDeleteChat = async () => {
     try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.error('No authentication token found');
+        return;
+      }
+
       const response = await fetch(`${url}/api/adminChats/${currentChat.id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': localStorage.getItem('token'),
+          'Authorization': token,
+          'Content-Type': 'application/json'
         }
       });
 
-      if (response.ok) {
-        // Emit socket event for real-time update
-        socket.emit('chat-deleted', { chatId: currentChat.id });
-        navigate('/admin/messages');
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.error('Authentication failed');
+          return;
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      // Emit socket event for real-time update
+      socket.emit('chat-deleted', { chatId: currentChat.id });
+      navigate('/admin/messages');
     } catch (error) {
       console.error('Error deleting chat:', error);
     }
@@ -103,12 +213,17 @@ const ChatHeader = ({ currentChat }) => {
 
   const handleVideoCall = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.error('No authentication token found');
+        return;
+      }
+
       const initiatorName = currentChat?.metadata?.initiator?.name || "Admin";
 
       // First create the Zoom meeting
       const meetingRequest = {
-        topic: `Meeting with ${otherParticipant?.name}`,
+        topic: `Meeting with ${userProfile?.name || selectedParticipant?.name}`,
         type: 2,
         start_time: new Date().toISOString(),
         duration: 60,
@@ -128,59 +243,63 @@ const ChatHeader = ({ currentChat }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${token}`
+          'Authorization': token
         },
         body: JSON.stringify(meetingRequest)
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Send meeting details as a message in the chat
-        const messageResponse = await fetch(`${url}/api/adminChats/${currentChat.id}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${token}`
-          },
-          body: JSON.stringify({
-            message: `Video call initiated by ${initiatorName}`,
-            type: 'zoom-meeting',
-            meetingDetails: {
-              join_url: data.join_url,
-              password: data.password,
-              meeting_id: data.meeting_id,
-              host_name: initiatorName,
-              initiator_id: currentUserId
-            }
-          })
-        });
-
-        if (!messageResponse.ok) {
-          throw new Error('Failed to send meeting details message');
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.error('Authentication failed');
+          return;
         }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        // Socket emission for real-time notification
-        socket.emit('video-call-invitation', {
-          chatId: currentChat.id,
+      const data = await response.json();
+      
+      // Send meeting details as a message in the chat
+      const messageResponse = await fetch(`${url}/api/adminChats/${currentChat.id}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          message: `Video call initiated by ${initiatorName}`,
+          type: 'zoom-meeting',
           meetingDetails: {
-            ...data,
-            host_name: initiatorName
-          },
-          initiatorName: initiatorName,
-          recipientId: otherParticipant?.id,
-          initiatorRole: userRole,
-          initiatorId: currentUserId
-        });
+            join_url: data.join_url,
+            password: data.password,
+            meeting_id: data.meeting_id,
+            host_name: initiatorName,
+            initiator_id: currentUserId
+          }
+        })
+      });
 
-        setMeetingDetails({
+      if (!messageResponse.ok) {
+        throw new Error('Failed to send meeting details message');
+      }
+
+      // Socket emission for real-time notification
+      socket.emit('video-call-invitation', {
+        chatId: currentChat.id,
+        meetingDetails: {
           ...data,
           host_name: initiatorName
-        });
-        setShowZoomModal(true);
-      } else {
-        throw new Error('Failed to create Zoom meeting');
-      }
+        },
+        initiatorName: initiatorName,
+        recipientId: selectedParticipant?.id,
+        initiatorRole: userRole,
+        initiatorId: currentUserId
+      });
+
+      setMeetingDetails({
+        ...data,
+        host_name: initiatorName
+      });
+      setShowZoomModal(true);
     } catch (error) {
       console.error('Error in video call:', error);
       alert('Error creating video call. Please try again.');
@@ -193,31 +312,49 @@ const ChatHeader = ({ currentChat }) => {
       <div className="chat-header">
         <div className="chat-header-left">
           <div className="avatar-wrapper">
-            {otherParticipant?.photoURL ? (
-              <img
-                src={otherParticipant.photoURL}
-                alt={otherParticipant?.name || "User"}
-                className="user-avatar"
-              />
-            ) : (
+            {isLoading ? (
               <BsPersonCircle className="default-avatar" />
+            ) : (
+              profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt={userProfile?.name || "User"}
+                  className="user-avatar"
+                  onError={(e) => {
+                    console.error('Error loading profile picture:', e);
+                    e.target.src = ''; // Clear the src to show default avatar
+                    setProfilePicture(null); // Clear the profile picture state
+                  }}
+                />
+              ) : (
+                <BsPersonCircle className="default-avatar" />
+              )
             )}
             <span className={`online-status ${activeStatus ? 'active' : ''}`}></span>
           </div>
           <div className="user-info">
-            <h3 className="user-name">{otherParticipant?.name || "User"}</h3>
+            <h3 className="user-name">
+              {isLoading ? "Loading..." : (userProfile?.name || "User")}
+            </h3>
             <span className="user-status">
               {!activeStatus
-                ? `Last seen ${new Date(
-                    otherParticipant?.lastSeen?._seconds 
-                      ? otherParticipant.lastSeen._seconds * 1000 
-                      : otherParticipant?.lastSeen
-                  ).toLocaleString()}`
+                ? `Last seen ${(() => {
+                    const lastSeen = userProfile?.lastSeen;
+                    if (!lastSeen) return 'Never';
+                    
+                    // Handle Firestore timestamp
+                    if (lastSeen._seconds) {
+                      return new Date(lastSeen._seconds * 1000).toLocaleString();
+                    }
+                    
+                    // Handle regular date string or timestamp
+                    const date = new Date(lastSeen);
+                    return isNaN(date.getTime()) ? 'Never' : date.toLocaleString();
+                  })()}`
                 : "Online"}
             </span>
           </div>
         </div>
-
         <div className="chat-header-right">
           <button className="video-call-button">
             <BsCameraVideo size={24} onClick={handleVideoCall} />

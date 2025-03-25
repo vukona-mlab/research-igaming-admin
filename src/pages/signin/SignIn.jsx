@@ -5,12 +5,41 @@ import "./SignIn.css";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const navigate = useNavigate(); // For redirection after login
+  const [error, setError] = useState(""); 
+  const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState(""); 
+  const [passwordError, setPasswordError] = useState(""); 
+  const navigate = useNavigate();
+
+  // Function to validate email format
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
+    setError(""); 
+    setEmailError(""); 
+    setPasswordError("");
+
+    // Validate email
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+
+    // Validate password
+    if (!validatePassword(password)) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch(
@@ -30,25 +59,27 @@ const SignIn = () => {
         throw new Error(data.error || "Login failed. Please try again.");
       }
 
-      // Store token in local storage
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Redirect to dashboard or admin page
-      navigate("/admin-dashboard");
+      navigate("/profile");
     } catch (err) {
-      setError(err.message);
+     
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-page">
       <div className="login-form">
-        {/* Logo added here */}
         <img src="/images/logo.png" alt="Logo" className="login-logo" />
 
         <h2>Login</h2>
+
         {error && <p className="error-message">{error}</p>}
+
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
@@ -60,6 +91,7 @@ const SignIn = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {emailError && <p className="error-text">{emailError}</p>}
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
@@ -71,13 +103,20 @@ const SignIn = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {passwordError && <p className="error-text">{passwordError}</p>}
           </div>
           <div className="remember-me-container">
             <input type="checkbox" id="rememberMe" />
             <label htmlFor="rememberMe">Remember me</label>
           </div>
-          <button type="submit" className="login-btn">
-            Login
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? (
+              <>
+                <span className="spinner"></span> Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
       </div>

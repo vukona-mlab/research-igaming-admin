@@ -1,0 +1,30 @@
+.documentsHeader {
+  width: 100%;
+  display: flex;
+  gap: 25px;
+  padding-top: 5px;
+  border-bottom: 2px solid  #00000080;
+  top: 272px;
+  left: 146px;
+ 
+}
+
+
+.tbhTab {
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #00000080;
+  padding-bottom: 15px;
+  cursor: pointer;
+  top: 272px;
+  left: 146px;
+}
+
+.currentTab {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  color: #000000;
+  border-bottom: 3px solid #b90909;
+}

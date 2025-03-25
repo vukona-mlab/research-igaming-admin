@@ -10,6 +10,8 @@ import {
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -35,7 +37,36 @@ await setPersistence(auth, inMemoryPersistence);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
+const messaging = getMessaging(app);
 
+const requestForToken = () => {
+  return Notification.requestPermission()
+    .then((permission) => {
+      if (permission === "granted") {
+        return getToken(messaging, {
+          vapidKey: import.meta.env.VITE_API_VAPID_KEY,
+        });
+      } else {
+        throw new Error("Notification not granted");
+      }
+    })
+    .catch((err) => {
+      console.error("Error getting token", err);
+    });
+};
+onMessage(messaging, ({ notification }) => {
+  new Notification(notification.title, {
+    body: notification.body,
+    icon: notification.icon,
+  });
+});
+const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      console.log("payload", payload);
+      resolve(payload);
+    });
+  });
 // Add logout function
 const handleLogout = async () => {
   try {
@@ -51,4 +82,12 @@ const handleLogout = async () => {
   }
 };
 
-export { auth, db, storage, googleProvider, handleLogout };
+export {
+  auth,
+  db,
+  storage,
+  googleProvider,
+  requestForToken,
+  onMessageListener,
+  handleLogout,
+};

@@ -1,42 +1,52 @@
-import React, { useState } from 'react';
-import HeaderTabs from '../../components/HeaderTabs/HeaderTabs';
-import './DocumentsPage.css';
+import React, { useEffect, useState } from "react";
+import "./DocumentsPage.css";
+import Navbar from "../../components/common/NavBar/NavBar";
+import SearchBar from "../../components/common/SearchBar/SearchBar";
+import Sidebar from "../../components/CMS sidebar/Sidebar";
+import DocumentHeader from "../../components/DocumentHeader/DocumentHeader";
+import DocumentsList from "../../components/DocumentsList/DocumentsList";
 
-const Documents = () => {
-  const [selectedTab, setSelectedTab] = useState('Documents');
-  const [selectedFilter, setSelectedFilter] = useState('All'); // State for selected filter button
+const DocumentsPage = () => {
+  const [loading, setLoading] = useState(false);
+  const [filteredDocuments, setFilteredDocuments] = useState([]);
+  const token = localStorage.getItem("token");
+  const url = import.meta.env.VITE_API_URL;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleSearch = (query) => {
+    if (!query) {
+      setFilteredDocuments(documents);
+    } else {
+      const lowerCaseQuery = query.toLowerCase();
+      setFilteredDocuments(
+        documents.filter((document) =>
+          document.name.toLowerCase().includes(lowerCaseQuery)
+        )
+      );
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
-    <div className="documents-container">
-      <HeaderTabs
-        tabOne="Notifications"
-        tabTwo="Documents"
-        tabThree="Account"
-        handleTabChange={setSelectedTab}
-      />
-
-      {/* Buttons Section */}
-      <div className="filter-buttons">
-        {['All', 'Pending', 'Approved', 'Declined'].map((filter) => (
-          <button
-            key={filter}
-            className={selectedFilter === filter ? 'selected' : ''}
-            onClick={() => setSelectedFilter(filter)}
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
-
-      <div className="tab-content">
-        {selectedTab === 'Notifications'}
-
-        {selectedTab === 'Documents'}
-
-        {selectedTab === 'Account'}
+    <div className="DocumentsPage">
+      <Sidebar onToggle={setIsSidebarOpen} />
+      <div
+        className={`main-content ${
+          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+        }`}
+      >
+        <Navbar />
+        <div className="DocumentsPageContainer">
+          <SearchBar placeholder="Search" onSearch={handleSearch} />
+          <DocumentHeader />
+          {/* <DocumentsList /> */}
+        </div>
       </div>
     </div>
   );
 };
 
-export default Documents;
+export default DocumentsPage;

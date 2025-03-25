@@ -1,0 +1,104 @@
+.MessagingPageC {
+  min-height: 100vh;
+  background: #ffffff00;
+}
+
+.messagePageContainer {
+  width: calc(100% - 40px);
+  height: calc(95vh - 70px);
+  margin: 20px auto;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+  padding: 0 20px;
+}
+
+.chats-section {
+  width: 380px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #00000000;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chatbox-section {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #a0121200;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-left: 50px;
+}
+
+.no-chat-selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #6B7280;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.1rem;
+  color: #6B7280;
+}
+
+.main-content {
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-left: 0;
+  padding: 20px;
+  background: #F9FAFB;
+}
+
+.main-content.sidebar-expanded {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 100px;
+  width: calc(100% - 100px);
+}
+
+@media (max-width: 1024px) {
+  .messagePageContainer {
+    flex-direction: column;
+    height: auto;
+    gap: 16px;
+  }
+
+  .chats-section {
+    width: 100%;
+    height: 40vh;
+  }
+
+  .chatbox-section {
+    width: 100%;
+    height: 60vh;
+  }
+}
+
+.MessagingPageC .search-container {
+  width: 30%;
+  margin: 15px 0 0 0 !important;
+}
+
+.MessagingPageC .navbar {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}

@@ -1,0 +1,187 @@
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #E5E7EB;
+}
+
+.online-status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: #10B981;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+}
+
+.online-status.active {
+    background-color: #10B981;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.user-status {
+    font-size: 13px;
+    color: #6B7280;
+}
+
+.chat-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.video-call-button,
+.options-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #6B7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.video-call-button:hover,
+.options-button:hover {
+    background-color: #F3F4F6;
+    color: #111827;
+}
+
+.context-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-width: 180px;
+    overflow: hidden;
+}
+
+.context-menu button {
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.context-menu button:hover {
+    background-color: #F3F4F6;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .chat-header {
+        padding: 12px 16px;
+    }
+
+    .avatar-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .user-name {
+        font-size: 15px;
+    }
+
+    .user-status {
+        font-size: 12px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .chat-header {
+        background-color: #ffffff;
+        border-bottom-color: #e0e0e0;
+    }
+
+    .user-name {
+        color: #2c3e50;
+    }
+
+    .user-status {
+        color: #7f8c8d;
+    }
+
+    .options-button {
+        color: #7f8c8d;
+    }
+
+    .options-button:hover {
+        background-color: #f5f6f7;
+        color: #2c3e50;
+    }
+
+    .online-status {
+        border-color: #ffffff;
+    }
+
+    .online-status.active {
+        background-color: #ffffff;
+    }
+
+    .context-menu {
+        background-color: #ffffff;
+        border-color: #e0e0e0;
+    }
+
+    .context-menu button {
+        color: #2c3e50;
+    }
+
+    .context-menu button:hover {
+        background-color: #f5f6f7;
+    }
+}

@@ -1,57 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./MessageCard.css";
 import { Link } from 'react-router-dom';
 import { BsCameraVideo, BsExclamationTriangle, BsInfoCircle } from 'react-icons/bs';
+import { format } from "date-fns";
 
-const MessageCard = ({ message }) => {
-  const isCurrentUser = !message.senderId === localStorage.getItem('uid');
-  
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return '';
-    
-    let date;
-    // Handle Firestore timestamp
-    if (timestamp?._seconds) {
-      date = new Date(timestamp._seconds * 1000);
-    } else {
-      // Handle regular Date object or ISO string
-      date = new Date(timestamp);
-    }
+const MessageCard = ({ message, isCurrentUser }) => {
+  const [isRead, setIsRead] = useState(false);
+  const [isReadByAll, setIsReadByAll] = useState(false);
 
-    const now = new Date();
-    const yesterday = new Date(now);
-    yesterday.setDate(yesterday.getDate() - 1);
+  useEffect(() => {
+    // Update read status whenever message.readBy changes
+    if (message.readBy && Array.isArray(message.readBy)) {
+      console.log('Message read status update:', {
+        messageId: message.id,
+        readBy: message.readBy,
+        senderId: message.senderId,
+        isCurrentUser
+      });
 
-    // Format time
-    const timeString = date.toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit'
-    });
+      // For messages from the current user
+      if (isCurrentUser) {
+        // Message is read if it has been read by the recipient
+        setIsRead(message.readBy.length > 1);
+        // Message is read by all if both sender and recipient have read it
+        setIsReadByAll(message.readBy.length > 1);
+      } else {
+        // For messages from other users, they are considered read if the current user has read them
+        setIsRead(message.readBy.includes(message.senderId));
+        setIsReadByAll(message.readBy.length > 1);
+      }
+    }
+  }, [message.readBy, message.senderId, isCurrentUser]);
 
-    // If message is from today
-    if (date.toDateString() === now.toDateString()) {
-      return `Today at ${timeString}`;
+  const formatTime = (timestamp) => {
+    if (!timestamp) return "";
+    
+    const date = timestamp?._seconds 
+      ? new Date(timestamp._seconds * 1000)
+      : new Date(timestamp);
+    
+    return format(date, "EEEE, d, h:mm a");
+  };
+
+  const getMessageClass = () => {
+    if (message.type === 'system') {
+      return 'system-message';
     }
     
-    // If message is from yesterday
-    if (date.toDateString() === yesterday.toDateString()) {
-      return `Yesterday at ${timeString}`;
-    }
-    
-    // If message is from this year
-    if (date.getFullYear() === now.getFullYear()) {
-      return date.toLocaleDateString([], {
-        month: 'short',
-        day: 'numeric',
-      }) + ` at ${timeString}`;
-    }
-    
-    // If message is from a different year
-    return date.toLocaleDateString([], {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }) + ` at ${timeString}`;
+    return isCurrentUser ? 'current-user-message' : 'other-user-message';
   };
 
   const handleJoinMeeting = (url) => {
@@ -92,80 +88,48 @@ const MessageCard = ({ message }) => {
   };
 
   const renderMessageContent = () => {
-    switch (message.type) {
-      case 'zoom-meeting':
-        const isHost = message.meetingDetails.initiator_id === localStorage.getItem('uid');
-        
-        return (
-          <div className="zoom-meeting-message">
-            <div className="zoom-meeting-header">
-              <BsCameraVideo size={20} />
-              <span>Video Call Invitation</span>
-            </div>
-            <div className="zoom-meeting-details">
-              <p className="host-info">
-                Host: {message.meetingDetails.host_name} {isHost && '(You)'}
-              </p>
-              <p>Meeting ID: {message.meetingDetails.meeting_id}</p>
-              <p>Password: {message.meetingDetails.password}</p>
-              <button 
-                className="join-meeting-btn"
-                onClick={() => handleJoinMeeting(message.meetingDetails.join_url)}
-              >
-                Join Meeting
-              </button>
-            </div>
-          </div>
-        );
-
-      case 'system':
-        return (
-          <div className="system-message">
-            <BsInfoCircle size={16} />
-            <span>{message.text}</span>
-          </div>
-        );
-
-      case 'warning':
-        return (
-          <div className="warning-message">
-            <BsExclamationTriangle size={16} />
-            <span>{message.text}</span>
-          </div>
-        );
-
-      case 'user_action':
-        return (
-          <div className="action-message">
-            <span className="action-label">Admin Action:</span>
-            <span className="action-details">{message.text}</span>
-          </div>
-        );
-
-      default:
-        return message.text || message.message;
+    if (message.type === 'system') {
+      return (
+        <div className="system-message-content">
+          <span className="system-icon">ℹ️</span>
+          <span>{message.text}</span>
+        </div>
+      );
     }
+
+    if (message.attachments?.length > 0) {
+      return (
+        <div className="message-attachments">
+          {message.attachments.map((attachment, index) => (
+            <div key={index} className="attachment">
+              {attachment.type.startsWith('image/') ? (
+                <img src={attachment.url} alt={attachment.name} />
+              ) : (
+                <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                  <div className="file-attachment">
+                    <span className="file-icon">📎</span>
+                    <span className="file-name">{attachment.name}</span>
+                  </div>
+                </a>
+              )}
+            </div>
+          ))}
+          {message.text && <div className="message-text">{message.text}</div>}
+        </div>
+      );
+    }
+
+    return <div className="message-text">{message.text}</div>;
   };
 
   return (
-    <div
-      className={`MessageCard ${isCurrentUser ? "right" : "left"} ${
-        message.type === 'system' ? 'system' :
-        message.type === 'warning' ? 'warning' :
-        message.type === 'user_action' ? 'action' : ''
-      }`}
-    >
+    <div className={`message-card ${getMessageClass()}`}>
       <div className="message-wrapper">
-        <div className="message-bubble">
-          <div className="message-content">
-            {renderMessageContent()}
-          </div>
-          <div className="attachments-container">
-            {renderAttachments()}
-          </div>
+        <div className={`message-content ${isCurrentUser && isRead && isReadByAll ? 'read-by-all' : ''}`}>
+          {renderMessageContent()}
         </div>
-        <div className="message-time">
-          {formatTimestamp(message.createdAt)}
+        <div className={`message-time ${isCurrentUser && isRead ? 'read' : ''}`}>
+          {formatTime(message.createdAt)}
         </div>
       </div>
     </div>

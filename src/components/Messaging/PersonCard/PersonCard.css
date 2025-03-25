@@ -4,6 +4,16 @@
   gap: 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  position: relative;
+  align-items: center;
+}
+
+.PersonCard:hover {
+  background-color: #f5f5f5;
+}
+
+.PersonCard.active {
+  background-color: #f0f2f5;
 }
 
 .person-avatar {
@@ -12,6 +22,10 @@
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .person-avatar img {
@@ -29,6 +43,10 @@
 .person-info {
   flex: 1;
   min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .person-header {
@@ -45,12 +63,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-right: 8px;
 }
 
 .last-message-time {
   font-size: 12px;
   color: #666;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .last-message {
@@ -62,9 +82,43 @@
   max-width: 280px;
 }
 
-/* Active/Selected state */
-.PersonCard.active {
-  background-color: #f0f2f5;
+.online-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background-color: #31a24c;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.unread-badge {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: #0084ff;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.PersonCard.unread .person-name {
+  font-weight: 700;
+  color: #000;
+}
+
+.PersonCard.unread .last-message {
+  color: #000;
+  font-weight: 500;
 }
 
 .typing-indicator {
@@ -73,17 +127,28 @@
   font-size: 0.9em;
 }
 
-.online-status {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #31a24c;
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  border: 2px solid white;
+/* Priority indicators */
+.PersonCard[data-priority="high"] {
+  border-left: 3px solid #dc3545;
 }
 
-.offline-status {
-  background-color: #ccc;
+.PersonCard[data-priority="medium"] {
+  border-left: 3px solid #ffc107;
+}
+
+.PersonCard[data-priority="low"] {
+  border-left: 3px solid #28a745;
+}
+
+/* Category indicators */
+.PersonCard[data-category="admin"] {
+  background-color: #f8f9fa;
+}
+
+.PersonCard[data-category="support"] {
+  background-color: #fff3cd;
+}
+
+.PersonCard[data-category="user"] {
+  background-color: #ffffff;
 }

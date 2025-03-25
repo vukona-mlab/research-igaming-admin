@@ -1,89 +1,155 @@
-.MessageCard {
-  margin: 8px 0;
+.message-card {
   display: flex;
-  flex-direction: column;
+  margin: 8px 0;
+  max-width: 70%;
 }
 
-.MessageCard.left {
-  align-items: flex-end;
+.message-card.current-user-message {
+  margin-left: auto;
+  justify-content: flex-end;
 }
 
-.MessageCard.right {
-  align-items: flex-start;
+.message-card.other-user-message {
+  margin-right: auto;
+  justify-content: flex-start;
+}
+
+.message-card.system-message {
+  margin: 16px auto;
+  max-width: 90%;
+  justify-content: center;
 }
 
 .message-wrapper {
   display: flex;
   flex-direction: column;
-  max-width: 60%;
   gap: 4px;
 }
 
-.message-bubble {
-  padding: 12px 16px;
-  border-radius: 16px;
-  background-color: #E8E8E8;
-  color: #111827;
-  font-size: 14px;
-  line-height: 1.5;
+.message-content {
+  padding: 8px 12px;
+  border-radius: 12px;
+  position: relative;
+  word-wrap: break-word;
+  transition: all 0.2s ease;
 }
 
-.MessageCard.left .message-bubble {
-  background-color: #2F2F2F;
+.message-content.read-by-all {
+  position: relative;
+}
+
+.message-content.read-by-all::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  right: -15px;
+  width: 17px;
+  height: 17px;
+  background-color: #333;
+  border-radius: 50%;
+  opacity: 1;
+  border: 2px solid white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.current-user-message .message-content {
+  background-color: #333;
   color: white;
   border-bottom-right-radius: 4px;
 }
 
-.MessageCard.right .message-bubble {
-  background-color: #E8E8E8;
+.other-user-message .message-content {
+  background-color: #f0f2f5;
+  color: #1a1a1a;
   border-bottom-left-radius: 4px;
 }
 
-.message-content {
-  word-break: break-word;
+.system-message .message-content {
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 0.9em;
+  text-align: center;
 }
 
-.attachments-container {
-  margin-top: 8px;
+.message-text {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.message-time {
+  font-size: 0.75em;
+  color: #333;
+  padding: 2px 8px;
+  opacity: 0.8;
+  border-radius: 12px;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.message-time.read {
+  background-color: rgba(0, 0, 0, 0);
+  color: #333;
+  opacity: 1;
+}
+
+.current-user-message .message-time {
+  text-align: right;
+}
+
+.other-user-message .message-time {
+  text-align: left;
+}
+
+.message-attachments {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.attachment-image img {
-  max-width: 240px;
-  max-height: 240px;
-  border-radius: 12px;
-  object-fit: cover;
+.attachment {
+  max-width: 100%;
 }
 
-.attachment-file {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.1);
+.attachment img {
+  max-width: 100%;
   border-radius: 8px;
 }
 
-.attachment-file a {
-  color: #3B82F6;
+.file-attachment {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
   text-decoration: none;
-  font-size: 14px;
+  color: inherit;
 }
 
-.MessageCard.right .attachment-file a {
-  color: #FFFFFF;
+.file-attachment:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-.message-time {
-  font-size: 12px;
-  color: #9CA3AF;
-  margin-top: 4px;
+.file-icon {
+  font-size: 1.2em;
 }
 
-.MessageCard.right .message-time {
-  color: #9CA3AF;
+.file-name {
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.system-message-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.system-icon {
+  font-size: 1.2em;
 }
 
 /* System Messages */
@@ -111,13 +177,13 @@
 }
 
 /* Show timestamp on hover */
-.MessageCard:hover .message-time {
+.message-card:hover .message-time {
   opacity: 1;
 }
 
 /* Add more space between different senders */
-.MessageCard.right + .MessageCard.left,
-.MessageCard.left + .MessageCard.right {
+.message-card.current-user-message + .message-card.other-user-message,
+.message-card.other-user-message + .message-card.current-user-message {
   margin-top: 16px;
 }
 

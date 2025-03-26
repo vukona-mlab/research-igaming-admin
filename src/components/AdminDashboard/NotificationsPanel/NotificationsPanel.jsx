@@ -1,14 +1,29 @@
 import { useEffect, useState } from "react";
 import NotificationCard from "../NotificationCard/NotificationCard";
 import "./NotificationsPanel.css";
+import { useNavigate } from "react-router-dom";
 const NotificationsPanel = () => {
   const [notifications, setNotifications] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentTab, setCurrentTab] = useState("All");
   const authToken = localStorage.getItem("authToken");
-
+  const navigate = useNavigate();
   useEffect(() => {
     getNotifications();
   }, []);
+  useEffect(() => {
+    const filteredData = notifications.filter((item) => {
+      if (currentTab === "All") return true;
+      if (currentTab === "Alerts") return item.type === "alert";
+      if (currentTab === "Updates") return item.type === "update";
+    });
+
+    if (filteredData.length > 0) {
+      setFilteredData(filteredData);
+    } else {
+      setFilteredData(notifications);
+    }
+  }, [currentTab]);
   const getNotifications = async () => {
     try {
       const response = await fetch(
@@ -24,13 +39,13 @@ const NotificationsPanel = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setNotifications(data && data.notifications);
+        setNotifications(data && data.notifications.slice(0, 3));
+        setFilteredData(data && data.notifications.slice(0, 3));
       }
     } catch (error) {
       console.error(error);
     }
   };
-  console.log(notifications);
   return (
     <div className="NotificationsPanel">
       <div className="np-header">
@@ -77,18 +92,18 @@ const NotificationsPanel = () => {
       </div>
       <div className="np-tabs"></div>
       <div className="np-body">
-        {notifications.length > 0 ? (
-          notifications.map((notif) => (
-            <NotificationCard notification={notif} />
-          ))
+        {filteredData.length > 0 ? (
+          filteredData.map((notif) => <NotificationCard notification={notif} />)
         ) : (
           <div>No notifications</div>
         )}
       </div>
       <div>
-        <button className="np-see-all">See all</button>
+        <button className="np-see-all" onClick={() => navigate("/documents")}>
+          See all
+        </button>
       </div>
-      <div className="np-msg-icon">
+      <div className="np-msg-icon" onClick={() => navigate("/messages")}>
         <img src="/images/message.png" />
       </div>
     </div>

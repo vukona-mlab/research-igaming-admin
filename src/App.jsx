@@ -1,20 +1,5 @@
 
 import React from "react";
-import StarRating from "./components/RatingCard//StarRating"
-const App = () => {
-  return (
-    <div className="App">
-    
-      <StarRating/>
-    </div>
-  );
-};
-
-export default App;
-
-/*
-
-import React from "react";
 import DocumentsList from "./components/DocumentsList/DocumentsList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/signin/SignIn";
@@ -53,4 +38,3 @@ const App = () => {
 export default App;
 
 
-*/

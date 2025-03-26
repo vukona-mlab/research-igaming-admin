@@ -1,3 +1,40 @@
+import React from 'react';
+import { FaStar } from 'react-icons/fa';
+
+const StarRating = ({ 
+  rating, 
+  onRatingChange, 
+  maxRating = 5, 
+  starColor = '#FFD700', 
+  size = 24, 
+  interactive = false 
+}) => {
+  const handleStarClick = (selectedRating) => {
+    if (interactive && onRatingChange) {
+      onRatingChange(selectedRating);
+    }
+  };
+
+  return (
+    <div className="flex">
+      {[...Array(maxRating)].map((_, index) => {
+        const starValue = index + 1;
+        return (
+          <FaStar
+            key={index}
+            color={starValue <= rating ? starColor : '#e4e5e9'}
+            size={size}
+            className={`mr-1 ${interactive ? 'cursor-pointer hover:opacity-70' : ''}`}
+            onClick={() => handleStarClick(starValue)}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+export default StarRating; /*
+
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
@@ -74,3 +111,5 @@ const StarRating = ({
 };
 
 export default StarRating;
+
+*/

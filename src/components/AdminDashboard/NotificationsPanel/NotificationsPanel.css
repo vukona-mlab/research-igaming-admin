@@ -1,5 +1,5 @@
 .NotificationsPanel {
-  width: 25%;
+  width: 18%;
 }
 
 .np-body {
@@ -37,7 +37,35 @@
   margin: 15px 0px;
 }
 
-.lh-currentTab {
+.np-active-tabs-div {
+  display: flex;
+  gap: 15px;
+  margin: 25px 0px;
+}
+.np-active-tabs-tab {
+  height: 30px;
+  width: 100px;
+  border: none;
+  outline: none;
+  color: #333333;
+  border: 1px solid #00000080;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 400;
+}
+.np-currentTab {
   background-color: #333333;
   color: white;
+}
+
+.np-msg-icon {
+  width: 54px;
+  height: 54px;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-left: auto;
 }

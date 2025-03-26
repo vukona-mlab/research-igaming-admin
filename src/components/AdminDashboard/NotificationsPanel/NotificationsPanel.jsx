@@ -37,12 +37,12 @@ const NotificationsPanel = () => {
         <div className="np-title">Notifications</div>
         <div className="np-mark">Mark all as read</div>
       </div>
-      <div className="lh-active-tabs-div">
+      <div className="np-active-tabs-div">
         <button
           className={
             currentTab === "All"
-              ? "lh-active-tabs-tab lh-currentTab"
-              : "lh-active-tabs-tab"
+              ? "np-active-tabs-tab np-currentTab"
+              : "np-active-tabs-tab"
           }
           onClick={() => {
             setCurrentTab("All");
@@ -53,8 +53,8 @@ const NotificationsPanel = () => {
         <button
           className={
             currentTab === "Alerts"
-              ? "lh-active-tabs-tab lh-currentTab"
-              : "lh-active-tabs-tab"
+              ? "np-active-tabs-tab np-currentTab"
+              : "np-active-tabs-tab"
           }
           onClick={() => {
             setCurrentTab("Alerts");
@@ -65,8 +65,8 @@ const NotificationsPanel = () => {
         <button
           className={
             currentTab === "Updates"
-              ? "lh-active-tabs-tab lh-currentTab"
-              : "lh-active-tabs-tab"
+              ? "np-active-tabs-tab np-currentTab"
+              : "np-active-tabs-tab"
           }
           onClick={() => {
             setCurrentTab("Updates");
@@ -87,6 +87,9 @@ const NotificationsPanel = () => {
       </div>
       <div>
         <button className="np-see-all">See all</button>
+      </div>
+      <div className="np-msg-icon">
+        <img src="/images/message.png" />
       </div>
     </div>
   );

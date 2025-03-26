@@ -1,5 +1,5 @@
 .NotificationsPanel {
-  width: 18%;
+  width: 100%;
 }
 
 .np-body {
@@ -12,6 +12,7 @@
 .np-header {
   display: flex;
   justify-content: space-between;
+  width: 110%;
 }
 
 .np-title {
@@ -24,6 +25,7 @@
   font-size: 14px;
   font-weight: 500;
   color: #00000080;
+  width: 150px;
 }
 
 .np-see-all {

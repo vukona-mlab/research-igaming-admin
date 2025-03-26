@@ -6,8 +6,8 @@ const ActiveUsersGraph = () => {
   const data = [
     { name: 'Mon', freelancers: 13000, clients: 1000 },
     { name: 'Tue', freelancers: 300, clients: 80 },
-    { name: 'Wed', freelancers: 100, clients: 5 },
-    { name: 'Thur', freelancers: 500, clients: 40000 },
+    { name: 'Wed', freelancers: 100, clients: 500 },
+    { name: 'Thur', freelancers: 500, clients: 400 },
     { name: 'Fri', freelancers: 450, clients: 4500 },
     { name: 'Sat', freelancers: 4000, clients: 6000 },
     { name: 'Sun', freelancers: 200, clients: 400 },

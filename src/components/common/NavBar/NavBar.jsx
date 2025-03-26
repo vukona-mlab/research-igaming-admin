@@ -18,8 +18,8 @@ function NavBar() {
   }, []);
 
   const fetchProfile = async (adminId) => {
-    const token = localStorage.getItem('authToken');
-    
+    const token = localStorage.getItem("authToken");
+
     if (!adminId || !token) {
       console.error("Missing adminId or token");
       return;
@@ -73,14 +73,18 @@ function NavBar() {
                 alt="Notifications"
               />
             </div>
-            <div className="user-profile">
-              <img 
-                src={profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.displayName || '')}&background=random`}
-                alt="User" 
-                className="profile-pic" 
-              />
-              <span className="user-name">{userData?.displayName || 'User'}</span>
-            </div>
+
+            <img
+              className="profile-pic"
+              src={
+                profilePic ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  userData?.displayName || ""
+                )}&background=random`
+              }
+              alt="User"
+            />
+            <span className="user-name">{userData?.displayName || "User"}</span>
           </div>
         </Navbar.Collapse>
       </Container>

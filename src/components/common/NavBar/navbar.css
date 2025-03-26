@@ -17,21 +17,16 @@
   margin-right: -1%;
 }
 
-.bell-icon {
-  font-size: 24px;
-  color: #ffb400;
-  cursor: pointer;
-}
-
-.user-profile {
+.bell-icon img {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  width: 30px; /* Ensure this matches the profile-pic */
+  height: 30px;
 }
 
 .profile-pic {
-  width: 35px;
-  height: 35px;
+  display: flex;
+  max-width: 40px;
+  max-height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }

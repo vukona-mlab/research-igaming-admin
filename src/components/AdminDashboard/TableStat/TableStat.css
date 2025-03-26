@@ -48,6 +48,11 @@
   padding-right: 24px;
 }
 
+.table thead tr th {
+  background-color: #000000;
+  color: #ffffff;
+}
+
 /* Add subtle border radius to first and last cells in header */
 .table thead tr th:first-child {
   border-top-left-radius: 8px;

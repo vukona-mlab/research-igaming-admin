@@ -1,4 +1,4 @@
-.overlord {
+.pj-overlord {
   border: solid 1px #f4f5f9;
   border-radius: 7px;
   overflow: hidden;
@@ -7,18 +7,18 @@
   width: calc(100% - 100px);
 }
 
-.table-container {
+.pj-table-container {
   width: 100%;
   text-align: left;
   padding: 0 20px;
 }
 
-.table-heading {
+.pj-table-heading {
   padding: 15px 0;
   margin-bottom: 20px;
 }
 
-.t-heading {
+.pj-t-heading {
   font-family: "Lato";
   font-weight: 550;
   font-size: 18px;
@@ -29,7 +29,7 @@
   padding: 12px;
 }
 
-.t-data {
+.pj-t-data {
   font-family: "Lato";
   font-weight: 400;
   font-size: 14.22px;
@@ -40,7 +40,7 @@
 }
 
 /* Add new style for project ID */
-.t-data .project-id {
+.pj-t-data .project-id {
   font-family: "Poppins";
   font-weight: 400;
   color: #89868d;

@@ -207,23 +207,23 @@ export default function ProjectList() {
         <ProjectsHeader handleTabChange={setFilter} onSearch={setSearchTerm} />
         <div className="project-container">
           {selectedProject && <ProfileCard onClose={handleCloseProfile} />}
-          <div className="overlord">
-            <table className="table-container">
+          <div className="pj-overlord">
+            <table className="pj-table-container">
               <tbody>
-                <tr className="table-heading">
-                  <th className="t-heading">Client</th>
-                  <th className="t-heading">Project Ref</th>
-                  <th className="t-heading">Freelancer</th>
-                  <th className="t-heading">Status</th>
-                  <th className="t-heading">Date</th>
-                  <th className="t-heading">Actions</th>
+                <tr className="pj-table-heading">
+                  <th className="pj-t-heading">Client</th>
+                  <th className="pj-t-heading">Project Ref</th>
+                  <th className="pj-t-heading">Freelancer</th>
+                  <th className="pj-t-heading">Status</th>
+                  <th className="pj-t-heading">Date</th>
+                  <th className="pj-t-heading">Actions</th>
                 </tr>
                 {searchResults.map((project) => {
                   const client = clients[project.clientId] || {};
                   const freelancer = freelancers[project.freelancerId] || {};
                   return (
                     <tr key={project.id}>
-                      <td className="t-data">
+                      <td className="pj-t-data">
                         <div className="client-info">
                           {client.profilePicture ? (
                             <img
@@ -251,10 +251,10 @@ export default function ProjectList() {
                           </div>
                         </div>
                       </td>
-                      <td className="t-data">
+                      <td className="pj-t-data">
                         <span className="project-id">{project.id}</span>
                       </td>
-                      <td className="t-data">
+                      <td className="pj-t-data">
                         {project.freelancerId ? (
                           <div className="freelancer-info">
                             {freelancer.profilePicture ? (
@@ -284,7 +284,7 @@ export default function ProjectList() {
                           <span>N/A</span>
                         )}
                       </td>
-                      <td className="t-data">
+                      <td className="pj-t-data">
                         <div
                           className={`active-blocked ${
                             project.status?.toLowerCase() || "pending"
@@ -294,10 +294,10 @@ export default function ProjectList() {
                           {project.status}
                         </div>
                       </td>
-                      <td className="t-data">
+                      <td className="pj-t-data">
                         {formatDate(project.createdAt)}
                       </td>
-                      <td className="t-data">
+                      <td className="pj-t-data">
                         <div className="action-buttons">
                           <Button
                             variant="contained"

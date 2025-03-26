@@ -1,0 +1,44 @@
+.project-stats-card {
+  background: rgba(255, 255, 255, 0);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 280px;
+}
+
+.stats-content {
+  flex: 1;
+  padding-left: 16px;
+  z-index: 1;
+}
+
+.stats-number {
+  font-family: Lato;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #2e2e2e;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #05f370;
+}
+
+.stats-label {
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 14.22px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #757575;
+}
+
+.chart-container {
+  width: 100px;
+  height: 50px;
+}

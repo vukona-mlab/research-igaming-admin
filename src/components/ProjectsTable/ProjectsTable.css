@@ -1,0 +1,18 @@
+.projects-table {
+  padding: 24px;
+  width: 55%;
+}
+
+.projects-table-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2e2e2e;
+  margin-bottom: 24px;
+}
+
+.projects-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 800px;
+} 

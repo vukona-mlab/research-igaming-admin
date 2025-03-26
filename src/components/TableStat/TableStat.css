@@ -1,0 +1,55 @@
+.table-container {
+  width: 55%;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Lato', sans-serif;
+}
+
+.table th {
+  background: #000000;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  padding: 16px;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #333333;
+  border-bottom: 1px solid #E0E0E0;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  background: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #F5F5F5;
+}
+
+/* Ensure proper spacing between cells */
+.table th:not(:last-child),
+.table td:not(:last-child) {
+  padding-right: 24px;
+}
+
+/* Add subtle border radius to first and last cells in header */
+.table thead tr th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.table thead tr th:last-child {
+  border-top-right-radius: 8px;
+} 

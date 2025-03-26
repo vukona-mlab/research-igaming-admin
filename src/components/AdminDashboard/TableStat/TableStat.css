@@ -1,9 +1,12 @@
 .table-container {
-  width: 55%;
+  max-width: 1000px;
+  width: 100%;
   overflow-x: auto;
-  background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  margin-top: 30px;
+
 }
 
 .table {
@@ -43,6 +46,11 @@
 .table th:not(:last-child),
 .table td:not(:last-child) {
   padding-right: 24px;
+}
+
+.table thead tr th {
+  background-color: #000000;
+  color: #ffffff;
 }
 
 /* Add subtle border radius to first and last cells in header */

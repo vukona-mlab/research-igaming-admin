@@ -5,7 +5,9 @@ const ChangePasswordForm = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [profileImage, setProfileImage] = useState("https://via.placeholder.com/80");
+  const [profileImage, setProfileImage] = useState(
+    "https://via.placeholder.com/80"
+  );
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -17,17 +19,13 @@ const ChangePasswordForm = () => {
 
   return (
     <div className="password-form-container">
-      <div className="profile-section">
-        <img src={profileImage} alt="Profile" className="profile-pic" />
-        <label className="upload-icon">
-          <img src="/images/camera-icon.png" alt="Upload" className="camera-icon" />
-          <input type="file" className="file-input" accept="image/*" onChange={handleImageChange} />
-        </label>
-      </div>
+      <div className="profile-section"></div>
 
       <form className="password-form">
         <div className="form-group">
-          <label className="input-label">Old Password <span>*</span></label>
+          <label className="input-label">
+            Old Password <span>*</span>
+          </label>
           <input
             type="password"
             value={oldPassword}
@@ -37,7 +35,9 @@ const ChangePasswordForm = () => {
         </div>
 
         <div className="form-group">
-          <label className="input-label">New Password <span>*</span></label>
+          <label className="input-label">
+            New Password <span>*</span>
+          </label>
           <input
             type="password"
             value={newPassword}
@@ -47,7 +47,9 @@ const ChangePasswordForm = () => {
         </div>
 
         <div className="form-group">
-          <label className="input-label">Confirm Password <span>*</span></label>
+          <label className="input-label">
+            Confirm Password <span>*</span>
+          </label>
           <input
             type="password"
             value={confirmPassword}
@@ -56,7 +58,9 @@ const ChangePasswordForm = () => {
           />
         </div>
 
-        <button type="submit" className="submit-btn">Submit</button>
+        <button type="submit" className="submit-btn">
+          Submit
+        </button>
       </form>
     </div>
   );

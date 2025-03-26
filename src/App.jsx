@@ -1,9 +1,25 @@
+
+import React from "react";
+import StarRating from "./components/RatingCard//StarRating"
+const App = () => {
+  return (
+    <div className="App">
+    
+      <StarRating/>
+    </div>
+  );
+};
+
+export default App;
+
+/*
+
 import React from "react";
 import DocumentsList from "./components/DocumentsList/DocumentsList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/signin/SignIn";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
-import FreelancerList from "./pages/FreelancerList/FreelanceList";
+import FreelanceList from "./pages/FreelancerList/FreelanceList";
 import DocumentsPage from "./pages/Documents/DocumentsPage";
 import ProtectedRoutes from "./components/protected/ProtectedRoutes";
 import ProtectedAuth from "./components/protected/ProtectedAuth";
@@ -20,7 +36,7 @@ const App = () => {
             <Route path="/" element={<LoginPage />} />
           </Route>
           <Route element={<ProtectedRoutes />}>
-            <Route path="/freelancer" element={<FreelancerList />} />
+            <Route path="/freelancer" element={<FreelanceList />} />
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/documents1" element={<DocumentsPage1 />} />
             <Route path="/profile" element={<ProfilePage />} />
@@ -35,3 +51,6 @@ const App = () => {
 };
 
 export default App;
+
+
+*/

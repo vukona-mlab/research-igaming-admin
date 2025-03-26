@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./AdminDashboard.css";
 import NavBar from "../../components/common/NavBar/NavBar";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
-import ActiveUsersGraph from "../../components/ActiveUsersGraph/ActiveUsersGraph"
-import ProjectStats from "../../components/ProjectsTable/ProjectsTable"
-import TableStat from "../../components/TableStat/TableStat"
+import NotificationsPanel from "../../components/AdminDashboard/NotificationsPanel/NotificationsPanel";
+import ActiveUsersGraph from "../../components/ActiveUsersGraph/ActiveUsersGraph";
+import ProjectStats from "../../components/ProjectsTable/ProjectsTable";
+import TableStat from "../../components/TableStat/TableStat";
 
 const AdminDashboard = () => {
   return (
@@ -13,17 +14,19 @@ const AdminDashboard = () => {
       <div className="amd-main-container">
         <NavBar />
         <div className="amd-main-content">
-        <div className="amd-projects-stats-container">
-            <ProjectStats/>
+          <div className="amd-projects-stats-container">
+            <ProjectStats />
           </div>
           <div className="amd-projects-table-container">
-            <TableStat/>
+            <TableStat />
           </div>
           <div className="amd-graphs-container">
-            <ActiveUsersGraph/>
+            <ActiveUsersGraph />
           </div>
-          
-          <div className="amd-notifications-container"></div>
+
+          <div className="amd-notifications-container">
+            <NotificationsPanel />
+          </div>
         </div>
       </div>
     </div>

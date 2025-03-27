@@ -1,49 +1,67 @@
-import React, {useState, useEffect} from "react";
-import './documentsList.css';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import "./documentsList.css";
+import axios from "axios";
 import { FaEllipsisV } from "react-icons/fa";
 
 export default function DocumentsList() {
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+  const [selectedItem, setSelectedItem] = React.useState(null)
 
   useEffect(() => {
-      getDocuments();
-    }, []);
+    getDocuments();
+  }, []);
 
-    const getDocuments = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem('authToken');
-        console.log('Token:', token);
+  const getDocuments = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("authToken");
+      console.log("Token:", token);
 
-        if (!token) {
-          throw new Error('No authentication token found');
-        }
-
-        const response = await axios.get('http://localhost:8000/api/documents', {
-          headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-          }
-        });
-        console.log('Fetched documents:', response.data.usersDocuments);
-    
-        const allDocuments = response.data.usersDocuments.flat();
-        setDocuments(allDocuments);
-      } catch (error) {
-        console.error("Error fetching documents:", error);
-        if (error.response) {
-          console.error('Error response:', error.response.data);
-          console.error('Error status:', error.response.status);
-        }
-        setError(error.message);
-      } finally {
-        setLoading(false);
+      if (!token) {
+        throw new Error("No authentication token found");
       }
-    };
-    
+
+      const response = await axios.get("http://localhost:8000/api/documents", {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Fetched documents:", response.data.usersDocuments);
+
+      const allDocuments = response.data.usersDocuments.flat();
+      setDocuments(allDocuments);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        console.error("Error status:", error.response.status);
+      }
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleMenu = (item) => {
+    setSelectedItem(item)
+    setShowMenu((prev) => !prev);
+  };
+
+  useEffect(() => {
+    console.log(showMenu);
+  }, [showMenu]);
+
+  function showDeclineOptions(event) {
+    const dropdown = document.querySelector(".decline-menu");
+    if (dropdown) {
+      dropdown.classList.toggle("show");
+    }
+  }
 
   return (
     <div className="container">
@@ -58,20 +76,45 @@ export default function DocumentsList() {
             <th className="table-heading">Document</th>
             <th className="table-heading">Actions</th>
           </tr>
-          {documents.map((document)=>(
-          <tr key={document.id}>
-          <td className="t-data">{document.name || 'N/A'}</td>
-          <td className="t-data">{document.status || 'N/A'}</td>
-          <td className="t-data">{document.type || 'N/A'}</td>
-          <td className="t-data">{document.email || 'N/A'}</td>
-          <td className="t-data">{document.date || 'N/A'}</td>
-          <td className="t-data">{document.document || 'N/A'}</td>
-          <td className="t-data"><div className="action-buttons">
-            <div className="approved">{document.actions}Approved</div>
-            <div className="dotted-menu"><FaEllipsisV /></div>
-            </div></td>
-        </tr>
-       ))}
+          {documents.map((document) => (
+            <tr key={document.id}>
+              <td className="t-data">{document.name || "N/A"}</td>
+              <td className="t-data">{document.status || "N/A"}</td>
+              <td className="t-data">{document.type || "N/A"}</td>
+              <td className="t-data">{document.email || "N/A"}</td>
+              <td className="t-data">{document.date || "N/A"}</td>
+              <td className="t-data">{document.document || "N/A"}</td>
+              <td className="t-data">
+                <div className="action-buttons">
+                  <div className="approved">{document.actions}Approved</div>
+
+                  <div className="dotted-menu">
+                    <FaEllipsisV
+                      onClick={(item) => toggleMenu(document.id)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    {showMenu && selectedItem == document.id && (
+                      <div className="context-menu" ref={menuRef}>
+                        <div className="heading">Actions</div>
+                        <div className="context-opts">Approve</div>
+                        <div className="context-opts" onClick={showDeclineOptions}>Decline</div>
+                        <div className="decline-menu">
+                          <div className="decline-opts">Names don't match</div>
+                          <div className="decline-opts">
+                            Documents not visible
+                          </div>
+                          <div className="decline-opts">
+                            Documents not certified
+                          </div>
+                        </div>
+                        <div className="context-opts">Close</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

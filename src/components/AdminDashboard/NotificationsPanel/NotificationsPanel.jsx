@@ -39,8 +39,8 @@ const NotificationsPanel = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setNotifications(data && data.notifications.slice(0, 3));
-        setFilteredData(data && data.notifications.slice(0, 3));
+        setNotifications(data && data.notifications.slice(0, 4));
+        setFilteredData(data && data.notifications.slice(0, 4));
       }
     } catch (error) {
       console.error(error);

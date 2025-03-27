@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import axios from 'axios';
 import './ActiveUsersGraph.css';
 
 const ActiveUsersGraph = () => {
-  const data = [
-    { name: 'Mon', freelancers: 13000, clients: 1000 },
-    { name: 'Tue', freelancers: 300, clients: 80 },
-    { name: 'Wed', freelancers: 100, clients: 500 },
-    { name: 'Thur', freelancers: 500, clients: 400 },
-    { name: 'Fri', freelancers: 450, clients: 4500 },
-    { name: 'Sat', freelancers: 4000, clients: 6000 },
-    { name: 'Sun', freelancers: 200, clients: 400 },
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [timeRange, setTimeRange] = useState(7);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get(`http://localhost:8000/api/daily-active-users?days=${timeRange}`, {
+          headers: {
+            Authorization: token
+          }
+        });
+        setData(response.data);
+      } catch (err) {
+        setError('Failed to fetch active users data');
+        console.error('Error fetching active users data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [timeRange]);
 
   const formatYAxis = (value) => {
     if (value >= 1000) {
@@ -32,6 +49,14 @@ const ActiveUsersGraph = () => {
     return [0, step, step * 2, step * 3, roundedMax];
   };
 
+  const handleTimeRangeChange = (days) => {
+    setTimeRange(days);
+    setLoading(true);
+  };
+
+  if (loading) return <div className="active-users-container">Loading graph data...</div>;
+  if (error) return <div className="active-users-container">Error: {error}</div>;
+
   return (
     <div className="active-users-container">
       <div className="graph-header">
@@ -46,10 +71,17 @@ const ActiveUsersGraph = () => {
             Clients
           </span>
         </div>
-        <button className="time-selector">
-          Last 7 days
-          <span className="dropdown-icon">▼</span>
-        </button>
+        <div className="time-selector">
+          <select 
+            value={timeRange} 
+            onChange={(e) => handleTimeRangeChange(Number(e.target.value))}
+            className="time-select"
+          >
+            <option value={7}>Last 7 days</option>
+            <option value={14}>Last 14 days</option>
+            <option value={30}>Last 30 days</option>
+          </select>
+        </div>
       </div>
       
       <div className="graph-container">

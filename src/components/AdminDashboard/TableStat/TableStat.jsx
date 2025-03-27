@@ -1,9 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import './TableStat.css';
 
-const TableStat = ({ data, columns }) => {
-  if (!data || !columns) return null;
+const TableStat = () => {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Assuming you store the token in localStorage
+        const response = await axios.get('http://localhost:8000/api/stats', {
+          headers: {
+            Authorization: token
+          }
+        });
+        setStats(response.data);
+      } catch (err) {
+        setError('Failed to fetch statistics');
+        console.error('Error fetching stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) return <div>Loading statistics...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!stats) return null;
+
+  const columns = [
+    { key: 'activeUsers', title: 'Active Users' },
+    { key: 'activeClients', title: 'Active Clients' },
+    { key: 'activeFreelancers', title: 'Active Freelancers' },
+    { key: 'blockedUsers', title: 'Blocked Users' },
+    { key: 'blockedClients', title: 'Blocked Clients' },
+    { key: 'blockedFreelancers', title: 'Blocked Freelancers' }
+  ];
+
+  const data = [{
+    activeUsers: stats.activeUsers.toLocaleString(),
+    activeClients: stats.activeClients.toLocaleString(),
+    activeFreelancers: stats.activeFreelancers.toLocaleString(),
+    blockedUsers: stats.blockedUsers.toLocaleString(),
+    blockedClients: stats.blockedClients.toLocaleString(),
+    blockedFreelancers: stats.blockedFreelancers.toLocaleString()
+  }];
 
   return (
     <div className="table-container">

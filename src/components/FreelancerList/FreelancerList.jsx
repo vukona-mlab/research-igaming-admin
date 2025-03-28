@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import "./FreelancerList.css";
-import ProfileCard from '../../components/Profilecard/ProfileCard';
+import ProfileCard from "../../components/Profilecard/ProfileCard";
 
 export default function FreelancerList() {
   const [loading, setLoading] = useState(false);
@@ -16,8 +16,10 @@ export default function FreelancerList() {
   const fetchFreelancers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/api/freelancers');
-      console.log('Fetched freelancers:', response.data.freelancers);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/freelancers`
+      );
+      console.log("Fetched freelancers:", response.data.freelancers);
       setFreelancers(response.data.freelancers);
     } catch (error) {
       console.error("Error fetching freelancers:", error);
@@ -48,7 +50,7 @@ export default function FreelancerList() {
             email={selectedFreelancer.email}
             phone={selectedFreelancer.phone}
             dateOfBirth={selectedFreelancer.dateOfBirth}
-            interests={selectedFreelancer.interests || 'Not specified'}
+            interests={selectedFreelancer.interests || "Not specified"}
             projectCount={selectedFreelancer.projectCount || 0}
             profileImage={selectedFreelancer.profilePicture}
             onClose={handleCloseProfile}
@@ -85,7 +87,7 @@ export default function FreelancerList() {
                             width: "40px",
                             height: "40px",
                             borderRadius: "50%",
-                            cursor: "pointer"
+                            cursor: "pointer",
                           }}
                           onClick={() => handleProfileClick(freelancer)}
                         />
@@ -94,15 +96,19 @@ export default function FreelancerList() {
                       {freelancer.role}
                     </div>
                   </td>
-                  <td className="t-data">{freelancer.position || 'N/A'}</td>
-                  <td className="t-data">{freelancer.phone || 'N/A'}</td>
+                  <td className="t-data">{freelancer.position || "N/A"}</td>
+                  <td className="t-data">{freelancer.phone || "N/A"}</td>
                   <td className="t-data">{freelancer.email}</td>
-                  <td className="t-data">{freelancer.dateOfBirth || 'N/A'}</td>
-                  <td className="t-data">{freelancer.startDate || 'N/A'}</td>
+                  <td className="t-data">{freelancer.dateOfBirth || "N/A"}</td>
+                  <td className="t-data">{freelancer.startDate || "N/A"}</td>
                   <td className="t-data">
                     <div className="action-buttons">
-                      <div className={`active-blocked ${freelancer.status?.toLowerCase() || 'inactive'}`}>
-                        {freelancer.status || 'inactive'}
+                      <div
+                        className={`active-blocked ${
+                          freelancer.status?.toLowerCase() || "inactive"
+                        }`}
+                      >
+                        {freelancer.status || "inactive"}
                       </div>
                     </div>
                   </td>

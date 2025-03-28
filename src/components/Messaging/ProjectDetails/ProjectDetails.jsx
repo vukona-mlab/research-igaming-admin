@@ -126,20 +126,23 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
 
   const handleTransaction = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/transaction", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          clientId: clientId,
-          freelancerId: freelancerId,
-          amount: parseFloat(project.budget),
-          clientEmail: clientDetails.email,
-          projectId: project.id,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/transaction`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            clientId: clientId,
+            freelancerId: freelancerId,
+            amount: parseFloat(project.budget),
+            clientEmail: clientDetails.email,
+            projectId: project.id,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -152,7 +155,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
             if (transaction.status === "success") {
               try {
                 const res = await fetch(
-                  "http://localhost:8000/api/payment/verify",
+                  `${import.meta.env.VITE_API_URL}/api/payment/verify`,
                   {
                     method: "POST",
                     headers: {

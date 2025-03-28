@@ -5,10 +5,10 @@ import "./SignIn.css";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [emailError, setEmailError] = useState(""); 
-  const [passwordError, setPasswordError] = useState(""); 
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
   // Function to validate email format
@@ -23,8 +23,8 @@ const SignIn = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); 
-    setEmailError(""); 
+    setError("");
+    setEmailError("");
     setPasswordError("");
 
     // Validate email
@@ -43,7 +43,7 @@ const SignIn = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/auth/admin/login",
+        `${import.meta.env.VITE_API_URL}/api/auth/admin/login`,
         {
           method: "POST",
           headers: {
@@ -64,7 +64,6 @@ const SignIn = () => {
 
       navigate("/profile");
     } catch (err) {
-     
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);

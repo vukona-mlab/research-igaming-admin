@@ -27,15 +27,18 @@ const FreelanceList = () => {
 
   // Fetch freelancers and clients from the backend
   useEffect(() => {
-    const fetchFreelancers = fetch("http://localhost:8000/api/freelancers", {
-      method: "GET",
-      headers: {
-        Authorization: ` ${localStorage.getItem("authToken")}`,
-        "Content-Type": "application/json",
-      },
-    }).then((res) => res.json());
+    const fetchFreelancers = fetch(
+      `${import.meta.env.VITE_API_URL}/api/freelancers`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: ` ${localStorage.getItem("authToken")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => res.json());
 
-    const fetchClients = fetch("http://localhost:8000/api/clients", {
+    const fetchClients = fetch(`${import.meta.env.VITE_API_URL}/api/clients`, {
       method: "GET",
       headers: {
         Authorization: `${localStorage.getItem("authToken")}`,

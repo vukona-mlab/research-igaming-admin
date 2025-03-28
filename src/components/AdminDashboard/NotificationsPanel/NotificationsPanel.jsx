@@ -27,7 +27,7 @@ const NotificationsPanel = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/admin-notifications",
+        `${import.meta.env.VITE_API_URL}/api/admin-notifications`,
         {
           method: "GET",
           headers: {

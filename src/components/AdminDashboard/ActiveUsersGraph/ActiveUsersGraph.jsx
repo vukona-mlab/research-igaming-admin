@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import axios from 'axios';
-import './ActiveUsersGraph.css';
+import React, { useState, useEffect } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import axios from "axios";
+import "./ActiveUsersGraph.css";
 
 const ActiveUsersGraph = () => {
   const [data, setData] = useState([]);
@@ -12,16 +20,21 @@ const ActiveUsersGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get(`http://localhost:8000/api/daily-active-users?days=${timeRange}`, {
-          headers: {
-            Authorization: token
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/daily-active-users?days=${timeRange}`,
+          {
+            headers: {
+              Authorization: token,
+            },
           }
-        });
+        );
         setData(response.data);
       } catch (err) {
-        setError('Failed to fetch active users data');
-        console.error('Error fetching active users data:', err);
+        setError("Failed to fetch active users data");
+        console.error("Error fetching active users data:", err);
       } finally {
         setLoading(false);
       }
@@ -39,7 +52,7 @@ const ActiveUsersGraph = () => {
 
   // Calculate max value from data for Y-axis
   const maxValue = Math.max(
-    ...data.map(item => Math.max(item.freelancers, item.clients))
+    ...data.map((item) => Math.max(item.freelancers, item.clients))
   );
 
   // Generate nice round numbers for ticks
@@ -54,8 +67,10 @@ const ActiveUsersGraph = () => {
     setLoading(true);
   };
 
-  if (loading) return <div className="active-users-container">Loading graph data...</div>;
-  if (error) return <div className="active-users-container">Error: {error}</div>;
+  if (loading)
+    return <div className="active-users-container">Loading graph data...</div>;
+  if (error)
+    return <div className="active-users-container">Error: {error}</div>;
 
   return (
     <div className="active-users-container">
@@ -72,8 +87,8 @@ const ActiveUsersGraph = () => {
           </span>
         </div>
         <div className="time-selector">
-          <select 
-            value={timeRange} 
+          <select
+            value={timeRange}
             onChange={(e) => handleTimeRangeChange(Number(e.target.value))}
             className="time-select"
           >
@@ -83,7 +98,7 @@ const ActiveUsersGraph = () => {
           </select>
         </div>
       </div>
-      
+
       <div className="graph-container">
         <ResponsiveContainer width="100%" height={300}>
           <LineChart
@@ -95,33 +110,28 @@ const ActiveUsersGraph = () => {
               bottom: 20,
             }}
           >
-            <CartesianGrid 
-              strokeDasharray="3 3" 
+            <CartesianGrid
+              strokeDasharray="3 3"
               vertical={false}
               stroke="#E5E7EB"
             />
-            <XAxis 
-              dataKey="name" 
-              axisLine={false}
-              tickLine={false}
-              dy={10}
-            />
-            <YAxis 
+            <XAxis dataKey="name" axisLine={false} tickLine={false} dy={10} />
+            <YAxis
               tickFormatter={formatYAxis}
               axisLine={false}
               tickLine={false}
               ticks={generateNiceTicks(maxValue)}
               dx={-10}
-              domain={[0, 'auto']}
+              domain={[0, "auto"]}
             />
-            <Tooltip 
-              contentStyle={{ 
-                background: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            <Tooltip
+              contentStyle={{
+                background: "white",
+                border: "none",
+                borderRadius: "8px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
               }}
-              formatter={(value) => [`${formatYAxis(value)}`, '']}
+              formatter={(value) => [`${formatYAxis(value)}`, ""]}
             />
             <Line
               type="monotone"
@@ -146,4 +156,4 @@ const ActiveUsersGraph = () => {
   );
 };
 
-export default ActiveUsersGraph; 
+export default ActiveUsersGraph;

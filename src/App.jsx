@@ -20,7 +20,7 @@ const App = () => {
             <Route path="/" element={<LoginPage />} />
           </Route>
           <Route element={<ProtectedRoutes />}>
-            <Route path="/freelancer" element={<FreelancerList />} />
+            <Route path="/users" element={<FreelancerList />} />
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/documents1" element={<DocumentsPage1 />} />
             <Route path="/profile" element={<ProfilePage />} />

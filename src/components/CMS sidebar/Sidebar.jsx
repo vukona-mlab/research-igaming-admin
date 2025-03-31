@@ -94,7 +94,7 @@ const Sidebar = ({ onToggle }) => {
           <SidebarItem
             imgSrc={userIcon}
             text="Users"
-            to="/freelancer"
+            to="/users"
             isOpen={isOpen}
           />
           <SidebarItem

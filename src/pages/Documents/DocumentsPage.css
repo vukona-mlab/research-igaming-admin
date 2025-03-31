@@ -1,9 +1,9 @@
 .DocumentsPage {
     min-height: 100vh;
     background: #be353500;
-  }
-  
-  .messagePageContainer {
+}
+
+.messagePageContainer {
     width: calc(100% - 40px);
     height: calc(95vh - 70px);
     margin: 0 auto 25px auto;
@@ -13,66 +13,66 @@
     position: relative;
     z-index: 1;
     background-color: #fff;
-  }
-  
-  .loading {
+}
+
+.loading {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-size: 1.2rem;
     color: #666;
-  }
-  
-  @media (max-width: 768px) {
-    .messagePageContainer {
-      flex-direction: column;
-      height: auto;
-    }
-  }
+}
 
-  .MessagingPageC .search-container {
+@media (max-width: 768px) {
+    .messagePageContainer {
+        flex-direction: column;
+        height: auto;
+    }
+}
+
+.MessagingPageC .search-container {
     width: 30%;
     margin: 15px 0 0 15px !important;
-  }
+}
 
-  .MessagingPageC .navbar {
+.MessagingPageC .navbar {
     width: 100%;
     position: relative;
     z-index: 2;
-  }
+}
 
-  .main-content {
+.main-content {
     transition: margin-left 0.3s ease;
     width: 100%;
     margin-left: 0;
     padding-top: 0;
-  }
+}
 
-  .main-content.sidebar-expanded {
+.main-content.sidebar-expanded {
     margin-left: 250px;
     width: calc(100% - 250px);
     padding-left: 0;
-  }
+}
 
-  .main-content.sidebar-collapsed {
+.main-content.sidebar-collapsed {
     margin-left: 100px;
     width: calc(100% - 100px);
     padding-left: 0;
-  }
+}
 
-  .filter-buttons .selected {
+.filter-buttons .selected {
     background: #333333;
     color: white;
-  }
+}
 
-  .DocumentsPageContainer .container {
+.DocumentsPageContainer .container {
     margin-left: 0px;
     width: calc(100% + 30px);
     margin-top: 40px;
     max-width: auto;
-  }
+}
 
-  .DocumentsPageContainer .table-container {
+.DocumentsPageContainer .table-container {
     width: 100%;
-  }
+}

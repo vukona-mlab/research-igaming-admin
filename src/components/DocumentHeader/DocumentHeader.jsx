@@ -20,7 +20,7 @@ const Documents = ({ searchTerm }) => {
       />
 
       {/* Buttons Section */}
-      {selectedTab !== "Notifications" && selectedTab !== "Account" && (
+      {selectedTab !== "Notifications" && selectedTab !== "Account" && selectedTab !== "Reviews" && (
         <div className="filter-buttons">
           {["All", "Pending", "Approved", "Declined"].map((filter) => (
             <button

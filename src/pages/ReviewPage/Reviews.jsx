@@ -1,50 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
+import React, { useState, useEffect, memo } from 'react';
 import axios from 'axios';
+import ReviewCard from '../../components/Reviews/ReviewCard/ReviewCard';
+import FilterButtons from '../../components/FilterButtons/FilterButtons';
 
-const ReviewCard = ({ name, status, date, rating, text, profilePic }) => {
-  const renderStars = () => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star 
-        key={index} 
-        className={`h-5 w-5 ${index < rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`} 
-      />
-    ));
-  };
+// Memoized Filter Section
+const FilterSection = memo(({ selectedFilter, onFilterChange }) => (
+  <div className="mb-4">
+    <FilterButtons 
+      selectedFilter={selectedFilter}
+      onFilterChange={onFilterChange}
+    />
+  </div>
+));
 
-  return (
-    <div className="bg-white border rounded-lg p-4 mb-4 shadow-sm">
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center">
-          <img 
-            src={profilePic || "/default-avatar.jpg"} 
-            alt={name} 
-            className="w-8 h-8 rounded-full mr-2"
-          />
-          <span className="font-semibold mr-2">{name}</span>
-          <span className={`px-2 py-1 rounded text-xs ${
-            status === 'Approved' ? 'bg-green-100 text-green-800' : 
-            status === 'Rejected' ? 'bg-red-100 text-red-800' : 
-            'bg-yellow-100 text-yellow-800'
-          }`}>
-            {status}
-          </span>
-        </div>
-        <span className="text-gray-500 text-sm">
-          {new Date(date).toLocaleDateString()}
-        </span>
-      </div>
-      <div className="flex mb-2">{renderStars()}</div>
-      <p className="text-gray-700">{text}</p>
-    </div>
-  );
-};
+// Memoized Reviews List
+const ReviewsList = memo(({ reviews, onStatusUpdate }) => (
+  <div>
+    {reviews.length === 0 ? (
+      <p className="text-gray-500 text-center">No reviews yet</p>
+    ) : (
+      reviews.map((review, index) => (
+        <ReviewCard 
+          key={review.id || index}
+          review={review}
+          onStatusUpdate={onStatusUpdate}
+        />
+      ))
+    )}
+  </div>
+));
 
-const Reviews = ({ freelancerId }) => {
+const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState("All");
+
+  const handleStatusUpdate = (reviewId, newStatus) => {
+    setReviews(prevReviews => 
+      prevReviews.map(review => 
+        review.id === reviewId 
+          ? { ...review, status: newStatus }
+          : review
+      )
+    );
+  };
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -65,19 +65,16 @@ const Reviews = ({ freelancerId }) => {
 
         // Use the base URL from the project's fetch calls
         const response = await axios.get('http://localhost:8000/api/reviews', {
-          params: { 
-            freelancerId: freelancerId,
-            ...(filter && { stars: filter }) 
-          },
           headers: {
             'Authorization': authToken
           }
         });
         
-        // Include both 'Approved' and 'Pending' reviews
-        const filteredReviews = (response.data.reviews || []).filter(
-          review => ['Approved', 'Pending'].includes(review.status)
-        );
+        // Filter reviews based on selected status
+        const filteredReviews = (response.data.reviews || []).filter(review => {
+          if (selectedFilter === "All") return true;
+          return review.status === selectedFilter;
+        });
 
         setReviews(filteredReviews);
         setLoading(false);
@@ -88,16 +85,8 @@ const Reviews = ({ freelancerId }) => {
       }
     };
 
-    // Only fetch reviews if freelancerId is provided
-    if (freelancerId) {
-      fetchReviews();
-    } else {
-      setError('No freelancer ID provided');
-      setLoading(false);
-    }
-  }, [freelancerId, filter]);
-
-  const starFilters = [1, 2, 3, 4, 5];
+    fetchReviews();
+  }, [selectedFilter]);
 
   // Loading Skeleton
   const LoadingSkeleton = () => (
@@ -146,49 +135,15 @@ const Reviews = ({ freelancerId }) => {
   if (error) return <ErrorComponent />;
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
-      
-      {/* Star Filter */}
-      <div className="flex items-center mb-4">
-        <span className="mr-2">Filter by:</span>
-        <div className="flex space-x-2">
-          <button 
-            onClick={() => setFilter(null)}
-            className={`px-2 py-1 rounded ${filter === null ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          >
-            All
-          </button>
-          {starFilters.map(stars => (
-            <button 
-              key={stars}
-              onClick={() => setFilter(stars)}
-              className={`flex items-center px-2 py-1 rounded ${filter === stars ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            >
-              {stars} <Star className="h-4 w-4 ml-1 text-yellow-500 fill-yellow-500" />
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Reviews List */}
-      {reviews.length === 0 ? (
-        <p className="text-gray-500 text-center">No reviews yet</p>
-      ) : (
-        reviews.map((review, index) => (
-          <ReviewCard 
-            key={review.id || index}
-            name={review.clientDisplayName || 'Anonymous'}
-            status={review.status}
-            date={review.createdAt?._seconds 
-              ? new Date(review.createdAt._seconds * 1000) 
-              : (review.createdAt || new Date())}
-            rating={review.stars}
-            text={review.message}
-            profilePic={review.clientProfilePic}
-          />
-        ))
-      )}
+    <div className="max-w-2xl mx-auto pt-2 px-4">      
+      <FilterSection 
+        selectedFilter={selectedFilter}
+        onFilterChange={setSelectedFilter}
+      />
+      <ReviewsList 
+        reviews={reviews} 
+        onStatusUpdate={handleStatusUpdate}
+      />
     </div>
   );
 };

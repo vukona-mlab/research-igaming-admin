@@ -39,20 +39,32 @@ const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 const messaging = getMessaging(app);
 
-const requestForToken = () => {
-  return Notification.requestPermission()
-    .then((permission) => {
-      if (permission === "granted") {
-        return getToken(messaging, {
-          vapidKey: import.meta.env.VITE_API_VAPID_KEY,
-        });
-      } else {
-        throw new Error("Notification not granted");
-      }
-    })
-    .catch((err) => {
-      console.error("Error getting token", err);
-    });
+const requestForToken = async () => {
+  try {
+    // First check if service worker is supported
+    if (!('serviceWorker' in navigator)) {
+      throw new Error('Service Worker not supported');
+    }
+
+    // Register the service worker
+    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    
+    // Request notification permission
+    const permission = await Notification.requestPermission();
+    
+    if (permission === "granted") {
+      const token = await getToken(messaging, {
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+        serviceWorkerRegistration: registration
+      });
+      return token;
+    } else {
+      throw new Error("Notification permission not granted");
+    }
+  } catch (err) {
+    console.error("Error getting token", err);
+    throw err;
+  }
 };
 onMessage(messaging, ({ notification }) => {
   new Notification(notification.title, {

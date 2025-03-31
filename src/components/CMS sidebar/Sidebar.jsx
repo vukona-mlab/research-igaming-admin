@@ -13,10 +13,10 @@ const Sidebar = ({ onToggle }) => {
   const [userData, setUserData] = useState(null);
   const [profilePicture, setProfilePicture] = useState("");
   const location = useLocation();
-  
+
   useEffect(() => {
     // Fetch user data from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setUserData(user);
       fetchProfile(user.uid);
@@ -24,8 +24,8 @@ const Sidebar = ({ onToggle }) => {
   }, []);
 
   const fetchProfile = async (adminId) => {
-    const token = localStorage.getItem('authToken');
-    
+    const token = localStorage.getItem("authToken");
+
     if (!adminId || !token) {
       console.error("Missing adminId or token");
       return;
@@ -79,29 +79,29 @@ const Sidebar = ({ onToggle }) => {
 
         {/* Navigation Items */}
         <div className="sidebar-nav">
-          <SidebarItem 
-            imgSrc={dashIcon} 
-            text="Dashboard" 
-            to="/admin-dashboard" 
-            isOpen={isOpen} 
-          />
-          <SidebarItem 
-            imgSrc={messageIcon} 
-            text="Messages" 
-            to="/messages" 
-            isOpen={isOpen} 
-          />
-          <SidebarItem 
-            imgSrc={userIcon} 
-            text="Users" 
-            to="/freelancer" 
+          <SidebarItem
+            imgSrc={dashIcon}
+            text="Dashboard"
+            to="/admin-dashboard"
             isOpen={isOpen}
           />
-          <SidebarItem 
-            imgSrc={projectIcon} 
-            text="Projects" 
-            to="/documents" 
-            isOpen={isOpen} 
+          <SidebarItem
+            imgSrc={messageIcon}
+            text="Messages"
+            to="/messages"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            imgSrc={userIcon}
+            text="Users"
+            to="/users"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            imgSrc={projectIcon}
+            text="Projects"
+            to="/documents"
+            isOpen={isOpen}
           />
         </div>
       </div>
@@ -110,7 +110,12 @@ const Sidebar = ({ onToggle }) => {
       <div className="mb-4">
         <Link to="/profile" className="sidebar-profile">
           <img
-            src={profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.displayName || '')}&background=random`}
+            src={
+              profilePicture ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                userData?.displayName || ""
+              )}&background=random`
+            }
             alt="User"
             className="profile-img"
           />
@@ -130,9 +135,7 @@ const Sidebar = ({ onToggle }) => {
 const SidebarItem = ({ imgSrc, text, isOpen, to }) => {
   return (
     <Link to={to} className="sidebar-item">
-      {imgSrc && (
-        <img src={imgSrc} alt="Icon" className="sidebar-icon" />
-      )}
+      {imgSrc && <img src={imgSrc} alt="Icon" className="sidebar-icon" />}
       {isOpen && <span className="sidebar-text">{text}</span>}
     </Link>
   );

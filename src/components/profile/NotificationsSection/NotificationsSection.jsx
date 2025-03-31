@@ -38,10 +38,10 @@ const NotificationsSection = () => {
   const [allProjNotif, setAllProjNotif] = useState(false);
   return (
     <div className="NotificationsSection">
-      <ProfileImage>
+      {/* <ProfileImage>
         <img src="images/Rectangle 258.png" alt="Profile" />
         <CameraIcon>📷</CameraIcon>
-      </ProfileImage>
+      </ProfileImage> */}
       <div className="ns-notifs-checks">
         <div className="ns-input-check">
           <div className="ns-input-check-text">

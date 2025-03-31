@@ -3,6 +3,8 @@ import DocumentTabs from "../DocumentsTabs/DocumentTabs";
 import "./DocumentHeader.css";
 import NotificationsPage from "../../pages/notificationPage/NotificationsPage";
 import DocumentsList from "../DocumentsList/DocumentsList";
+import ReviewPage from "../../pages/ReviewPage/Reviews"; // Import the Reviews component
+
 const Documents = ({ searchTerm }) => {
   const [selectedTab, setSelectedTab] = useState("Notifications");
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter button
@@ -18,7 +20,7 @@ const Documents = ({ searchTerm }) => {
       />
 
       {/* Buttons Section */}
-      {selectedTab !== "Notifications" && selectedTab !== "Account" && (
+      {selectedTab !== "Notifications" && selectedTab !== "Account" && selectedTab !== "Reviews" && (
         <div className="filter-buttons">
           {["All", "Pending", "Approved", "Declined"].map((filter) => (
             <button
@@ -39,9 +41,9 @@ const Documents = ({ searchTerm }) => {
 
         {selectedTab === "Documents" && <DocumentsList />}
 
-        {selectedTab === "Account"}
+        {selectedTab === "Account" && null}
 
-        {selectedTab === "Reviews"}
+        {selectedTab === "Reviews" && <ReviewPage />}
       </div>
     </div>
   );

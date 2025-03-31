@@ -63,6 +63,26 @@ export default function DocumentsList() {
     }
   }
 
+  const declineDocument = async (documentId, reason) => {
+    try {
+      await axios.patch(`http://localhost:8000/api/documents/${documentId}`, {
+        status: `Declined: ${reason}`,
+      });
+  
+      setDocuments((prevDocs) =>
+        prevDocs.map((doc) =>
+          doc.id === documentId ? { ...doc, status: `Declined: ${reason}` } : doc
+        )
+      );
+  
+      setShowDeclineMenu(false);
+      setShowMenu(false);
+    } catch (error) {
+      console.error("Error declining document:", error);
+    }
+  };
+  
+
   return (
     <div className="container">
       <table className="table-container">
@@ -99,11 +119,11 @@ export default function DocumentsList() {
                         <div className="context-opts">Approve</div>
                         <div className="context-opts" onClick={showDeclineOptions}>Decline</div>
                         <div className="decline-menu">
-                          <div className="decline-opts">Names don't match</div>
-                          <div className="decline-opts">
+                          <div className="decline-opts" onClick={() => declineDocument(document.id, "Names don't match")}>Names don't match</div>
+                          <div className="decline-opts" onClick={() => declineDocument(document.id, "Documents not visible")}>
                             Documents not visible
                           </div>
-                          <div className="decline-opts">
+                          <div className="decline-opts" onClick={() => declineDocument(document.id, "Documents not certified")}>
                             Documents not certified
                           </div>
                         </div>

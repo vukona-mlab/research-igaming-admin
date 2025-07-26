@@ -27,24 +27,24 @@ const MessagingPage = () => {
   const url = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) {
-      navigate('/admin/login');
+      navigate("/admin/login");
       return;
     }
 
     // Get current user info from token
-    const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-    console.log('Token payload:', tokenPayload);
-    
+    const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+    console.log("Token payload:", tokenPayload);
+
     // Extract user ID from the payload
     const userId = tokenPayload.uid;
-    console.log('Setting current user ID:', userId);
+    console.log("Setting current user ID:", userId);
     setCurrentUserId(userId);
-    
+
     // Set user role from the payload
     const userRole = tokenPayload.roles?.[0] || tokenPayload.type;
-    console.log('Setting user role:', userRole);
+    console.log("Setting user role:", userRole);
     setUserRole(userRole);
 
     fetchChats();
@@ -59,10 +59,18 @@ const MessagingPage = () => {
 
   useEffect(() => {
     if (searchQuery) {
-      const filtered = chats.filter(chat => {
-        const otherParticipant = chat.participants?.find(p => p.id !== currentUserId);
-        return otherParticipant?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               otherParticipant?.email?.toLowerCase().includes(searchQuery.toLowerCase());
+      const filtered = chats.filter((chat) => {
+        const otherParticipant = chat.participants?.find(
+          (p) => p.id !== currentUserId
+        );
+        return (
+          otherParticipant?.name
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          otherParticipant?.email
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        );
       });
       setFilteredChats(filtered);
     } else {
@@ -72,19 +80,19 @@ const MessagingPage = () => {
 
   const initializeSocket = () => {
     const socket = io(url);
-    
-    socket.on('new-admin-message', (data) => {
+
+    socket.on("new-admin-message", (data) => {
       if (data.chatId === currentChatId) {
         getCurrentChat();
       }
       fetchChats();
     });
 
-    socket.on('admin-chat-created', (data) => {
+    socket.on("admin-chat-created", (data) => {
       fetchChats();
     });
 
-    socket.on('chat-archived', (data) => {
+    socket.on("chat-archived", (data) => {
       if (data.chatId === currentChatId) {
         setCurrentChatId("");
         setCurrentChat(null);
@@ -92,7 +100,7 @@ const MessagingPage = () => {
       fetchChats();
     });
 
-    socket.on('video-call-invitation', (data) => {
+    socket.on("video-call-invitation", (data) => {
       if (data.recipientId === currentUserId) {
         handleVideoCallInvitation(data);
       }
@@ -102,10 +110,10 @@ const MessagingPage = () => {
   };
 
   const handleVideoCallInvitation = (data) => {
-    if (Notification.permission === 'granted') {
-      const notification = new Notification('Video Call Invitation', {
+    if (Notification.permission === "granted") {
+      const notification = new Notification("Video Call Invitation", {
         body: `${data.initiatorName} is inviting you to a video call`,
-        icon: '/path/to/notification-icon.png'
+        icon: "/path/to/notification-icon.png",
       });
 
       notification.onclick = () => {
@@ -124,39 +132,40 @@ const MessagingPage = () => {
   const fetchChats = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) {
-        navigate('/admin/login');
+        navigate("/admin/login");
         return;
       }
 
-      const response = await fetch(
-        `${url}/api/adminChats`,
-        {
-          method: "GET",
-          headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-          },
-        }
-      );
+      const response = await fetch(`${url}/api/admin-chats`, {
+        method: "GET",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         if (response.status === 401) {
-          navigate('/admin/login');
+          navigate("/admin/login");
           return;
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Fetched chats data:', data.chats);
-      console.log('Current user ID:', currentUserId);
-      
+      console.log("Fetched chats data:", data.chats);
+      console.log("Current user ID:", currentUserId);
+
       // Sort chats by last message timestamp
       const sortedChats = data.chats.sort((a, b) => {
-        const timeA = a.updatedAt?._seconds ? a.updatedAt._seconds * 1000 : new Date(a.updatedAt).getTime();
-        const timeB = b.updatedAt?._seconds ? b.updatedAt._seconds * 1000 : new Date(b.updatedAt).getTime();
+        const timeA = a.updatedAt?._seconds
+          ? a.updatedAt._seconds * 1000
+          : new Date(a.updatedAt).getTime();
+        const timeB = b.updatedAt?._seconds
+          ? b.updatedAt._seconds * 1000
+          : new Date(b.updatedAt).getTime();
         return timeB - timeA; // Most recent first
       });
       setChats(sortedChats);
@@ -170,37 +179,37 @@ const MessagingPage = () => {
 
   const getCurrentChat = async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) {
-        navigate('/admin/login');
+        navigate("/admin/login");
         return;
       }
 
       const response = await fetch(
-        `${url}/api/adminChats/${currentChatId}/messages`,
+        `${url}/api/admin-chats/${currentChatId}/messages`,
         {
           method: "GET",
           headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
+            Authorization: token,
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (!response.ok) {
         if (response.status === 401) {
-          navigate('/admin/login');
+          navigate("/admin/login");
           return;
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Current chat participants:', data.participants);
-      
+      console.log("Current chat participants:", data.participants);
+
       // Ensure participants array is properly formatted
-      const formattedParticipants = data.participants.map(participant => {
-        if (typeof participant === 'string') {
+      const formattedParticipants = data.participants.map((participant) => {
+        if (typeof participant === "string") {
           return participant;
         }
         return {
@@ -208,25 +217,28 @@ const MessagingPage = () => {
           name: participant.name || participant.displayName,
           profilePicture: participant.profilePicture,
           activeStatus: participant.activeStatus,
-          role: participant.role || 'admin' // Ensure role is set
+          role: participant.role || "admin", // Ensure role is set
         };
       });
 
       setCurrentChat({
         ...data,
-        participants: formattedParticipants
+        participants: formattedParticipants,
       });
-      
+
       // Set the other participant's info from participants array
-      const otherParticipant = formattedParticipants.find(p => {
-        const participantId = typeof p === 'object' ? p.id : p;
+      const otherParticipant = formattedParticipants.find((p) => {
+        const participantId = typeof p === "object" ? p.id : p;
         return participantId !== currentUserId;
       });
-      
+
       if (otherParticipant) {
-        const otherUserName = typeof otherParticipant === 'object' 
-          ? (otherParticipant.name || otherParticipant.displayName || "Unknown User")
-          : "Unknown User";
+        const otherUserName =
+          typeof otherParticipant === "object"
+            ? otherParticipant.name ||
+              otherParticipant.displayName ||
+              "Unknown User"
+            : "Unknown User";
         setCurrentUserName(otherUserName);
       }
     } catch (error) {
@@ -239,18 +251,21 @@ const MessagingPage = () => {
   };
 
   const handleChatSelect = (chatId, selectedParticipant) => {
-    console.log('Chat selected:', { chatId, selectedParticipant });
+    console.log("Chat selected:", { chatId, selectedParticipant });
     setCurrentChatId(chatId);
-    
+
     // Set the selected participant's name and role
     if (selectedParticipant) {
-      const participantName = selectedParticipant.name || selectedParticipant.displayName || "Unknown User";
-      console.log('Setting selected participant name to:', participantName);
+      const participantName =
+        selectedParticipant.name ||
+        selectedParticipant.displayName ||
+        "Unknown User";
+      console.log("Setting selected participant name to:", participantName);
       setCurrentUserName(participantName);
-      
+
       // Update the chat in the chats list with the new participant info
-      setChats(prevChats => {
-        return prevChats.map(chat => {
+      setChats((prevChats) => {
+        return prevChats.map((chat) => {
           if (chat.id === chatId) {
             // Create a properly structured chat object
             const updatedChat = {
@@ -259,22 +274,22 @@ const MessagingPage = () => {
                 id: selectedParticipant.id,
                 name: participantName,
                 profilePicture: selectedParticipant.profilePicture,
-                activeStatus: selectedParticipant.activeStatus
+                activeStatus: selectedParticipant.activeStatus,
               },
               metadata: {
                 target: {
                   id: selectedParticipant.id,
                   name: participantName,
                   profilePicture: selectedParticipant.profilePicture,
-                  activeStatus: selectedParticipant.activeStatus
+                  activeStatus: selectedParticipant.activeStatus,
                 },
                 initiator: {
                   id: currentUserId,
-                  name: currentUserName
-                }
-              }
+                  name: currentUserName,
+                },
+              },
             };
-            console.log('Updated chat structure:', updatedChat);
+            console.log("Updated chat structure:", updatedChat);
             return updatedChat;
           }
           return chat;
@@ -282,7 +297,7 @@ const MessagingPage = () => {
       });
 
       // Update currentChat with the properly structured data
-      setCurrentChat(prevChat => {
+      setCurrentChat((prevChat) => {
         if (prevChat && prevChat.id === chatId) {
           return {
             ...prevChat,
@@ -290,20 +305,20 @@ const MessagingPage = () => {
               id: selectedParticipant.id,
               name: participantName,
               profilePicture: selectedParticipant.profilePicture,
-              activeStatus: selectedParticipant.activeStatus
+              activeStatus: selectedParticipant.activeStatus,
             },
             metadata: {
               target: {
                 id: selectedParticipant.id,
                 name: participantName,
                 profilePicture: selectedParticipant.profilePicture,
-                activeStatus: selectedParticipant.activeStatus
+                activeStatus: selectedParticipant.activeStatus,
               },
               initiator: {
                 id: currentUserId,
-                name: currentUserName
-              }
-            }
+                name: currentUserName,
+              },
+            },
           };
         }
         return prevChat;
@@ -318,7 +333,11 @@ const MessagingPage = () => {
   return (
     <div className="MessagingPageC">
       <Sidebar onToggle={setIsSidebarOpen} />
-      <div className={`main-content ${isSidebarOpen ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
+      <div
+        className={`main-content ${
+          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+        }`}
+      >
         <Navbar />
         <SearchBar placeholder="Search chats..." onSearch={handleSearch} />
 
@@ -340,7 +359,9 @@ const MessagingPage = () => {
                 currentClientId={currentUserId}
                 currentClientName={currentUserName}
                 isAdminChat={true}
-                isInitiator={currentChat?.metadata?.initiator?.id === currentUserId}
+                isInitiator={
+                  currentChat?.metadata?.initiator?.id === currentUserId
+                }
               />
             ) : (
               <div className="no-chat-selected">

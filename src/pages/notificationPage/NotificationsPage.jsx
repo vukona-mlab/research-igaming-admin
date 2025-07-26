@@ -80,7 +80,7 @@ const NotificationsPage = ({ searchTerm }) => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/admin-notifications",
+        `${import.meta.env.VITE_API_URL}/api/admin-notifications`,
         {
           method: "GET",
           headers: {
@@ -102,7 +102,7 @@ const NotificationsPage = ({ searchTerm }) => {
     try {
       console.log("clicked", id, authToken);
       const res = await fetch(
-        `http://localhost:8000/api/admin-notifications/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/admin-notifications/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -123,7 +123,7 @@ const NotificationsPage = ({ searchTerm }) => {
   const readNotification = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:8000/api/admin-notifications/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/admin-notifications/${id}`,
         {
           method: "PUT",
           headers: {

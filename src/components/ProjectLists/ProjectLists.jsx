@@ -72,11 +72,14 @@ export default function ProjectList() {
         token = `Bearer ${token}`;
       }
 
-      const response = await axios.get("http://localhost:8000/api/projects", {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/projects`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       // console.log("Projects data from API:", response.data.projects);
       setProjects(response.data.projects);
       setSearchResults(response.data.projects);
@@ -98,11 +101,14 @@ export default function ProjectList() {
         token = `Bearer ${token}`;
       }
 
-      const response = await axios.get("http://localhost:8000/api/clients", {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/clients`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       const clientsMap = response.data.clients.reduce((acc, client) => {
         acc[client.id] = client;
         return acc;
@@ -124,7 +130,7 @@ export default function ProjectList() {
       }
 
       const response = await axios.get(
-        "http://localhost:8000/api/freelancers",
+        `${import.meta.env.VITE_API_URL}/api/freelancers`,
         {
           headers: {
             Authorization: token,

@@ -33,7 +33,7 @@ const Sidebar = ({ onToggle }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/auth/admin/profile/${adminId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
         {
           headers: {
             "Content-Type": "application/json",

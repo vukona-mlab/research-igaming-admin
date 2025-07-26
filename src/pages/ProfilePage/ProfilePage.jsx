@@ -35,7 +35,7 @@ const HeaderContainer = styled.div`
   align-items: center;
   margin-bottom: 20px;
 
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -46,7 +46,7 @@ const Header = styled.h1`
   font-weight: bold;
   color: #888;
 
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: 20px;
   }
 `;
@@ -75,8 +75,8 @@ const ProfileImage = styled.div`
   overflow: hidden;
   margin-right: 15px;
   position: relative;
-  cursor:pointer;
-  
+  cursor: pointer;
+
   img {
     width: 100%;
     height: 100%;
@@ -129,7 +129,7 @@ const FormGrid = styled(Box)`
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
 
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -156,8 +156,6 @@ const Button = styled.button`
 const EditButton = styled(Button)`
   margin-left: auto;
 `;
-
-
 
 const ProfilePage = () => {
   const user = JSON.parse(localStorage.getItem("user")); // Parse the user object
@@ -196,7 +194,7 @@ const ProfilePage = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8000/api/auth/admin/profile/${adminId}`,
+          `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -259,7 +257,7 @@ const ProfilePage = () => {
       }
 
       const response = await fetch(
-        `http://localhost:8000/api/auth/admin/profile/${adminId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
         {
           method: "PUT",
           headers: {

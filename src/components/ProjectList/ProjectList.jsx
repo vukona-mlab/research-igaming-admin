@@ -33,13 +33,17 @@ export default function ProjectList({ statusFilter }) {
         token = `Bearer ${token}`;
       }
 
-      const response = await axios.get("http://localhost:8000/api/projects", {
-        headers: { Authorization: token },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/projects`,
+        {
+          headers: { Authorization: token },
+        }
+      );
 
       // Filter projects based on selected status
       const filteredProjects = response.data.projects.filter(
-        (project) => project.status?.toLowerCase() === statusFilter.toLowerCase()
+        (project) =>
+          project.status?.toLowerCase() === statusFilter.toLowerCase()
       );
 
       setProjects(filteredProjects);
@@ -61,9 +65,12 @@ export default function ProjectList({ statusFilter }) {
         token = `Bearer ${token}`;
       }
 
-      const response = await axios.get("http://localhost:8000/api/clients", {
-        headers: { Authorization: token },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/clients`,
+        {
+          headers: { Authorization: token },
+        }
+      );
 
       const clientsMap = response.data.clients.reduce((acc, client) => {
         acc[client.id] = client;
@@ -85,14 +92,20 @@ export default function ProjectList({ statusFilter }) {
         token = `Bearer ${token}`;
       }
 
-      const response = await axios.get("http://localhost:8000/api/freelancers", {
-        headers: { Authorization: token },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/freelancers`,
+        {
+          headers: { Authorization: token },
+        }
+      );
 
-      const freelancersMap = response.data.freelancers.reduce((acc, freelancer) => {
-        acc[freelancer.id] = freelancer;
-        return acc;
-      }, {});
+      const freelancersMap = response.data.freelancers.reduce(
+        (acc, freelancer) => {
+          acc[freelancer.id] = freelancer;
+          return acc;
+        },
+        {}
+      );
 
       setFreelancers(freelancersMap);
     } catch (error) {
@@ -150,7 +163,11 @@ export default function ProjectList({ statusFilter }) {
                     <td>{project.id}</td>
                     <td>{freelancer.name || "N/A"}</td>
                     <td>
-                      <div className={`status ${project.status?.toLowerCase() || "pending"}`}>
+                      <div
+                        className={`status ${
+                          project.status?.toLowerCase() || "pending"
+                        }`}
+                      >
                         {project.status}
                       </div>
                     </td>
@@ -170,7 +187,10 @@ export default function ProjectList({ statusFilter }) {
               })
             ) : (
               <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "10px" }}>
+                <td
+                  colSpan="6"
+                  style={{ textAlign: "center", padding: "10px" }}
+                >
                   No projects found.
                 </td>
               </tr>

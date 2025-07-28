@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./PeopleComponent.css";
 import PersonCard from "../PersonCard/PersonCard";
-import { BsChatDots, BsPeople } from "react-icons/bs";
+import { BsChatDots, BsPeople, BsChatSquareDots } from "react-icons/bs";
+import { TbMessageReport } from "react-icons/tb";
 
 const PeopleComponent = ({
   people,
@@ -9,6 +10,10 @@ const PeopleComponent = ({
   onChatSelect,
   isAdminChat,
   currentChatId,
+  isReports,
+  isUserChats,
+  current,
+  setCurrent,
 }) => {
   const [showAdmins, setShowAdmins] = useState(false);
   const [adminUsers, setAdminUsers] = useState([]);
@@ -256,11 +261,42 @@ const PeopleComponent = ({
     <div className="PeopleComponent">
       <div className="people-header">
         <div className="people-title">
-          {showAdmins ? "Admin Users" : "Chats"}
+          {current == "Reports"
+            ? "Reports"
+            : current == "UserChats"
+            ? "User Chats"
+            : current == "AdminUsers"
+            ? "Admin Users"
+            : "Admin Chats"}
+          {/* {showAdmins ? "Admin Users" : "Admin Chats"} */}
         </div>
+
         <button
           className="toggle-view-btn"
-          onClick={() => setShowAdmins(!showAdmins)}
+          onClick={() => {
+            setCurrent("Reports");
+            if (showAdmins) setShowAdmins(false);
+          }}
+        >
+          <TbMessageReport />
+        </button>
+
+        <button
+          className="toggle-view-btn"
+          onClick={() => {
+            setCurrent("UserChats");
+            if (showAdmins) setShowAdmins(false);
+          }}
+        >
+          <BsChatSquareDots />
+        </button>
+        <button
+          className="toggle-view-btn"
+          onClick={() => {
+            setCurrent(!showAdmins ? "AdminUsers" : "AdminChats");
+
+            setShowAdmins(!showAdmins);
+          }}
         >
           {showAdmins ? <BsChatDots /> : <BsPeople />}
         </button>

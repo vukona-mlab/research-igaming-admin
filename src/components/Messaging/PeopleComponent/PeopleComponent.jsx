@@ -3,6 +3,7 @@ import "./PeopleComponent.css";
 import PersonCard from "../PersonCard/PersonCard";
 import { BsChatDots, BsPeople, BsChatSquareDots } from "react-icons/bs";
 import { TbMessageReport } from "react-icons/tb";
+import { HiOutlineFlag } from "react-icons/hi2";
 
 const PeopleComponent = ({
   people,
@@ -278,7 +279,7 @@ const PeopleComponent = ({
             if (showAdmins) setShowAdmins(false);
           }}
         >
-          <TbMessageReport />
+          <HiOutlineFlag />
         </button>
 
         <button

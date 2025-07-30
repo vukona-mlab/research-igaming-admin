@@ -1,9 +1,9 @@
 .PeopleComponent {
   flex: 1;
   width: 415px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 12px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #e5e7eb;
   padding: 20px 16px;
   height: calc(100vh - 200px);
   overflow-y: auto;
@@ -18,7 +18,7 @@
 }
 
 .PeopleComponent::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
+  background: #d1d5db;
   border-radius: 3px;
 }
 
@@ -78,13 +78,13 @@
 }
 
 .person-card-container:hover {
-  background-color: #F3F4F6;
+  background-color: #f3f4f6;
   border-radius: 8px;
 }
 
 /* Empty state styling */
 .PeopleComponent > div:first-child:not(.people-title) {
-  color: #6B7280;
+  color: #6b7280;
   text-align: center;
   padding: 24px;
   font-size: 15px;

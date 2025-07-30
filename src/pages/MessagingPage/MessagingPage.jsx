@@ -23,6 +23,9 @@ const MessagingPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [userRole, setUserRole] = useState(localStorage.getItem("role"));
+  const [isReports, setIsReports] = useState(false);
+  const [isUserChats, setIsUserChats] = useState(false);
+  const [current, setCurrent] = useState("Chats");
   const navigate = useNavigate();
   const url = import.meta.env.VITE_API_URL;
 
@@ -78,6 +81,21 @@ const MessagingPage = () => {
     }
   }, [searchQuery, chats]);
 
+  useEffect(() => {
+    const filteredChats =
+      chats.length > 0 && current == "UserChats"
+        ? chats.filter(
+            (chat) => chat.tags && chat.tags.some((tag) => tag === "admin")
+          )
+        : current == "Reports"
+        ? chats.filter(
+            (chat) => chat.tags && chat.tags.some((tag) => tag === "report")
+          )
+        : chats.filter((chat) => chat.chatType === "admin-admin");
+    setFilteredChats(filteredChats);
+
+    console.log({ chats, filteredChats });
+  }, [chats, current, currentChatId]);
   const initializeSocket = () => {
     const socket = io(url);
 
@@ -349,6 +367,10 @@ const MessagingPage = () => {
               onChatSelect={handleChatSelect}
               isAdminChat={true}
               currentChatId={currentChatId}
+              isReports={isReports}
+              isUserChats={isUserChats}
+              current={current}
+              setCurrent={setCurrent}
             />
           </div>
           <div className="chatbox-section">

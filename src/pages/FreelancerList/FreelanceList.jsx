@@ -24,6 +24,7 @@ const FreelanceList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState("freelancers"); // Track current view
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Fetch freelancers and clients from the backend
   useEffect(() => {
@@ -127,115 +128,122 @@ const FreelanceList = () => {
     });
 
   return (
-    <Box sx={{ width: "90%", margin: "auto", padding: 3 }}>
-      <NavBar />
-      <Sidebar />
+    <div>
 
-      <ListHeader
-        listName={viewMode === "freelancers" ? "Freelancers" : "Clients"}
-        tab={filter}
-        handleTabChange={handleTabChange}
-        handleListNameChange={handleListNameChange}
-        onSearch={handleSearch}
-      />
+      <Sidebar onToggle={setIsSidebarOpen} />
+      <div
+        className={`main-content ${isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+          }`}
+      >
+        <NavBar />
+        <ListHeader
+          listName={viewMode === "freelancers" ? "Freelancers" : "Clients"}
+          tab={filter}
+          handleTabChange={handleTabChange}
+          handleListNameChange={handleListNameChange}
+          onSearch={handleSearch}
+        />
 
-      {/* Error Message */}
-      {error && (
-        <Box sx={{ textAlign: "center", my: 4 }}>
-          <Typography color="error">{error}</Typography>
-        </Box>
-      )}
+        {/* Error Message */}
+        {error && (
+          <Box sx={{ textAlign: "center", my: 4 }}>
+            <Typography color="error">{error}</Typography>
+          </Box>
+        )}
 
-      {/* Loading Indicator */}
-      {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>Name</b>
-                </TableCell>
-                <TableCell>
-                  <b>Position</b>
-                </TableCell>
-                <TableCell>
-                  <b>Phone</b>
-                </TableCell>
-                <TableCell>
-                  <b>Email</b>
-                </TableCell>
-                <TableCell>
-                  <b>DOB</b>
-                </TableCell>
-                <TableCell>
-                  <b>Start Date</b>
-                </TableCell>
-                <TableCell>
-                  <b>Status</b>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredData.length === 0 ? (
+        {/* Loading Indicator */}
+        {loading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={7} align="center">
-                    No {viewMode} found
+                  <TableCell>
+                    <b>Name</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Position</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Phone</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Email</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>DOB</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Start Date</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Status</b>
                   </TableCell>
                 </TableRow>
-              ) : (
-                filteredData.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      <Box display="flex" alignItems="center" gap={2}>
-                        <Avatar
-                          src={item.profilePicture || "/default-avatar.jpg"}
-                        />
-                        {item.displayName || item.name || "No Name"}
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      {item.jobTitle ||
-                        (viewMode === "clients" ? "Client" : "N/A")}
-                    </TableCell>
-                    <TableCell>{item.phoneNumber || "N/A"}</TableCell>
-                    <TableCell>{item.email || "N/A"}</TableCell>
-                    <TableCell>
-                      {item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}
-                    </TableCell>
-                    <TableCell>
-                      {item.createdAt ? formatDate(item.createdAt) : "N/A"}
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
-                        <Box
-                          sx={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: "50%",
-                            backgroundColor: item.activeStatus
-                              ? "green"
-                              : "red",
-                          }}
-                        />
-                        <Typography variant="body2">
-                          {item.activeStatus ? "Active" : "Inactive"}
-                        </Typography>
-                      </Box>
+              </TableHead>
+              <TableBody>
+                {filteredData.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No {viewMode} found
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </Box>
+                ) : (
+                  filteredData.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Box display="flex" alignItems="center" gap={2}>
+                          <Avatar
+                            src={item.profilePicture || "/default-avatar.jpg"}
+                          />
+                          {item.displayName || item.name || "No Name"}
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        {item.jobTitle ||
+                          (viewMode === "clients" ? "Client" : "N/A")}
+                      </TableCell>
+                      <TableCell>{item.phoneNumber || "N/A"}</TableCell>
+                      <TableCell>{item.email || "N/A"}</TableCell>
+                      <TableCell>
+                        {item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {item.createdAt ? formatDate(item.createdAt) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <Box
+                            sx={{
+                              width: 10,
+                              height: 10,
+                              borderRadius: "50%",
+                              backgroundColor: item.activeStatus
+                                ? "green"
+                                : "red",
+                            }}
+                          />
+                          <Typography variant="body2">
+                            {item.activeStatus ? "Active" : "Inactive"}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </div>
+
+    </div>
+
   );
 };
 

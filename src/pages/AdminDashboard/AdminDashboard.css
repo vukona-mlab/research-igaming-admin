@@ -9,10 +9,10 @@
 }
 
 .amd-main-container {
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease;
   width: calc(100% - 70px);
   margin-left: 70px;
-  padding: 20px;
+  padding: 20px; */
 }
 
 .amd-main-content {
@@ -20,7 +20,7 @@
   justify-content: space-between; 
   gap: 24px;
   width: 100%;
-  padding-left: 80px;
+  /* padding-left: 80px; */
   padding-top: 20px;
 }
 

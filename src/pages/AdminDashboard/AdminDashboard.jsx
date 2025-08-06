@@ -12,32 +12,39 @@ import SearchBar from "../../components/common/SearchBar/SearchBar";
 
 
 const AdminDashboard = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  
+
   return (
     <div className="AdminDashboard">
-      <Sidebar />
-      <div className="amd-main-container">
-        <NavBar />
-        <div className="amd-main-content">
-          <div className="amd-stats-container">
-          <SearchBar placeholder="Search" onSearch={() => {}} />
-          <div className="amd-projects-stats-container">
-            <ProjectStats />
-          </div>
-          <div className="amd-projects-table-container">
-            <TableStat />
-          </div>
-          <div className="amd-graphs-container">
-            <ActiveUsersGraph />
-          </div>
-          </div>
+      <Sidebar onToggle={setIsSidebarOpen} />
+      <div
+        className={`main-content ${isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+          }`}
+      >
+        <div className="amd-main-container">
+          <NavBar />
+          <div className="amd-main-content">
+            <div className="amd-stats-container">
+              <SearchBar placeholder="Search" onSearch={() => { }} />
+              <div className="amd-projects-stats-container">
+                <ProjectStats />
+              </div>
+              <div className="amd-projects-table-container">
+                <TableStat />
+              </div>
+              <div className="amd-graphs-container">
+                <ActiveUsersGraph />
+              </div>
+            </div>
 
-          <div className="amd-notifications-container">
-            <NotificationsPanel />
+            <div className="amd-notifications-container">
+              <NotificationsPanel />
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   );
 };

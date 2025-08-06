@@ -68,13 +68,13 @@ const Sidebar = ({ onToggle }) => {
   return (
     <div className={`sidebar ${isOpen ? "sidebar-open" : "sidebar-closed"}`}>
       {/* Top Section */}
-      <div>
+      <div className="sidebar-inner">
         {/* Toggle Button */}
         <button
           className={`sidebar-button ${isOpen ? "open" : ""}`}
           onClick={toggleSidebar}
         >
-          <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
+          <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="sidebar-menu-icon" />
         </button>
 
         {/* Navigation Items */}
@@ -135,7 +135,7 @@ const Sidebar = ({ onToggle }) => {
 const SidebarItem = ({ imgSrc, text, isOpen, to }) => {
   return (
     <Link to={to} className="sidebar-item">
-      {imgSrc && <img src={imgSrc} alt="Icon" className="sidebar-icon" />}
+      {imgSrc && <img src={imgSrc} alt="Icon" className={`sidebar-icon ${!isOpen ? "sidebar-icon-closed" : ""}`} />}
       {isOpen && <span className="sidebar-text">{text}</span>}
     </Link>
   );

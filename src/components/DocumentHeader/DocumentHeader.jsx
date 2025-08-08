@@ -14,8 +14,8 @@ const Documents = ({ searchTerm }) => {
       <DocumentTabs
         tabOne="Notifications"
         tabTwo="Documents"
-        tabThree="Account"
-        tabFour="Reviews"
+        tabThree="Reviews"
+        tabFour=""
         handleTabChange={setSelectedTab}
       />
 
@@ -41,9 +41,11 @@ const Documents = ({ searchTerm }) => {
           <NotificationsPage searchTerm={searchTerm} />
         )}
 
-        {selectedTab === "Documents" && <DocumentsList />}
+        {selectedTab === "Documents" && (
+          <DocumentsList selectedFilter={selectedFilter} />
+        )}
 
-        {selectedTab === "Account" && null}
+        {/* {selectedTab === "Account" && null} */}
 
         {selectedTab === "Reviews" && <ReviewPage />}
       </div>

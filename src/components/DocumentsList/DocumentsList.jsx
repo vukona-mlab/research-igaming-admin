@@ -3,8 +3,10 @@ import "./documentsList.css";
 import axios, { all } from "axios";
 import { FaEllipsisV } from "react-icons/fa";
 
-export default function DocumentsList() {
+export default function DocumentsList({ selectedFilter }) {
   const [loading, setLoading] = useState(false);
+  const [docData, setDocData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [users, setUsers] = useState([]);
 
@@ -19,23 +21,11 @@ export default function DocumentsList() {
   const [currentUserId, setCurrentUserId] = useState("");
 
   const contextMenuRef = useRef(null);
+  const userMenuRef = useRef(null);
+
   useEffect(() => {
     getDocuments();
   }, []);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        contextMenuRef.current &&
-        !contextMenuRef.current.contains(event.target)
-      ) {
-        setShowContextMenu(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const getDocuments = async () => {
     setLoading(true);
     try {
@@ -66,12 +56,21 @@ export default function DocumentsList() {
         }
         return [];
       });
-      console.log("Fetched documents:", response.data.usersDocuments);
 
       const allDocuments = arr.flat();
+      const updatedUsers = response.data.usersDocuments.filter((user) => {
+        let docs = user.documents.filter((doc) => doc.id);
+
+        if (docs && docs.length > 0) {
+          return true;
+        }
+      });
 
       setDocuments(allDocuments);
-      setUsers(response.data.usersDocuments);
+      setDocData(allDocuments);
+
+      setUsers(updatedUsers);
+      setUserData(updatedUsers);
     } catch (error) {
       console.error("Error fetching documents:", error);
       if (error.response) {
@@ -84,6 +83,30 @@ export default function DocumentsList() {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(event.target)
+      ) {
+        setShowContextMenu(false);
+      }
+    };
+    const handleClickOutsideMenu = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutsideMenu);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutsideMenu);
+    };
+  }, []);
+
   const handleContextMenuClick = (e) => {
     e.stopPropagation();
 
@@ -95,6 +118,7 @@ export default function DocumentsList() {
     setShowUserMenu(!showUserMenu);
   };
   const handleUserMenuAction = async (userId) => {
+    console.log({ USER: userId });
     setShowUserDoc(!showUserDocs);
   };
   const handleContextMenuAction = async (action, docId, userId) => {
@@ -130,6 +154,45 @@ export default function DocumentsList() {
       setIsUpdating(false);
     }
   };
+  useEffect(() => {
+    console.log({ selectedFilter, users, documents });
+
+    const arr = userData.map((user) => {
+      let docs =
+        user.documents &&
+        user.documents.filter((doc) => {
+          if (selectedFilter === "All") return true;
+          return doc.status === selectedFilter.toLowerCase();
+        });
+
+      if (docs && docs.length > 0) {
+        docs = docs.map((doc) => {
+          return { ...doc, userId: user.id, email: user.email };
+        });
+        return docs;
+      }
+      return [];
+    });
+
+    const allDocuments = arr.flat();
+    const updatedUsers = userData
+      .map((user) => {
+        let docs =
+          user.documents &&
+          user.documents.filter((doc) => {
+            if (selectedFilter === "All") return true;
+            return doc.status === selectedFilter.toLowerCase();
+          });
+        if (docs && docs.length > 0) {
+          return { ...user, documents: docs };
+        }
+        return {};
+      })
+      .filter((user) => JSON.stringify(user) != "{}");
+
+    setDocuments(allDocuments);
+    setUsers(updatedUsers);
+  }, [selectedFilter]);
 
   return (
     <div className="container">
@@ -145,18 +208,26 @@ export default function DocumentsList() {
             <th className="table-heading">Actions</th>
           </tr>
           {users.map((user) => (
-            <>
-              <tr key={user.id}>
-                <td className="t-data">{user.name || "N/A"}</td>
-                <td className="t-data">{user.documents[0].status || "N/A"}</td>
-                <td className="t-data">
+            <React.Fragment key={user.id}>
+              <tr
+                className="document-user"
+                onClick={() => {
+                  setCurrentUserId(user.id);
+                  handleUserMenuAction(user.id);
+                }}
+              >
+                <td className="t-data doc-user">{user.name || "N/A"}</td>
+                <td className="t-data doc-user">
+                  {user.documents[0].status || "N/A"}
+                </td>
+                <td className="t-data doc-user">
                   {user.documents[0].documentType || "N/A"}
                 </td>
-                <td className="t-data">{user.email || "N/A"}</td>
-                <td className="t-data">
+                <td className="t-data doc-user">{user.email || "N/A"}</td>
+                <td className="t-data doc-user">
                   {user.documents[0].dateAdded || "N/A"}
                 </td>
-                <td className="t-data">
+                <td className="t-data doc-user">
                   {user.documents[0].documentName || "N/A"}
                 </td>
                 <td className="t-data">
@@ -174,12 +245,17 @@ export default function DocumentsList() {
                         <FaEllipsisV />
                       </div>
                       {showUserMenu && currentUserId == user.id && (
-                        <div className="context-menu">
+                        <div className="context-menu" ref={userMenuRef}>
                           <button
                             className="context-menu-item decline"
-                            onClick={() => handleUserMenuAction(user.id)}
+                            onClick={() => {
+                              setCurrentUserId(user.id);
+                              handleUserMenuAction(user.id);
+                            }}
                           >
-                            Show More
+                            {showUserDocs && showUserMenu
+                              ? "Hide"
+                              : "Show More"}
                           </button>
                         </div>
                       )}
@@ -226,7 +302,10 @@ export default function DocumentsList() {
                               <FaEllipsisV />
                             </div>
                             {showContextMenu && currentDocId == document.id && (
-                              <div className="context-menu">
+                              <div
+                                className="context-menu"
+                                ref={contextMenuRef}
+                              >
                                 <button
                                   className="context-menu-item approve"
                                   onClick={() =>
@@ -260,7 +339,7 @@ export default function DocumentsList() {
                       </td>
                     </tr>
                   ))}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>

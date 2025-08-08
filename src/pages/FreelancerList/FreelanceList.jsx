@@ -129,11 +129,11 @@ const FreelanceList = () => {
 
   return (
     <div>
-
       <Sidebar onToggle={setIsSidebarOpen} />
       <div
-        className={`main-content ${isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
-          }`}
+        className={`main-content ${
+          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+        }`}
       >
         <NavBar />
         <ListHeader
@@ -209,7 +209,9 @@ const FreelanceList = () => {
                       <TableCell>{item.phoneNumber || "N/A"}</TableCell>
                       <TableCell>{item.email || "N/A"}</TableCell>
                       <TableCell>
-                        {item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}
+                        {item.dateOfBirth
+                          ? formatDate(item.dateOfBirth)
+                          : "N/A"}
                       </TableCell>
                       <TableCell>
                         {item.createdAt ? formatDate(item.createdAt) : "N/A"}
@@ -241,9 +243,7 @@ const FreelanceList = () => {
           </TableContainer>
         )}
       </div>
-
     </div>
-
   );
 };
 

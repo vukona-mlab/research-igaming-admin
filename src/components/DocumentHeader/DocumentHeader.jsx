@@ -14,34 +14,38 @@ const Documents = ({ searchTerm }) => {
       <DocumentTabs
         tabOne="Notifications"
         tabTwo="Documents"
-        tabThree="Account"
-        tabFour="Reviews"
+        tabThree="Reviews"
+        tabFour=""
         handleTabChange={setSelectedTab}
       />
 
       {/* Buttons Section */}
-      {selectedTab !== "Notifications" && selectedTab !== "Account" && selectedTab !== "Reviews" && (
-        <div className="filter-buttons">
-          {["All", "Pending", "Approved", "Declined"].map((filter) => (
-            <button
-              key={filter}
-              className={selectedFilter === filter ? "selected" : ""}
-              onClick={() => setSelectedFilter(filter)}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-      )}
+      {selectedTab !== "Notifications" &&
+        selectedTab !== "Account" &&
+        selectedTab !== "Reviews" && (
+          <div className="filter-buttons">
+            {["All", "Pending", "Approved", "Declined"].map((filter) => (
+              <button
+                key={filter}
+                className={selectedFilter === filter ? "selected" : ""}
+                onClick={() => setSelectedFilter(filter)}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        )}
 
       <div className="tab-content">
         {selectedTab === "Notifications" && (
           <NotificationsPage searchTerm={searchTerm} />
         )}
 
-        {selectedTab === "Documents" && <DocumentsList />}
+        {selectedTab === "Documents" && (
+          <DocumentsList selectedFilter={selectedFilter} />
+        )}
 
-        {selectedTab === "Account" && null}
+        {/* {selectedTab === "Account" && null} */}
 
         {selectedTab === "Reviews" && <ReviewPage />}
       </div>

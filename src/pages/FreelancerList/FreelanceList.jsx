@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ListHeader from "../../components/common/ListHeader/ListHeader";
 import NavBar from "../../components/common/NavBar/NavBar";
 import {
@@ -15,6 +15,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
+import axios, { all } from "axios";
 
 const FreelanceList = () => {
   const [filter, setFilter] = useState("All");
@@ -25,51 +26,69 @@ const FreelanceList = () => {
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState("freelancers"); // Track current view
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const contextMenuRef = useRef(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState("");
 
   // Fetch freelancers and clients from the backend
   useEffect(() => {
-    const fetchFreelancers = fetch(
-      `${import.meta.env.VITE_API_URL}/api/freelancers`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: ` ${localStorage.getItem("authToken")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    ).then((res) => res.json());
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const fetchFreelancers = fetch(
+        `${import.meta.env.VITE_API_URL}/api/freelancers`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: ` ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
 
-    const fetchClients = fetch(`${import.meta.env.VITE_API_URL}/api/clients`, {
-      method: "GET",
-      headers: {
-        Authorization: `${localStorage.getItem("authToken")}`,
-        "Content-Type": "application/json",
-      },
-    }).then((res) => res.json());
+      const fetchClients = fetch(
+        `${import.meta.env.VITE_API_URL}/api/clients`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
+      const [freelancerData, clientData] = await Promise.all([
+        fetchFreelancers,
+        fetchClients,
+      ]);
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+      setFreelancers(freelancerData.freelancers || []);
+      setClients(clientData.clients || []);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("Failed to load data. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const [freelancerData, clientData] = await Promise.all([
-          fetchFreelancers,
-          fetchClients,
-        ]);
-
-        setFreelancers(freelancerData.freelancers || []);
-        setClients(clientData.clients || []);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Failed to load data. Please try again later.");
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(event.target)
+      ) {
+        setShowContextMenu(false);
       }
     };
 
-    fetchData();
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   // Format date function
   const formatDate = (timestamp) => {
     if (!timestamp) return "N/A";
@@ -109,9 +128,10 @@ const FreelanceList = () => {
   // Filter data based on selected filter and search term
   const filteredData = currentData
     .filter((item) => {
+      const stat = item.status ? item.status : item.activeStatus;
       if (filter === "All") return true;
-      if (filter === "Active") return item.activeStatus === true;
-      if (filter === "Blocked") return item.activeStatus === false;
+      if (filter === "Active") return stat === true;
+      if (filter === "Blocked") return stat === false;
       return true;
     })
     .filter((item) => {
@@ -126,14 +146,49 @@ const FreelanceList = () => {
         (item.jobTitle && item.jobTitle.toLowerCase().includes(searchLower))
       );
     });
+  const handleContextMenuClick = (e) => {
+    e.stopPropagation();
+    setShowContextMenu(!showContextMenu);
+  };
 
+  const handleContextMenuAction = async (action, userId) => {
+    try {
+      setIsUpdating(true);
+      const token = localStorage.getItem("authToken"); // Get the token which already includes 'Bearer' prefix
+      const status = action === "Block" ? false : true;
+
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/auth/users/${userId}/status`,
+        {
+          status,
+        },
+        {
+          headers: {
+            Authorization: token, // Use the token directly as it already includes 'Bearer'
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      fetchData();
+      // Call the parent component's callback to update the UI
+
+      setShowContextMenu(false);
+    } catch (error) {
+      console.error("Error updating review status:", error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  console.log({ freelancers, clients });
   return (
     <div>
-
       <Sidebar onToggle={setIsSidebarOpen} />
       <div
-        className={`main-content ${isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
-          }`}
+        className={`main-content ${
+          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+        }`}
       >
         <NavBar />
         <ListHeader
@@ -182,6 +237,9 @@ const FreelanceList = () => {
                   <TableCell>
                     <b>Status</b>
                   </TableCell>
+                  <TableCell>
+                    <b>Actions</b>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -209,10 +267,14 @@ const FreelanceList = () => {
                       <TableCell>{item.phoneNumber || "N/A"}</TableCell>
                       <TableCell>{item.email || "N/A"}</TableCell>
                       <TableCell>
-                        {item.dateOfBirth ? formatDate(item.dateOfBirth) : "N/A"}
+                        {item.dateOfBirth
+                          ? formatDate(item.dateOfBirth)
+                          : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {item.createdAt ? formatDate(item.createdAt) : "N/A"}
+                        {item.createdAt
+                          ? formatDate(item.createdAt._seconds)
+                          : "N/A"}
                       </TableCell>
                       <TableCell>
                         <Box
@@ -223,15 +285,59 @@ const FreelanceList = () => {
                               width: 10,
                               height: 10,
                               borderRadius: "50%",
-                              backgroundColor: item.activeStatus
+                              backgroundColor: item.status
+                                ? item.status
+                                  ? "green"
+                                  : "red"
+                                : item.activeStatus
                                 ? "green"
                                 : "red",
                             }}
                           />
                           <Typography variant="body2">
-                            {item.activeStatus ? "Active" : "Inactive"}
+                            {item.status
+                              ? item.status
+                                ? "Active"
+                                : "Inactive"
+                              : item.activeStatus
+                              ? "Active"
+                              : "Inactive"}
                           </Typography>
                         </Box>
+                      </TableCell>
+                      <TableCell className="context-menu-container">
+                        <button
+                          className="context-menu-button"
+                          onClick={(e) => {
+                            setCurrentUserId(item.id);
+                            handleContextMenuClick(e);
+                          }}
+                          aria-label="More options"
+                        >
+                          <span className="context-menu-dots">⋮</span>
+                        </button>
+                        {showContextMenu && currentUserId == item.id && (
+                          <div className="context-menu">
+                            <button
+                              className="context-menu-item block"
+                              onClick={() =>
+                                handleContextMenuAction("Block", item.id)
+                              }
+                              disabled={isUpdating}
+                            >
+                              {isUpdating ? "Updating..." : "Block"}
+                            </button>
+                            <button
+                              className="context-menu-item unblock"
+                              onClick={() =>
+                                handleContextMenuAction("Unblock", item.id)
+                              }
+                              disabled={isUpdating}
+                            >
+                              {isUpdating ? "Updating..." : "Unblock"}
+                            </button>
+                          </div>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -241,9 +347,7 @@ const FreelanceList = () => {
           </TableContainer>
         )}
       </div>
-
     </div>
-
   );
 };
 

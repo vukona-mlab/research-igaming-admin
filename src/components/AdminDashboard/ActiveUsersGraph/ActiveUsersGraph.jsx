@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import "./ActiveUsersGraph.css";
+import BACKEND_URL from "../../../config/backend-config";
 
 const ActiveUsersGraph = () => {
   const [data, setData] = useState([]);
@@ -23,7 +24,7 @@ const ActiveUsersGraph = () => {
         const token = localStorage.getItem("authToken");
         const response = await axios.get(
           `${
-            import.meta.env.VITE_API_URL
+            BACKEND_URL
           }/api/daily-active-users?days=${timeRange}`,
           {
             headers: {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import axios from 'axios';
 import ReviewCard from '../../components/Reviews/ReviewCard/ReviewCard';
 import FilterButtons from '../../components/FilterButtons/FilterButtons';
+import BACKEND_URL from '../../config/backend-config';
 
 // Memoized Filter Section
 const FilterSection = memo(({ selectedFilter, onFilterChange }) => (
@@ -64,7 +65,7 @@ const Reviews = () => {
         const authToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
 
         // Use the base URL from the project's fetch calls
-        const response = await axios.get('http://localhost:8000/api/reviews', {
+        const response = await axios.get(`${BACKEND_URL}/api/reviews`, {
           headers: {
             'Authorization': authToken
           }

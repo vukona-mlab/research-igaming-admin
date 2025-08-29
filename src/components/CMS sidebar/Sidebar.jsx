@@ -7,6 +7,7 @@ import userIcon from "/public/images/user.png";
 import dashIcon from "/public/images/dashIcon.png";
 import messageIcon from "/public/images/messageIcon.png";
 import projectIcon from "/public/images/projIcon.png";
+import BACKEND_URL from "../../config/backend-config";
 
 const Sidebar = ({ onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,7 @@ const Sidebar = ({ onToggle }) => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
+        `${BACKEND_URL}/api/auth/admin/profile/${adminId}`,
         {
           headers: {
             "Content-Type": "application/json",

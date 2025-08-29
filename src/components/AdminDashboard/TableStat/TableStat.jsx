@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import "./TableStat.css";
+import BACKEND_URL from "../../../config/backend-config";
 
 const TableStat = () => {
   const [stats, setStats] = useState(null);
@@ -13,7 +14,7 @@ const TableStat = () => {
       try {
         const token = localStorage.getItem("authToken"); // Assuming you store the token in localStorage
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/stats`,
+          `${BACKEND_URL}/api/stats`,
           {
             headers: {
               Authorization: token,

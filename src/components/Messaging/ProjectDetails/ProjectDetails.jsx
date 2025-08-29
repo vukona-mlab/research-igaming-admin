@@ -4,6 +4,7 @@ import "./ProjectDetails.css";
 import { io } from "socket.io-client";
 import PaystackPop from "@paystack/inline-js";
 import TermsModal from "../../Escrow/TermsModal";
+import BACKEND_URL from "../../../config/backend-config";
 
 const ProjectDetails = ({ project, onClose, isClient }) => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
 
       // Fetch client details using the correct endpoint
       const clientResponse = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/users/${project.clientId}`,
+        `${BACKEND_URL}/api/auth/users/${project.clientId}`,
         {
           headers: {
             Authorization: token,
@@ -45,7 +46,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
       // Fetch freelancer details if available
       if (project.freelancerId) {
         const freelancerResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/users/${
+          `${BACKEND_URL}/api/auth/users/${
             project.freelancerId
           }`,
           {
@@ -69,7 +70,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
       if (action === "reject" || action === "delete") {
         // Delete the project if rejected by client or deleted by freelancer
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/projects/${project.id}`,
+          `${BACKEND_URL}/api/projects/${project.id}`,
           {
             method: "DELETE",
             headers: {
@@ -80,7 +81,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
 
         if (response.ok) {
           // Emit socket event for project deletion/rejection
-          const socket = io(import.meta.env.VITE_API_URL);
+          const socket = io(BACKEND_URL);
           socket.emit("project-status-updated", {
             chatId: project.chatId,
             projectId: project.id,
@@ -95,7 +96,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
       } else if (action === "approve") {
         // Update project status to approved
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/projects/${project.id}/status`,
+          `${BACKEND_URL}/api/projects/${project.id}/status`,
           {
             method: "PUT",
             headers: {
@@ -109,7 +110,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
         if (response.ok) {
           await handleTransaction();
           // Emit socket event for project approval
-          const socket = io(import.meta.env.VITE_API_URL);
+          const socket = io(BACKEND_URL);
           socket.emit("project-status-updated", {
             chatId: project.chatId,
             projectId: project.id,
@@ -127,7 +128,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
   const handleTransaction = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/transaction`,
+        `${BACKEND_URL}/api/transaction`,
         {
           method: "POST",
           headers: {
@@ -155,7 +156,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
             if (transaction.status === "success") {
               try {
                 const res = await fetch(
-                  `${import.meta.env.VITE_API_URL}/api/payment/verify`,
+                  `${BACKEND_URL}/api/payment/verify`,
                   {
                     method: "POST",
                     headers: {
@@ -211,7 +212,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
   const handleReleaseFunds = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/transaction/release`,
+        `${BACKEND_URL}/api/transaction/release`,
         {
           method: "POST",
           headers: {
@@ -252,7 +253,7 @@ const ProjectDetails = ({ project, onClose, isClient }) => {
       if (project.payments && project.payments.length > 0) {
         try {
           const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/api/transaction/${
+            `${BACKEND_URL}/api/transaction/${
               project.payments[0].transactionId
             }/status?clientId=${clientId}`,
             {

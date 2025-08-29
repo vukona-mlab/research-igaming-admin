@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
+import BACKEND_URL from "../../config/backend-config";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -43,7 +44,7 @@ const SignIn = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/admin/login`,
+        `${BACKEND_URL}/api/auth/admin/login`,
         {
           method: "POST",
           headers: {

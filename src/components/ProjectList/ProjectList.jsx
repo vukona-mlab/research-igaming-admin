@@ -4,6 +4,7 @@ import "./ProjectList.css";
 import { IconButton, Button } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
+import BACKEND_URL from "../../config/backend-config";
 
 export default function ProjectList({ statusFilter }) {
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,7 @@ export default function ProjectList({ statusFilter }) {
       }
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/projects`,
+        `${BACKEND_URL}/api/projects`,
         {
           headers: { Authorization: token },
         }
@@ -66,7 +67,7 @@ export default function ProjectList({ statusFilter }) {
       }
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/clients`,
+        `${BACKEND_URL}/api/clients`,
         {
           headers: { Authorization: token },
         }
@@ -93,7 +94,7 @@ export default function ProjectList({ statusFilter }) {
       }
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/freelancers`,
+        `${BACKEND_URL}/api/freelancers`,
         {
           headers: { Authorization: token },
         }

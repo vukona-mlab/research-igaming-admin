@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import NotificationCard from "../NotificationCard/NotificationCard";
 import "./NotificationsPanel.css";
 import { useNavigate } from "react-router-dom";
+import BACKEND_URL from "../../../config/backend-config";
 const NotificationsPanel = () => {
   const [notifications, setNotifications] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -27,7 +28,7 @@ const NotificationsPanel = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-notifications`,
+        `${BACKEND_URL}/api/admin-notifications`,
         {
           method: "GET",
           headers: {

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, act } from "react";
 import "./documentsList.css";
 import axios, { all } from "axios";
 import { FaEllipsisV } from "react-icons/fa";
+import BACKEND_URL from "../../config/backend-config";
 
 export default function DocumentsList({ selectedFilter }) {
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ export default function DocumentsList({ selectedFilter }) {
       }
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/documents`,
+        `${BACKEND_URL}/api/documents`,
         {
           headers: {
             Authorization: token,
@@ -132,7 +133,7 @@ export default function DocumentsList({ selectedFilter }) {
         status,
       });
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/documents/${userId}/update-status`,
+        `${BACKEND_URL}/api/documents/${userId}/update-status`,
         {
           docId: docId,
           status,

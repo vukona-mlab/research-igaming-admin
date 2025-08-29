@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProjectStats from "../ProjectsStats/ProjectStats";
 import axios from "axios";
 import "./ProjectsTable.css";
+import BACKEND_URL from "../../../config/backend-config";
 
 const ProjectsTable = () => {
   const [projectStats, setProjectStats] = useState([]);
@@ -34,7 +35,7 @@ const ProjectsTable = () => {
           : `Bearer ${token}`;
 
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/project-stats`,
+          `${BACKEND_URL}/api/project-stats`,
           {
             headers: {
               Authorization: authHeader,

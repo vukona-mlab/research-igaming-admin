@@ -7,8 +7,10 @@ const ListHeader = ({
   handleTabChange,
   handleListNameChange,
   onSearch,
+  currentTab,
+  setCurrentTab
 }) => {
-  const [currentTab, setCurrentTab] = useState("All");
+  // const [currentTab, setCurrentTab] = useState("All");
   return (
     <div className="ListHeader">
       <div className="lh-search-view">

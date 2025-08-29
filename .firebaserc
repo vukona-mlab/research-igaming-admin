@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "admin-research-igaming"
+  },
+  "targets": {
+    "research-igaming": {
+      "hosting": {
+        "admin": [
+          "admin-research-igaming"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

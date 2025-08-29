@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
 import axios, { all } from "axios";
+import BACKEND_URL from "../../config/backend-config";
 
 const FreelanceList = () => {
   const [filter, setFilter] = useState("All");
@@ -31,7 +32,7 @@ const FreelanceList = () => {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
-
+  const [currentTab, setCurrentTab] = useState("All");
   // Fetch freelancers and clients from the backend
   useEffect(() => {
     fetchData();
@@ -40,7 +41,7 @@ const FreelanceList = () => {
     try {
       setLoading(true);
       const fetchFreelancers = fetch(
-        `${import.meta.env.VITE_API_URL}/api/freelancers`,
+        `${BACKEND_URL}/api/freelancers`,
         {
           method: "GET",
           headers: {
@@ -51,7 +52,7 @@ const FreelanceList = () => {
       ).then((res) => res.json());
 
       const fetchClients = fetch(
-        `${import.meta.env.VITE_API_URL}/api/clients`,
+        `${BACKEND_URL}/api/clients`,
         {
           method: "GET",
           headers: {
@@ -128,10 +129,10 @@ const FreelanceList = () => {
   // Filter data based on selected filter and search term
   const filteredData = currentData
     .filter((item) => {
-      const stat = item.status ? item.status : item.activeStatus;
+      const blocked = item.blocked ? item.blocked : false;
       if (filter === "All") return true;
-      if (filter === "Active") return stat === true;
-      if (filter === "Blocked") return stat === false;
+      if (filter === "Active") return blocked === false;
+      if (filter === "Blocked") return blocked === true;
       return true;
     })
     .filter((item) => {
@@ -146,6 +147,8 @@ const FreelanceList = () => {
         (item.jobTitle && item.jobTitle.toLowerCase().includes(searchLower))
       );
     });
+  console.log({ filteredData });
+
   const handleContextMenuClick = (e) => {
     e.stopPropagation();
     setShowContextMenu(!showContextMenu);
@@ -155,12 +158,12 @@ const FreelanceList = () => {
     try {
       setIsUpdating(true);
       const token = localStorage.getItem("authToken"); // Get the token which already includes 'Bearer' prefix
-      const status = action === "Block" ? false : true;
 
+      const blocked = action === 'Block' ? true : false
       const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/auth/users/${userId}/status`,
+        `${BACKEND_URL}/api/auth/users/${userId}/status`,
         {
-          status,
+          blocked,
         },
         {
           headers: {
@@ -186,9 +189,8 @@ const FreelanceList = () => {
     <div>
       <Sidebar onToggle={setIsSidebarOpen} />
       <div
-        className={`main-content ${
-          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
-        }`}
+        className={`main-content ${isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+          }`}
       >
         <NavBar />
         <ListHeader
@@ -197,6 +199,8 @@ const FreelanceList = () => {
           handleTabChange={handleTabChange}
           handleListNameChange={handleListNameChange}
           onSearch={handleSearch}
+          setCurrentTab={setCurrentTab}
+          currentTab={currentTab}
         />
 
         {/* Error Message */}
@@ -285,23 +289,20 @@ const FreelanceList = () => {
                               width: 10,
                               height: 10,
                               borderRadius: "50%",
-                              backgroundColor: item.status
-                                ? item.status
+                              backgroundColor: item.blocked
+                                ? !item.blocked
                                   ? "green"
                                   : "red"
-                                : item.activeStatus
-                                ? "green"
-                                : "red",
+                                : "green",
                             }}
                           />
                           <Typography variant="body2">
-                            {item.status
-                              ? item.status
+                            {item.blocked
+                              ? !item.blocked
                                 ? "Active"
-                                : "Inactive"
-                              : item.activeStatus
-                              ? "Active"
-                              : "Inactive"}
+                                : "Blocked"
+                              : "Active"
+                            }
                           </Typography>
                         </Box>
                       </TableCell>

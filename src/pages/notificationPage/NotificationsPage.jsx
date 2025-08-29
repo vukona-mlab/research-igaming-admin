@@ -5,6 +5,7 @@ import SearchBar from "../../components/common/SearchBar/SearchBar";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
 import { requestForToken, onMessageListener } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import BACKEND_URL from "../../config/backend-config";
 
 const NotificationsPage = ({ searchTerm }) => {
   const [activeTab, setActiveTab] = useState("Notifications");
@@ -80,7 +81,7 @@ const NotificationsPage = ({ searchTerm }) => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-notifications`,
+        `${BACKEND_URL}/api/admin-notifications`,
         {
           method: "GET",
           headers: {
@@ -102,7 +103,7 @@ const NotificationsPage = ({ searchTerm }) => {
     try {
       console.log("clicked", id, authToken);
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-notifications/${id}`,
+        `${BACKEND_URL}/api/admin-notifications/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -123,7 +124,7 @@ const NotificationsPage = ({ searchTerm }) => {
   const readNotification = async (id) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-notifications/${id}`,
+        `${BACKEND_URL}/api/admin-notifications/${id}`,
         {
           method: "PUT",
           headers: {

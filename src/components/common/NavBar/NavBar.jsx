@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import "./navbar.css";
+import BACKEND_URL from "../../../config/backend-config";
 
 function NavBar() {
   const [profilePic, setProfilePic] = useState("/images/Frame 1149.png");
@@ -27,7 +28,7 @@ function NavBar() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
+        `${BACKEND_URL}/api/auth/admin/profile/${adminId}`,
         {
           headers: {
             "Content-Type": "application/json",

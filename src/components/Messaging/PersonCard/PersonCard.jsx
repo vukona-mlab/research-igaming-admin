@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./PersonCard.css";
 import { BsPersonCircle } from "react-icons/bs";
 import io from "socket.io-client";
+import BACKEND_URL from "../../../config/backend-config";
 
 const PersonCard = ({
   chatId,
@@ -28,7 +29,7 @@ const PersonCard = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_API_URL);
+    socketRef.current = io(BACKEND_URL);
 
     socketRef.current.on("user-typing", ({ userId, isTyping }) => {
       if (userId === otherId) {
@@ -64,7 +65,7 @@ const PersonCard = ({
 
         // Try admin profile endpoint first
         let response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${otherId}`,
+          `${BACKEND_URL}/api/auth/admin/profile/${otherId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -76,7 +77,7 @@ const PersonCard = ({
         // If admin profile fails, try user profile endpoint
         if (!response.ok && response.status === 404) {
           response = await fetch(
-            `${import.meta.env.VITE_API_URL}/api/auth/profile/${otherId}`,
+            `${BACKEND_URL}/api/auth/profile/${otherId}`,
             {
               headers: {
                 "Content-Type": "application/json",

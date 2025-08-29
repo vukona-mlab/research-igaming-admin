@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './ReviewCard.css';
 import StarIcon from '../../../assets/Star_duotone.svg';
 import axios from 'axios';
+import BACKEND_URL from '../../../config/backend-config';
 
 const ReviewCard = ({ review, onStatusUpdate }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -54,7 +55,7 @@ const ReviewCard = ({ review, onStatusUpdate }) => {
             const status = action === 'approve' ? 'Approved' : 'Declined';
 
             await axios.patch(
-                `${import.meta.env.VITE_API_URL}/api/reviews/status`,
+                `${BACKEND_URL}/api/reviews/status`,
                 {
                     reviewId: review.id,
                     status

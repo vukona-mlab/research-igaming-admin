@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ProjectModal.css";
 import { io } from "socket.io-client";
+import BACKEND_URL from "../../../config/backend-config";
 
 const ProjectModal = ({
   isOpen,
@@ -47,7 +48,7 @@ const ProjectModal = ({
       }
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/projects`,
+        `${BACKEND_URL}/api/projects`,
         {
           method: "POST",
           headers: {
@@ -71,7 +72,7 @@ const ProjectModal = ({
         const data = await response.json();
 
         // Emit socket event for real-time update
-        const socket = io(import.meta.env.VITE_API_URL);
+        const socket = io(BACKEND_URL);
         socket.emit("project-created", {
           chatId,
           projectData: {
@@ -92,7 +93,7 @@ const ProjectModal = ({
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/projects/${projectData.id}/status`,
+        `${BACKEND_URL}/api/projects/${projectData.id}/status`,
         {
           method: "PUT",
           headers: {
@@ -111,7 +112,7 @@ const ProjectModal = ({
       }
 
       // Send socket notification
-      const socket = io(import.meta.env.VITE_API_URL);
+      const socket = io(BACKEND_URL);
       socket.emit("project-status-update", {
         chatId,
         projectId: projectData.id,
@@ -128,7 +129,7 @@ const ProjectModal = ({
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/projects/${projectData.id}/status`,
+        `${BACKEND_URL}/api/projects/${projectData.id}/status`,
         {
           method: "PUT",
           headers: {
@@ -143,7 +144,7 @@ const ProjectModal = ({
 
       if (response.ok) {
         // Emit socket event for real-time update
-        const socket = io(import.meta.env.VITE_API_URL);
+        const socket = io(BACKEND_URL);
         socket.emit("project-status-updated", {
           chatId,
           projectId: projectData.id,

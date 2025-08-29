@@ -7,6 +7,7 @@ import { auth, db, storage } from "../../../config/firebase";
 import ChatHeader from "../ChatHeader/ChatHeader";
 import { io } from "socket.io-client";
 import { format } from "date-fns";
+import BACKEND_URL from "../../../config/backend-config";
 
 const ChatBox = ({
   chatId,
@@ -62,7 +63,7 @@ const ChatBox = ({
 
   useEffect(() => {
     // Initialize socket connection
-    socketRef.current = io(import.meta.env.VITE_API_URL);
+    socketRef.current = io(BACKEND_URL);
 
     // Join the chat room when component mounts
     if (chatId) {
@@ -140,7 +141,7 @@ const ChatBox = ({
 
       const response = await fetch(
         `${
-          import.meta.env.VITE_API_URL
+          BACKEND_URL
         }/api/admin-chats/${chatId}/messages?page=${pageNum}&limit=${MESSAGES_PER_PAGE}`,
         {
           headers: {
@@ -230,7 +231,7 @@ const ChatBox = ({
       const userRole = user.roles[0]; // Get the first role from the roles array
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-chats/${chatId}/messages`,
+        `${BACKEND_URL}/api/admin-chats/${chatId}/messages`,
         {
           method: "POST",
           headers: {
@@ -341,7 +342,7 @@ const ChatBox = ({
 
       console.log("Marking messages as read for chat:", chatId);
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-chats/${chatId}/read`,
+        `${BACKEND_URL}/api/admin-chats/${chatId}/read`,
         {
           method: "PUT",
           headers: {

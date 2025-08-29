@@ -7,6 +7,7 @@ import Sidebar from "../../components/CMS sidebar/Sidebar";
 import NavBar from "../../components/common/NavBar/NavBar";
 import LogoutButton from "../../components/LogOut/Logout";
 import ChangePasswordForm from "../../components/ResetPassword/ChangePasswordForm";
+import BACKEND_URL from "../../config/backend-config";
 
 const Container = styled.div`
   max-width: 1600px;
@@ -194,7 +195,7 @@ const ProfilePage = () => {
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
+          `${BACKEND_URL}/api/auth/admin/profile/${adminId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -257,7 +258,7 @@ const ProfilePage = () => {
       }
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${adminId}`,
+        `${BACKEND_URL}/api/auth/admin/profile/${adminId}`,
         {
           method: "PUT",
           headers: {

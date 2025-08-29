@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./FreelancerList.css";
 import ProfileCard from "../../components/Profilecard/ProfileCard";
+import BACKEND_URL from "../../config/backend-config";
 
 export default function FreelancerList() {
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,7 @@ export default function FreelancerList() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/freelancers`
+        `${BACKEND_URL}/api/freelancers`
       );
       console.log("Fetched freelancers:", response.data.freelancers);
       setFreelancers(response.data.freelancers);
@@ -108,7 +109,7 @@ export default function FreelancerList() {
                           freelancer.status?.toLowerCase() || "inactive"
                         }`}
                       >
-                        {freelancer.status || "inactive"}
+                        {freelancer.status || "blocked"}
                       </div>
                     </div>
                   </td>

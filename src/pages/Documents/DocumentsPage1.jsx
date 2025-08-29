@@ -5,12 +5,13 @@ import SearchBar from "../../components/common/SearchBar/SearchBar";
 import Sidebar from "../../components/CMS sidebar/Sidebar";
 import DocumentHeader from "../../components/DocumentHeader/DocumentHeader1";
 import DocumentsList from "../../components/DocumentsList/DocumentsList";
+import BACKEND_URL from "../../config/backend-config";
 
 const DocumentsPage1 = () => {
   const [loading, setLoading] = useState(false);
   const [filteredDocuments, setFilteredDocuments] = useState([]);
   const token = localStorage.getItem("token");
-  const url = import.meta.env.VITE_API_URL;
+  const url = BACKEND_URL;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
  

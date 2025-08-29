@@ -32,13 +32,17 @@ const app = initializeApp(firebaseConfig);
 
 const analytics = getAnalytics(app);
 
-const auth = getAuth(app);
-await setPersistence(auth, inMemoryPersistence);
+
 const db = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 const messaging = getMessaging(app);
-
+let auth
+const initAuth = async() => {
+  auth = getAuth(app);
+  await setPersistence(auth, inMemoryPersistence);
+}
+initAuth()
 const requestForToken = async () => {
   try {
     // First check if service worker is supported
@@ -48,10 +52,10 @@ const requestForToken = async () => {
 
     // Register the service worker
     const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    
+
     // Request notification permission
     const permission = await Notification.requestPermission();
-    
+
     if (permission === "granted") {
       const token = await getToken(messaging, {
         vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,

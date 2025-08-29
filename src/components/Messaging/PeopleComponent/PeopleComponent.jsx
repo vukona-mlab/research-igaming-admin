@@ -4,6 +4,7 @@ import PersonCard from "../PersonCard/PersonCard";
 import { BsChatDots, BsPeople, BsChatSquareDots } from "react-icons/bs";
 import { TbMessageReport } from "react-icons/tb";
 import { HiOutlineFlag } from "react-icons/hi2";
+import BACKEND_URL from "../../../config/backend-config";
 
 const PeopleComponent = ({
   people,
@@ -85,7 +86,7 @@ const PeopleComponent = ({
 
       // Try admin profile endpoint first
       let response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/admin/profile/${uid}`,
+        `${BACKEND_URL}/api/auth/admin/profile/${uid}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -99,7 +100,7 @@ const PeopleComponent = ({
       // If admin profile fails, try user profile endpoint
       if (!response.ok && response.status === 404) {
         response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/profile/${uid}`,
+          `${BACKEND_URL}/api/auth/profile/${uid}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -154,7 +155,7 @@ const PeopleComponent = ({
         : `Bearer ${token}`;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/admin/all`,
+        `${BACKEND_URL}/api/auth/admin/all`,
         {
           headers: {
             Authorization: cleanToken,
@@ -212,7 +213,7 @@ const PeopleComponent = ({
       console.log("Admin profile data:", adminProfile); // Debug log
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin-chats`,
+        `${BACKEND_URL}/api/admin-chats`,
         {
           method: "POST",
           headers: {

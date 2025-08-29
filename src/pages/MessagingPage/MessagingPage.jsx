@@ -8,6 +8,7 @@ import ChatBox from "../../components/Messaging/ChatBox/ChatBox";
 import io from "socket.io-client";
 import ZoomMeetingModal from "../../components/Messaging/ZoomMeetingModal/ZoomMeetingModal";
 import { useNavigate } from "react-router-dom";
+import BACKEND_URL from "../../config/backend-config";
 
 const MessagingPage = () => {
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ const MessagingPage = () => {
   const [isUserChats, setIsUserChats] = useState(false);
   const [current, setCurrent] = useState("Chats");
   const navigate = useNavigate();
-  const url = import.meta.env.VITE_API_URL;
+  const url = BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");

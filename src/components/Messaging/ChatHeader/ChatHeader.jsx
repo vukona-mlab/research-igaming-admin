@@ -8,8 +8,9 @@ import {
 } from "react-icons/bs";
 import { io } from "socket.io-client";
 import ZoomMeetingModal from "../ZoomMeetingModal/ZoomMeetingModal";
+import BACKEND_URL from "../../../config/backend-config";
 
-const url = import.meta.env.VITE_API_URL;
+const url = BACKEND_URL;
 const socket = io(url, { transports: ["websocket"] });
 
 const ChatHeader = ({ currentChat }) => {

@@ -17,6 +17,7 @@ import {
 import Sidebar from "../../components/CMS sidebar/Sidebar";
 import axios, { all } from "axios";
 import BACKEND_URL from "../../config/backend-config";
+import { ContextMenu } from "../../components/ContextMenu/ContextMenu";
 
 const FreelanceList = () => {
   const [filter, setFilter] = useState("All");
@@ -318,26 +319,27 @@ const FreelanceList = () => {
                           <span className="context-menu-dots">⋮</span>
                         </button>
                         {showContextMenu && currentUserId == item.id && (
-                          <div className="context-menu">
-                            <button
-                              className="context-menu-item block"
-                              onClick={() =>
-                                handleContextMenuAction("Block", item.id)
-                              }
-                              disabled={isUpdating}
-                            >
-                              {isUpdating ? "Updating..." : "Block"}
-                            </button>
-                            <button
-                              className="context-menu-item unblock"
-                              onClick={() =>
-                                handleContextMenuAction("Unblock", item.id)
-                              }
-                              disabled={isUpdating}
-                            >
-                              {isUpdating ? "Updating..." : "Unblock"}
-                            </button>
-                          </div>
+                          // <div className="context-menu">
+                          //   <button
+                          //     className="context-menu-item block"
+                          //     onClick={() =>
+                          //       handleContextMenuAction("Block", item.id)
+                          //     }
+                          //     disabled={isUpdating}
+                          //   >
+                          //     {isUpdating ? "Updating..." : "Block"}
+                          //   </button>
+                          //   <button
+                          //     className="context-menu-item unblock"
+                          //     onClick={() =>
+                          //       handleContextMenuAction("Unblock", item.id)
+                          //     }
+                          //     disabled={isUpdating}
+                          //   >
+                          //     {isUpdating ? "Updating..." : "Unblock"}
+                          //   </button>
+                          // </div>
+                          <ContextMenu item={item} handleContextMenuAction={handleContextMenuAction} isUpdating={isUpdating} />
                         )}
                       </TableCell>
                     </TableRow>

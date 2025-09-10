@@ -9,6 +9,8 @@ import io from "socket.io-client";
 import ZoomMeetingModal from "../../components/Messaging/ZoomMeetingModal/ZoomMeetingModal";
 import { useNavigate } from "react-router-dom";
 import BACKEND_URL from "../../config/backend-config";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const MessagingPage = () => {
   const [loading, setLoading] = useState(false);
@@ -52,6 +54,8 @@ const MessagingPage = () => {
     setUserRole(userRole);
 
     fetchChats();
+    fetchAnonymousChats()
+    console.log('checking for anonymous chats');
     initializeSocket();
   }, [navigate]);
 
@@ -86,13 +90,13 @@ const MessagingPage = () => {
     const filteredChats =
       chats.length > 0 && current == "UserChats"
         ? chats.filter(
-            (chat) => chat.tags && chat.tags.some((tag) => tag === "admin")
-          )
+          (chat) => chat.tags && chat.tags.some((tag) => tag === "admin")
+        )
         : current == "Reports"
-        ? chats.filter(
+          ? chats.filter(
             (chat) => chat.tags && chat.tags.some((tag) => tag === "report")
           )
-        : chats.filter((chat) => chat.chatType === "admin-admin");
+          : chats.filter((chat) => chat.chatType === "admin-admin");
     setFilteredChats(filteredChats);
 
     console.log({ chats, filteredChats });
@@ -195,7 +199,16 @@ const MessagingPage = () => {
       setLoading(false);
     }
   };
+  const fetchAnonymousChats = async () => {
+    console.log('fetching achats');
+    
+    const roomsRef = collection(db, "achats");
+    const qry = query(roomsRef, where("active", "==", true))
+    const snapshot = await getDocs(qry);
 
+    const rooms = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    console.log({ rooms });
+  }
   const getCurrentChat = async () => {
     try {
       const token = localStorage.getItem("authToken");
@@ -255,8 +268,8 @@ const MessagingPage = () => {
         const otherUserName =
           typeof otherParticipant === "object"
             ? otherParticipant.name ||
-              otherParticipant.displayName ||
-              "Unknown User"
+            otherParticipant.displayName ||
+            "Unknown User"
             : "Unknown User";
         setCurrentUserName(otherUserName);
       }
@@ -353,9 +366,8 @@ const MessagingPage = () => {
     <div className="MessagingPageC">
       <Sidebar onToggle={setIsSidebarOpen} />
       <div
-        className={`main-content ${
-          isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
-        }`}
+        className={`main-content ${isSidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"
+          }`}
       >
         <Navbar />
         <SearchBar placeholder="Search chats..." onSearch={handleSearch} />

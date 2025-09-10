@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import MessagesPage from "./pages/MessagingPage/MessagingPage";
 import DocumentsPage1 from "./pages/Documents/DocumentsPage1";
 import ProjectPage from "./pages/projectPage/projectPage";
+import QueryMessaging from "./pages/QueryMessaging/QueryMessaging";
 const App = () => {
   return (
     <div className="App">
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/documents1" element={<DocumentsPage1 />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/queries" element={<QueryMessaging/>} />
             <Route path="/projects" element={<ProjectPage />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Route>

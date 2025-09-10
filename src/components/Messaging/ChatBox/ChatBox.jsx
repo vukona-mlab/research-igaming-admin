@@ -40,7 +40,7 @@ const ChatBox = ({
 
   useEffect(() => {
     if (chatId) {
-      console.log("Fetching messages for chatId:", chatId);
+      // console.log("Fetching messages for chatId:", chatId);
       fetchMessages();
 
       // Clear any existing timeout
@@ -84,7 +84,7 @@ const ChatBox = ({
     // Listen for messages read status
     socketRef.current.on("messages-read", (data) => {
       if (data.chatId === chatId) {
-        console.log("Received messages-read event:", data);
+        // console.log("Received messages-read event:", data);
         // Update messages read status
         setMessages((prev) =>
           prev.map((msg) => {
@@ -93,7 +93,7 @@ const ChatBox = ({
               msg.senderId === currentClientId &&
               !msg.readBy?.includes(data.userId)
             ) {
-              console.log("Updating read status for message:", msg.id);
+              // console.log("Updating read status for message:", msg.id);
               return {
                 ...msg,
                 readBy: [...(msg.readBy || []), data.userId],
@@ -127,7 +127,7 @@ const ChatBox = ({
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    console.log("Current token:", token);
+    // console.log("Current token:", token);
   }, []);
 
   const fetchMessages = async (pageNum = 1, isInitial = true) => {
@@ -221,7 +221,7 @@ const ChatBox = ({
       }
 
       const user = JSON.parse(userStr);
-      console.log("Current user from localStorage:", user);
+      // console.log("Current user from localStorage:", user);
 
       if (!user.roles || !user.roles.length) {
         console.error("No role found for current user");
@@ -340,7 +340,7 @@ const ChatBox = ({
         return;
       }
 
-      console.log("Marking messages as read for chat:", chatId);
+      // console.log("Marking messages as read for chat:", chatId);
       const response = await fetch(
         `${BACKEND_URL}/api/admin-chats/${chatId}/read`,
         {
@@ -365,7 +365,7 @@ const ChatBox = ({
         prev.map((msg) => {
           // Only update messages that haven't been read by the current user
           if (!msg.readBy?.includes(currentClientId)) {
-            console.log("Marking message as read:", msg.id);
+            // console.log("Marking message as read:", msg.id);
             return {
               ...msg,
               readBy: [...(msg.readBy || []), currentClientId],
@@ -404,7 +404,7 @@ const ChatBox = ({
   const getStructuredChatData = () => {
     if (!currentChat) return null;
 
-    console.log("Current chat data:", currentChat); // Debug log
+    // console.log("Current chat data:", currentChat); // Debug log
 
     // If currentChat already has the correct structure, return it
     if (currentChat.metadata?.target || currentChat.metadata?.initiator) {
@@ -423,7 +423,7 @@ const ChatBox = ({
           },
         },
       };
-      console.log("Structured data with selectedParticipant:", structuredData); // Debug log
+      // console.log("Structured data with selectedParticipant:", structuredData); // Debug log
       return structuredData;
     }
 
@@ -439,7 +439,7 @@ const ChatBox = ({
           },
         },
       };
-      console.log("Structured data with otherParticipant:", structuredData); // Debug log
+      // console.log("Structured data with otherParticipant:", structuredData); // Debug log
       return structuredData;
     }
 
@@ -467,7 +467,7 @@ const ChatBox = ({
             },
           },
         };
-        console.log("Structured data with participants:", structuredData); // Debug log
+        // console.log("Structured data with participants:", structuredData); // Debug log
         return structuredData;
       }
     }
@@ -487,7 +487,7 @@ const ChatBox = ({
         },
       },
     };
-    console.log("Fallback structured data:", structuredData); // Debug log
+    // console.log("Fallback structured data:", structuredData); // Debug log
     return structuredData;
   };
 
@@ -495,7 +495,7 @@ const ChatBox = ({
     return <div className="loading">Loading messages...</div>;
 
   const structuredChatData = getStructuredChatData();
-  console.log("Final structured chat data:", structuredChatData); // Debug log
+  // console.log("Final structured chat data:", structuredChatData); // Debug log
 
   return (
     <div className={`f-chat-box ${isInitiator ? "initiator" : "receiver"}`}>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./PeopleComponent.css";
 import PersonCard from "../PersonCard/PersonCard";
 import { BsChatDots, BsPeople, BsChatSquareDots } from "react-icons/bs";
+import { RiQuestionnaireLine } from "react-icons/ri";
 import { TbMessageReport } from "react-icons/tb";
 import { HiOutlineFlag } from "react-icons/hi2";
 import BACKEND_URL from "../../../config/backend-config";
@@ -210,7 +211,7 @@ const PeopleComponent = ({
         return;
       }
 
-      console.log("Admin profile data:", adminProfile); // Debug log
+      // console.log("Admin profile data:", adminProfile); // Debug log
 
       const response = await fetch(
         `${BACKEND_URL}/api/admin-chats`,
@@ -243,7 +244,7 @@ const PeopleComponent = ({
         profilePicture: adminProfile.profilePicture,
         activeStatus: adminProfile.activeStatus,
       };
-      console.log("Participant data being passed:", participantData); // Debug log
+      // console.log("Participant data being passed:", participantData); // Debug log
       onChatSelect(data.chatId, participantData);
       setShowAdmins(false);
     } catch (error) {
@@ -266,10 +267,13 @@ const PeopleComponent = ({
           {current == "Reports"
             ? "Reports"
             : current == "UserChats"
-            ? "User Chats"
-            : current == "AdminUsers"
-            ? "Admin Users"
-            : "Admin Chats"}
+              ? "User Chats"
+              : current == "AdminUsers"
+                ? "Admin Users"
+                : current == "Queries" 
+                  ? "Queries"
+                  : "Admin Chats"
+          }
           {/* {showAdmins ? "Admin Users" : "Admin Chats"} */}
         </div>
 
@@ -282,7 +286,15 @@ const PeopleComponent = ({
         >
           <HiOutlineFlag />
         </button>
-
+        <button
+          className="toggle-view-btn"
+          onClick={() => {
+            setCurrent("Queries");
+            if (showAdmins) setShowAdmins(false);
+          }}
+        >
+          <RiQuestionnaireLine />
+        </button>
         <button
           className="toggle-view-btn"
           onClick={() => {
@@ -373,7 +385,7 @@ const PeopleComponent = ({
                     name:
                       typeof otherParticipantId === "object"
                         ? otherParticipantId.displayName ||
-                          otherParticipantId.name
+                        otherParticipantId.name
                         : "Loading...",
                     profilePicture:
                       typeof otherParticipantId === "object"

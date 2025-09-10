@@ -32,8 +32,8 @@ const ChatHeader = ({ currentChat }) => {
 
   // Get selected participant from chat data
   const selectedParticipant = currentChat?.metadata?.target;
-  console.log("Current chat in ChatHeader:", currentChat);
-  console.log("Selected participant in ChatHeader:", selectedParticipant);
+  // console.log("Current chat in ChatHeader:", currentChat);
+  // console.log("Selected participant in ChatHeader:", selectedParticipant);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -86,7 +86,7 @@ const ChatHeader = ({ currentChat }) => {
 
         const data = await response.json();
         const profile = data.profile || data.user;
-        console.log("Fetched user profile:", profile);
+        // console.log("Fetched user profile:", profile);
 
         // Update user profile with all available data
         const updatedProfile = {

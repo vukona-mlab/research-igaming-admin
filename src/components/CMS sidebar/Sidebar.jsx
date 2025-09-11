@@ -6,6 +6,7 @@ import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import userIcon from "/public/images/user.png";
 import dashIcon from "/public/images/dashIcon.png";
 import messageIcon from "/public/images/messageIcon.png";
+import queryMessageIcon from "/public/images/conversation.png"
 import projectIcon from "/public/images/projIcon.png";
 import BACKEND_URL from "../../config/backend-config";
 
@@ -90,6 +91,12 @@ const Sidebar = ({ onToggle }) => {
             imgSrc={messageIcon}
             text="Messages"
             to="/messages"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            imgSrc={queryMessageIcon}
+            text="Queries"
+            to="/queries"
             isOpen={isOpen}
           />
           <SidebarItem

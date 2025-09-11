@@ -19,7 +19,7 @@ export const ContextMenu = ({ isUpdating, item, handleContextMenuAction }) => {
                 }
                 disabled={isUpdating || !item.blocked}
             >
-                {isUpdating ? "Updating..." : "Unblockd"}
+                {isUpdating ? "Updating..." : "Unblock"}
             </button>
         </div>
     )

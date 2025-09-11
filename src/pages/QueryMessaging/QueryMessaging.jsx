@@ -16,7 +16,8 @@ import { BsPersonCircle } from "react-icons/bs";
 import QueryChatBox from "../../components/Messaging/ChatBox/QueryChatBox";
 
 const QueryMessaging = () => {
-  const [loading, setLoading] = useState(false);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const [loading, setloading] = useState(false);
   const [chats, setChats] = useState([]);
   const [filteredChats, setFilteredChats] = useState([]);
   const [currentChatId, setCurrentChatId] = useState("");
@@ -35,6 +36,7 @@ const QueryMessaging = () => {
   const [unsubscribe, setUnsubscribe] = useState(null);
   const [selectedMessages, setSelectedMessages] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null)
+  const [viewedUser, setViewedUser] = useState('')
   const activeStatus = false;
   const unreadCount = 0;
   const isLoading = false;
@@ -233,9 +235,10 @@ const QueryMessaging = () => {
     const roomsRef = doc(db, "achats", currentRoom)
     updateDoc(roomsRef, { active: false })
   }
-  const handleClick = (roomId) => {
+  const handleClick = (roomId, name, surname) => {
     console.log("subscribing to messages for room:", roomId);
-
+    setMessagesLoading(true)
+    setViewedUser(`${name} ${surname}`)
     // if already listening to another room, unsubscribe first
     if (unsubscribe) unsubscribe();
 
@@ -249,7 +252,7 @@ const QueryMessaging = () => {
       }));
       setSelectedMessages(messages);
     });
-
+    setMessagesLoading(false)
     setUnsubscribe(() => unsub);
   };
   const sendMessage = async (text) => {
@@ -302,7 +305,7 @@ const QueryMessaging = () => {
                     return (
                       <div
                         className={`PersonCard ${activeStatus === 'active' ? 'active' : ''} ${unreadCount > 0 ? 'unread' : ''}`}
-                        onClick={() => handleClick(chat.id)}
+                        onClick={() => handleClick(chat.id, chat.name, chat.surname)}
                       >
                         <div className="person-avatar">
                           <BsPersonCircle className="default-avatar" />
@@ -310,11 +313,11 @@ const QueryMessaging = () => {
                         </div>
                         <div className="person-info">
                           <div className="person-header">
-                            <div className="person-name">{"Anonymous"}</div>
-                            <div className="last-message-time">{chat.timestamp}</div>
+                            <div className="person-name">{`${chat.name} ${chat.surname}`}</div>
+                            <div className="last-message-time">{chat.timestamp.toDate().toLocaleString()}</div>
                           </div>
                           <div className="last-message">
-                            {"last message"}
+                            {chat.lastMessage}
                           </div>
                           {unreadCount > 0 && (
                             <div className="unread-badge">{unreadCount}</div>
@@ -334,6 +337,8 @@ const QueryMessaging = () => {
                 handleEndChat={handleEndChat}
                 messages={selectedMessages}
                 sendMessage={sendMessage}
+                viewedUser={viewedUser}
+                loading={messagesLoading}
               />
             ) : (
               <div className="no-chat-selected">

@@ -15,6 +15,8 @@ const QueryChatBox = ({
     handleEndChat,
     messages,
     sendMessage,
+    viewedUser,
+    loading,
     currentChat,
     currentClientId,
     currentClientName,
@@ -23,7 +25,7 @@ const QueryChatBox = ({
 }) => {
     const [photoUrl, setPhotoUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
-    const [loading, setLoading] = useState(true);
+
     const [files, setFiles] = useState();
     const [fileIcon, setFileIcon] = useState();
     const [isTyping, setIsTyping] = useState(false);
@@ -135,7 +137,7 @@ const QueryChatBox = ({
                             </div>
                             <div className="user-info">
                                 <h3 className="user-name">
-                                    {"Anonymous"}
+                                    {viewedUser}
                                 </h3>
                                 <span className="user-status">
                                     Online

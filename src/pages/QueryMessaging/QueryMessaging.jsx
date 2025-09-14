@@ -314,7 +314,7 @@ const QueryMessaging = () => {
                         <div className="person-info">
                           <div className="person-header">
                             <div className="person-name">{`${chat.name} ${chat.surname}`}</div>
-                            <div className="last-message-time">{chat.timestamp.toDate().toLocaleString()}</div>
+                            <div className="last-message-time">{chat?.timestamp?.toDate().toLocaleString()}</div>
                           </div>
                           <div className="last-message">
                             {chat.lastMessage}

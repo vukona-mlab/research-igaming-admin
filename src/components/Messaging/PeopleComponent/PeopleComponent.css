@@ -1,0 +1,91 @@
+.PeopleComponent {
+  flex: 1;
+  width: 415px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 20px 16px;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.PeopleComponent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.PeopleComponent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.PeopleComponent::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.people-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.people-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.toggle-view-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.toggle-view-btn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.toggle-view-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.person-card-container {
+  padding: 8px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.person-card-container:hover {
+  background-color: #f3f4f6;
+  border-radius: 8px;
+}
+
+/* Empty state styling */
+.PeopleComponent > div:first-child:not(.people-title) {
+  color: #6b7280;
+  text-align: center;
+  padding: 24px;
+  font-size: 15px;
+}

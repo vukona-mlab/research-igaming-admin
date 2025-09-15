@@ -1,0 +1,36 @@
+.AdminDashboard {
+  margin: 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+  padding: 0px;
+}
+
+.amd-main-container {
+  /* transition: all 0.3s ease;
+  width: calc(100% - 70px);
+  margin-left: 70px;
+  padding: 20px; */
+}
+
+.amd-main-content {
+  display: flex;
+  justify-content: space-between; 
+  gap: 24px;
+  width: 100%;
+  /* padding-left: 80px; */
+  padding-top: 20px;
+}
+
+.amd-stats-container {
+  flex: 1; /* Takes up available space */
+  
+}
+
+.amd-notifications-container {
+ padding-right: 100px;
+
+}
+

@@ -1,0 +1,67 @@
+.ProjectsHeader {
+  font-family: "Poppins";
+  margin: 50px auto;
+  width: calc(100% - 100px);
+}
+
+.pjh-search-view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0px;
+}
+.pjh-active-tabs {
+}
+.pjh-active-tabs-tabs-status {
+  display: flex;
+  justify-content: space-between;
+}
+.pjh-active-tabs-status {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 0px 25px;
+}
+.pjh-view-list-btn {
+  height: 52px;
+  width: 166px;
+}
+
+.pjh-active-tabs-heading {
+  color: #00000080;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.pjh-active-tabs-div {
+  display: flex;
+  gap: 15px;
+  margin: 25px 0px;
+}
+.pjh-active-tabs-tab {
+  height: 40px;
+  width: 100px;
+  border: none;
+  outline: none;
+  color: #333333;
+  border: 1px solid #00000080;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.pjh-currentTab {
+  background-color: #333333;
+  color: white;
+}
+.pjh-active-tabs-status-active {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.pjh-active-tabs-status-blocked {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}

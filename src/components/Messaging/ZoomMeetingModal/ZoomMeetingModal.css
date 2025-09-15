@@ -1,0 +1,116 @@
+.zoom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.zoom-modal {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #eaeaea;
+  border-radius: 8px 8px 0 0;
+}
+
+.zoom-modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 8px;
+  color: #666;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.zoom-modal-content {
+  padding: 20px;
+}
+
+.meeting-info {
+  text-align: center;
+}
+
+.meeting-info h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.meeting-info p {
+  margin: 10px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.join-button {
+  background-color: #2D8CFF;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.join-button:hover {
+  background-color: #2478DB;
+}
+
+.invitation-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.decline-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.decline-button:hover {
+  background-color: #c82333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .zoom-modal {
+    width: 95%;
+    margin: 10px;
+  }
+} 

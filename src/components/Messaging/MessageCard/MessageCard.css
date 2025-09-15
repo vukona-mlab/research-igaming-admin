@@ -1,0 +1,241 @@
+.message-card {
+  display: flex;
+  margin: 8px 0;
+  max-width: 70%;
+}
+
+.message-card.current-user-message {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.message-card.other-user-message {
+  margin-right: auto;
+  justify-content: flex-start;
+}
+
+.message-card.system-message {
+  margin: 16px auto;
+  max-width: 90%;
+  justify-content: center;
+}
+
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.message-content {
+  padding: 8px 12px;
+  border-radius: 12px;
+  position: relative;
+  word-wrap: break-word;
+  transition: all 0.2s ease;
+}
+
+.message-content.read-by-all {
+  position: relative;
+}
+
+.message-content.read-by-all::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  right: -15px;
+  width: 17px;
+  height: 17px;
+  background-color: #333;
+  border-radius: 50%;
+  opacity: 1;
+  border: 2px solid white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.current-user-message .message-content {
+  background-color: #333;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.other-user-message .message-content {
+  background-color: #f0f2f5;
+  color: #1a1a1a;
+  border-bottom-left-radius: 4px;
+}
+
+.system-message .message-content {
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.message-text {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.message-time {
+  font-size: 0.75em;
+  color: #333;
+  padding: 2px 8px;
+  opacity: 0.8;
+  border-radius: 12px;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.message-time.read {
+  background-color: rgba(0, 0, 0, 0);
+  color: #333;
+  opacity: 1;
+}
+
+.current-user-message .message-time {
+  text-align: right;
+}
+
+.other-user-message .message-time {
+  text-align: left;
+}
+
+.message-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attachment {
+  max-width: 100%;
+}
+
+.attachment img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.file-attachment {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.file-attachment:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.file-icon {
+  font-size: 1.2em;
+}
+
+.file-name {
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.system-message-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.system-icon {
+  font-size: 1.2em;
+}
+
+/* System Messages */
+.MessageCard.system .message-bubble {
+  background-color: #F3F4F6;
+  color: #6B7280;
+  font-style: italic;
+  text-align: center;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* Warning Messages */
+.MessageCard.warning .message-bubble {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+/* Action Messages */
+.MessageCard.action .message-bubble {
+  background-color: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid #BFDBFE;
+}
+
+/* Show timestamp on hover */
+.message-card:hover .message-time {
+  opacity: 1;
+}
+
+/* Add more space between different senders */
+.message-card.current-user-message + .message-card.other-user-message,
+.message-card.other-user-message + .message-card.current-user-message {
+  margin-top: 16px;
+}
+
+.zoom-meeting-message {
+  background: #f0f7ff00;
+  border: 1px solid #cce4ff00;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #00459400;
+}
+
+.MessageCard.right .zoom-meeting-message {
+  background: rgba(255, 255, 255, 0);
+  border-color: rgba(255, 255, 255, 0);
+}
+
+.zoom-meeting-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0056b3;
+  margin-bottom: 8px;
+}
+
+.zoom-meeting-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.zoom-meeting-details p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.join-meeting-btn {
+  background: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.join-meeting-btn:hover {
+  background: #004494;
+}
+
+.host-info {
+  font-weight: 500;
+  color: #0056b3;
+  margin-bottom: 8px !important;
+}

@@ -1,0 +1,162 @@
+/* Sidebar.css */
+
+.sidebar {
+    height: 100vh;
+    background-color: black;
+    transition: width 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    /* Ensure sidebar is above other content */
+}
+
+.sidebar-open {
+    width: 200px;
+    /* Adjusted width when open */
+}
+
+.sidebar-closed {
+    width: 70px;
+    /* Adjusted width when closed */
+}
+
+.sidebar-button {
+    color: white;
+    font-size: 1.5rem;
+    /* Smaller font size */
+    padding: 1rem;
+    padding-left: 22px;
+    /* Centered horizontally */
+    cursor: pointer;
+    border: none;
+    background: none;
+    outline: none;
+    transition: color 0.2s;
+}
+
+
+/* Remove focus outline completely */
+
+.sidebar-button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* Remove any other possible borders or outlines */
+
+.sidebar-button:active,
+.sidebar-button:focus-visible {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.sidebar-button.open {
+    color: #b30000;
+    margin-left: 30%;
+    /* Red X when sidebar is open */
+}
+
+
+/* Sidebar item alignment */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* Reduced gap between items */
+    margin-top: 3rem;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    /* Reduced padding */
+    color: #aaa;
+    /* Lighter gray for inactive items */
+    cursor: pointer;
+    border-radius: 0.25rem;
+    margin: 0 0.5rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+    background-color: #b30000;
+    /* Darker red that matches the image */
+    color: white;
+}
+
+.sidebar-icon {
+    width: 20px;
+    /* Smaller icon size */
+    height: 20px;
+}
+
+.sidebar-text {
+    font-size: 0.875rem;
+    /* Smaller text */
+    font-weight: 500;
+}
+
+
+/* Sidebar Profile */
+
+.sidebar-profile {
+    padding: 0.75rem;
+    color: #aaa;
+    /* Same as other inactive items */
+    border-radius: 0.25rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-profile:hover {
+    background-color: #b30000;
+    /* Same hover effect as other items */
+    color: white;
+}
+
+.profile-img {
+    width: 32px;
+    /* Smaller profile image */
+    height: 33px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid white;
+    /* Thinner border */
+}
+
+.profile-details {
+    font-size: 0.75rem;
+    /* Smaller font size */
+}
+
+.profile-details p {
+    margin: 0;
+    line-height: 1.2;
+    /* Tighter line height */
+}
+
+.profile-details p:first-child {
+    font-weight: 600;
+}
+
+.profile-details p:last-child {
+    color: rgba(255, 255, 255, 0.7);
+    /* Slightly transparent white */
+    font-size: 0.7rem;
+    /* Even smaller for email */
+}

@@ -1,0 +1,15 @@
+.message-button {
+    background-color: rgba(56, 52, 52, 0.897);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 70%;
+    transition: background 0.3s ease;
+}
+
+.message-button:hover {
+    background-color: #333;
+}

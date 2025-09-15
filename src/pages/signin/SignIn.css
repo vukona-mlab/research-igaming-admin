@@ -1,0 +1,162 @@
+.login-page {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: #000;
+  }
+  
+  .login-form {
+    width: 50%;
+    padding: 30px;
+    padding-top: 0;
+    border-radius: 10px;
+    margin-right: 20px;
+    align-items: center;
+    position: relative;
+    left: 8%;
+    
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #000000;
+    font-weight: 500;
+    font-size: 32px;
+    margin-right: 130px;
+   
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    
+    
+  }
+  
+  .input-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
+    font-weight: 400;
+  }
+  
+  input {
+    width: 85%;
+    padding: 20px;
+    font-size: 14px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: transparent;
+    height: 25px;
+    font-weight: 400;
+    box-sizing: border-box;
+    align-items: center;
+    margin-left: 100px;
+  }
+  
+  button.login-btn {
+    padding: 8px 0px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    width: 85%;
+    height: 45px;
+    margin-right:0;
+    display: block;
+    box-sizing: border-box;
+
+  }
+  
+  button.login-btn:hover {
+    background-color: #1a1e24;
+  }
+  
+  .image-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  .login-image {
+    width: 80%;
+    object-fit: cover;
+    border-radius: 10px;
+    height: 50%;
+  }
+  
+  .login-logo {
+    display: block;
+    margin: 0 left 20px; 
+    width: 137px; 
+    height: 58px;
+    text-align: left;
+    margin-bottom: 50px;
+  }
+  .remember-me-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .remember-me-container input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  
+  .remember-me-container label {
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+  }
+  .spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  button.login-btn:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+  }
+  .error-text {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .error-message {
+    color: red;
+
+  }
+  
+
+  
+  
+  
+  

@@ -1,0 +1,35 @@
+/* ProjectTabs.css */
+.tabs-container {
+  display: flex;
+  flex-direction: column; /* Stack tabs and content vertically */
+  align-items: flex-start; /* Ensure tabs are aligned to the left */
+  padding: 10px;
+}
+
+.MuiTab-root {
+  background-color: #444; /* Dark button-like tabs */
+  color: white;
+  font-weight: bold;
+  text-transform: none;
+  margin-right: 5px;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.MuiTab-root.Mui-selected {
+  background-color: #666; /* Darker color when selected */
+}
+
+.MuiTabs-flexContainer {
+  justify-content: flex-start; /* Ensure tabs are aligned to the left */
+  padding-bottom: 10px; /* Space between tabs and content */
+}
+
+.MuiTabs-indicator {
+  background-color: transparent; /* Remove indicator line */
+}
+
+.project-list-container {
+  width: 100%; /* Ensure the project list container takes full width */
+  padding-top: 20px; /* Space between tabs and the project list */
+}
